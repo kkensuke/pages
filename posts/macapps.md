@@ -97,9 +97,9 @@ https://rectangleapp.com/
 
 
 ## Stay
-
+:::linkcard
 https://cordlessdog.com/stay/
-
+:::
 Along with Rectangle, I would like to introduce an app called `Stay`. This app allows you to save the layout of multiple app windows on your desktop. What's more, it also lets you save these layouts for multiple monitors. This means you no longer have to readjust your window sizes every time you plug or unplug your laptop from a monitor!
 
 

@@ -217,6 +217,7 @@ python main.py 'https://www.youtube.com/watch?v=CONF_VIDEO' --summary-lang ja
 - 1日の利用制限の超過している場合は、翌日まで待つ
 
 
+
 ## 9. カスタマイズのアイデア
 ### 9.1. 要約プロンプトの調整
 `gemini_api.py` 内のプロンプトをカスタマイズすることで、要約のスタイルを変更できます：
@@ -241,6 +242,52 @@ MAX_SUMMARY_LENGTH = 100000  # より長い動画に対応
 ```
 
 ただし、Gemini のトークン制限には注意が必要です。
+
+### 9.3. Zsh でエイリアスを作成
+ Zsh でエイリアスを作成し、より短いコマンドで呼び出すことができます。
+```zsh
+you() {
+    if [ $# -lt 1 ]; then
+        echo "Usage: you [summary-lang] 'URL'"
+        echo "  summary-lang: en|ja|no|auto (default: auto)"
+        return 2
+    fi
+
+    # If only one argument, treat it as URL with auto language
+    if [ $# -eq 1 ]; then
+        lang="auto"
+        url="$1"
+    else
+        # Two or more arguments: first is language, rest is URL
+        lang="$1"; shift
+        url="$*"
+    fi
+
+    cd ~/Desktop
+    source <path_to>/venv/bin/activate || { echo "activating venv failed"; return 1; }
+
+    case "$lang" in
+        en) opts=(--summary-lang en) ;;
+        ja) opts=(--summary-lang ja) ;;
+        no) opts=(--no-summary) ;;
+        auto) opts=(--summary-lang auto) ;;
+        *) echo "Unknown option: $lang"; echo "Usage: you [lang] URL"; echo "  lang: en|ja|no|auto (default: auto)"; deac; return 2 ;;
+    esac
+
+    python <path_to>/yt_dlp_transcript/all.py "$url" "${opts[@]}"
+    rc=$?
+
+    deac
+    return $rc
+}
+```
+
+### 9.4. Quicklook で Markdown をレンダリング
+`QLMarkdown` は Quicklook で Markdown をレンダリングするアプリです。
+生成された字幕と要約のファイルの内容を見易く表示してくれます。
+```zsh
+brew install --cask qlmarkdown
+```
 
 
 ## 10. まとめ
