@@ -19,6 +19,7 @@ set -u
 # - https://github.com/sobolevn/dotfiles
 # - https://github.com/webpro/dotfiles
 # - https://apple.stackexchange.com/questions/14001/how-to-turn-off-all-animations-on-os-x
+# - https://macos-defaults.com/
 
 
 echo 'Configuring your mac. Hang tight.'
@@ -33,23 +34,54 @@ sudo nvram StartupMute=%01
 # Disable the “Are you sure you want to open this application?” dialog
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-# Disable Notifications
+# Disable Notifcations
 launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
 
 
 ## Keyboard
-# Deactivate the CapsLockDelay
+# deactivate the CapsLockDelay
 hidutil property --set '{"CapsLockDelayOverride":0}'
 
-# Delay until repeat: 15 (225ms) and Key repeat rate: 2 (30ms)
-# Lower values = faster repeat
+# Deley until repeat and Key repeat rate
 defaults write -g InitialKeyRepeat -int 15
 defaults write -g KeyRepeat -int 2
+
+# Capitalize
+defaults write -g "NSAutomaticCapitalizationEnabled" -bool false
+
+# Double-space to period
+defaults write -g "NSAutomaticPeriodSubstitutionEnabled" -bool false
+
+# Smart quotes and dashes
+defaults write -g "NSAutomaticDashSubstitutionEnabled" -bool false
+defaults write -g "NSAutomaticQuoteSubstitutionEnabled" -bool false
+
+
+defaults write -g KB_DoubleQuoteOption -string '"abc"'
+defaults write -g KB_SingleQuoteOption -string "'abc'"
+
+# Full-width numeric characters (true: Full-width, false: Half-width)
+defaults write com.apple.inputmethod.Kotoeri "JIMPrefFullWidthNumeralCharactersKey" -bool false
+
+# Shift key action (0: Katakana, 1: Romaji)
+defaults write com.apple.inputmethod.Kotoeri "JIMPrefShiftKeyActionKey" -int 0
 
 
 ## Trackpad
 # Cursor speed
-defaults write -g com.apple.trackpad.scaling 5
+defaults write -g com.apple.trackpad.scaling -float "3"
+
+# Tap to click
+defaults write com.apple.AppleMultitouchTrackpad "Clicking" -bool true
+
+# Click (0: light, 1: medium, 2: firm)
+defaults write com.apple.AppleMultitouchTrackpad "FirstClickThreshold" -int 0
+defaults write com.apple.AppleMultitouchTrackpad "SecondClickThreshold" -int 0
+
+
+## Menu bar
+# Change the spacing between icons in menu bar
+defaults -currentHost write -g NSStatusItemSpacing -int 6
 
 
 ## Dock ##
@@ -63,14 +95,20 @@ defaults delete com.apple.dock persistent-others
 defaults write com.apple.dock show-process-indicators -bool false
 defaults write com.apple.dock show-recents -bool false
 
-# No delay for auto-hiding the dock
-defaults write com.apple.dock autohide-time-modifier -int 0
+# Showing the Dock
+defaults write com.apple.dock "autohide-delay" -float "0"
+
+# animation
+defaults write com.apple.dock "mineffect" -string "scale"
+
+# Minimize windows into application icon
+defaults write com.apple.dock minimize-to-application -bool true
 
 # change the size of icons in the dock
 defaults write com.apple.dock "tilesize" -int 43
 
 # put favorite apps in the dock
-apps=("/System/Applications/System Settings" "/System/Applications/Utilities/Terminal" "/Applications/CotEditor" "/Applications/Visual Studio Code" "/Applications/Google Chrome" "/Applications/Firefox" "/Applications/Zotero" "/System/Applications/Mail")
+apps=("/System/Applications/Utilities/Terminal" "/Applications/CotEditor" "/Applications/Visual Studio Code" "/Applications/Google Chrome" "/Applications/Zotero" "/System/Applications/Mail")
 
 for app in "${apps[@]}"
 do
@@ -109,6 +147,9 @@ defaults write com.apple.LaunchServices LSQuarantine -bool false
 # icnv - Icon View
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
 
+# Auto adjust column width
+defaults write com.apple.finder "_FXEnableColumnAutoSizing" -bool true
+
 # Avoid creating .DS_Store files
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
@@ -116,25 +157,25 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 # set coteditor as default editor for any .txt file
 defaults write com.apple.LaunchServices LSHandlers -array-add '{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=com.coteditor.CotEditor;}'
 
-# Spring Loading (hovering over a folder to open it) delay set to zero
+# Spring Loading
 defaults write NSGlobalDomain com.apple.springing.delay -float 0
 
 # Show Library folder
 chflags nohidden ~/Library
 
 # Stop using default folders
-chflags hidden ~/{Documents,Movies,Music,Pictures}
-chmod 000 ~/{Documents,Movies,Music,Pictures}
+chflags hidden ~/{Documents,Movies,Music}
+chmod 000 ~/{Documents,Movies,Music}
 
 
 
-## Others ##
+## Others
 # showing and hiding Launchpad
 defaults write com.apple.dock springboard-show-duration -float 0
 defaults write com.apple.dock springboard-hide-duration -float 0
 
-# Change the spacing between icons in menu bar
-defaults -currentHost write -globalDomain NSStatusItemSpacing -int 6
+# Click in the scroll bar to (false: Jump to the next page, true: Jump to the spot that's clicked)
+defaults write -g "AppleScrollerPagingBehavior" -bool true
 
 
 
@@ -156,5 +197,4 @@ killall Finder
 killall Dock
 
 echo 'Done!'
-
 ```

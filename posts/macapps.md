@@ -96,15 +96,20 @@ https://rectangleapp.com/
 ![Image](/images/rectangle.jpeg "width=300px")
 
 
+## Stay
+
+https://cordlessdog.com/stay/
+
+Along with Rectangle, I would like to introduce an app called `Stay`. This app allows you to save the layout of multiple app windows on your desktop. What's more, it also lets you save these layouts for multiple monitors. This means you no longer have to readjust your window sizes every time you plug or unplug your laptop from a monitor!
+
+
 ## Shottr
 :::linkcard
 https://shottr.cc/
 :::
 - `Shottr` is a free app for taking screenshots. You can take a screenshot of a whole screen: `cmd + shift + 1`, or a selected area: `cmd + shift + 2`,
 an active window: `cmd + shift + 8`, or a whole page by scrolling: `cmd + shift + 9`. 
-
 - You can edit the screenshot immediately after taking it. You can blur sensitive information, erase unwanted parts, add arrows, highlight texts, add text boxes, and add rectangles.
-
 - The best feature of `Shottr` is that you can use **multi-language OCR** to convert the screenshot to text: `cmd + option + ctrl + o`.
 
 
@@ -113,6 +118,13 @@ an active window: `cmd + shift + 8`, or a whole page by scrolling: `cmd + shift 
 https://github.com/sbarex/SourceCodeSyntaxHighlight
 :::
 `Syntax Highlight` is a free and open source app for highlighting the syntax of source code in Quick Look (press space key on a file).
+
+
+## QLMarkdown
+:::linkcard
+https://github.com/sbarex/QLMarkdown
+:::
+Similarly, I would like to introduce a QuickLook app called `QLMarkdown`. It renders and displays Markdown, making it very easy to read.
 
 
 ## Unsplash Wallpapers
