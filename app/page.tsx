@@ -16,7 +16,7 @@ export default function HomePage() {
           </div>
           
           <h1 className="mb-6 bg-gradient-to-r from-blue-200 via-cyan-200 to-teal-200 bg-clip-text text-5xl font-bold text-transparent md:text-7xl">
-            Hi, I'm Ken! 👋
+            Hi, I'm Kensuke! 👋
           </h1>
           
           <p className="mx-auto max-w-2xl text-lg leading-relaxed text-slate-300 md:text-xl">
@@ -57,11 +57,26 @@ export default function HomePage() {
             I love working with the latest technologies and constantly learning new things.
           </p>
           
+          {/* Keywords Tags */}
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">Keywords</h3>
+            <div className="flex flex-wrap gap-2">
+              {['Quantum Computing', 'Quantum Machine Learning', 'Quantum Kernel Methods', 'Variational Quantum Algorithms', 'Generalization'].map((keyword) => (
+                <span 
+                  key={keyword}
+                  className="group rounded-full bg-gradient-to-r from-slate-100 to-slate-50 px-4 py-2 text-sm font-medium text-slate-700 ring-1 ring-slate-200 transition-all hover:scale-105 hover:shadow-md"
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
+          </div>
+          
           {/* Skills Tags */}
           <div>
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">Technical Skills</h3>
             <div className="flex flex-wrap gap-2">
-              {['Python', 'C++', 'TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'PostgreSQL'].map((tech) => (
+              {['Python', 'C++', 'TypeScript', 'React', 'Next.js', 'Tailwind CSS'].map((tech) => (
                 <span 
                   key={tech}
                   className="group rounded-full bg-gradient-to-r from-slate-100 to-slate-50 px-4 py-2 text-sm font-medium text-slate-700 ring-1 ring-slate-200 transition-all hover:scale-105 hover:shadow-md"
@@ -96,12 +111,12 @@ export default function HomePage() {
               <span className="font-medium text-slate-700">GitHub Profile</span>
             </a>
 
-            {/* <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4">
+            <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4">
               <div className="rounded-lg bg-slate-100 p-2 text-slate-600">
                 <Mail size={20} />
               </div>
-              <span className="text-sm text-slate-600">example.12345(at)gmail.com</span>
-            </div> */}
+              <span className="text-sm text-slate-600">kensuke(at)icepp.s.u-tokyo.ac.jp</span>
+            </div>
 
             <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4">
               <span className="text-2xl">📍</span>
@@ -112,17 +127,18 @@ export default function HomePage() {
       </section>
 
       {/* Projects Section */}
-      {/*
+      
       <section className="mt-16 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-md md:p-12">
         <div className="mb-8 flex items-center gap-3">
           <div className="h-1 w-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
-          <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">Featured Projects</h2>
+          <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">Projects</h2>
         </div>
         
         <div className="space-y-4">
           {[
-            { title: "Project 1", desc: "A web application built with React and Tailwind CSS", link: "/projects/project1" },
-            { title: "Project 2", desc: "A full-stack application using Next.js and Prisma", link: "/projects/project2" }
+            { title: "Double Descent in Quantum Kernel Ridge Regression", desc: "", link: "https://arxiv.org/abs/2604.17202" },
+            { title: "Study Notes on Statistical Learning Theory for Quantum Machine Learning", desc: "", link: "https://kkensuke.github.io/QML_generalization/main.pdf" },
+            { title: "Analysis of Data-encoding Induced Barren Plateau in Quantum Machine Learning", desc: "", link: "https://kkensuke.github.io/master_thesis/main.pdf" }
           ].map((project) => (
             <Link 
               key={project.title}
@@ -145,7 +161,7 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-      */}
+     
 
       {/* Quick Links Grid */}
       {/*
