@@ -1,5 +1,5 @@
 ---
-title: "世界の名画26選：時代背景で読み解く美術史の傑作"
+title: "世界の名画"
 date: "2026-05-10"
 subtitle: ""
 tags: [Art, History]
