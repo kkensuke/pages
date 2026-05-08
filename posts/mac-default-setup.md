@@ -1,9 +1,13 @@
 ---
-title: "MacOS Setup Script"
+title: "MacOS Default Setup"
 date: "2024-5-5"
 subtitle: "A guide to setting up MacOS with a shell script"
 tags: [MacOS]
 ---
+
+
+## Introduction
+MacOS hides hundreds of settings behind the `defaults` command. Instead of clicking through System Settings, the following script allows you to configure your Mac with a single run.
 
 
 ```bash

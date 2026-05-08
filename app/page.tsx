@@ -143,6 +143,7 @@ export default function HomePage() {
             <Link 
               key={project.title}
               href={project.link}
+              target="_blank"
               className="group block rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-6 transition-all hover:border-slate-300 hover:shadow-lg"
             >
               <div className="flex items-start justify-between">
