@@ -2,6 +2,7 @@
 title: "銀の匙"
 date: "2026-05-03"
 subtitle: "中　勘助"
+previewImage: https://upload.wikimedia.org/wikipedia/commons/7/72/Tea_Spoon_MET_DP253823.jpg
 tags: [Book]
 ---
 
