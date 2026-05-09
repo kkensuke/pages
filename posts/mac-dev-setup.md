@@ -1,54 +1,54 @@
 ---
-title: "MacOS Setup Script"
+title: "MacOS セットアップスクリプト"
 date: "2026-5-9"
-subtitle: "The Ultimate Guide to Automating Your macOS Developer Setup"
+subtitle: "MacOSの開発環境セットアップを自動化しよう"
 tags: [MacOS]
 ---
 
 
-## Introduction
-Setting up a fresh Mac can be a tedious process. Downloading apps, configuring system preferences, and setting up terminal environments can easily eat up an entire day. 
+## はじめに
+新しいMacのセットアップは骨の折れる作業です。アプリのダウンロード、システム設定の変更、ターミナル環境の構築などを行っていると、あっという間に1日が終わってしまいます。
 
-Over time, I’ve refined a fully automated setup process using a series of shell scripts. By executing these scripts in order, I can transform a vanilla macOS installation into a fully customized, high-performance developer machine in minutes.
-I will walk you through the step-by-step blueprint for setting up macOS from scratch.
+私は時間をかけて、一連のシェルスクリプトを使用した完全自動のセットアップ手順を練り上げてきました。これらのスクリプトを順番に実行するだけで、まっさらな macOS を、完全にカスタマイズされた高性能な開発マシンへと数分で変身させることができます。
+本記事では、macOS をゼロからセットアップするための設計図をステップバイステップで解説します。
 
-All the scripts mentioned in this post are available in my GitHub repository:
+この記事で紹介しているスクリプトはすべて、私の GitHub リポジトリで公開しています：
 :::linkcard
 https://github.com/kkensuke/dotfiles/tree/main/setup
 :::
 
 
 ---
-## Phase 1: The Initial Manual Steps
-Before running any scripts, there are a few manual steps required right out of the box:
+## フェーズ1：最初の手動ステップ
+スクリプトを実行する前に、箱から出してすぐにいくつかの手動ステップを行う必要があります。
 
-1. **Sign in to iCloud:** Sync your basic data and settings.
-2. **Install a Browser & Cloud Drive:** I usually install **Google Chrome** (via Safari) and **Google Drive** immediately. *(Note: Depending on your workflow, you might prefer relying completely on iCloud Drive for better system integration).*
-3. **Mail Setup:** Log into Gmail or your preferred email provider.
+1. **iCloud へのサインイン:** 基本的なデータと設定を同期します。
+2. **ブラウザとクラウドストレージのインストール:** 私は通常、すぐに（Safari 経由で）**Google Chrome** と **Google Drive** をインストールします。*（注：ワークフローによっては、システムとの統合性を高めるために、完全に iCloud Drive に依存する方が好ましい場合もあります）。*
+3. **メールのセットアップ:** Gmailや普段使っているメールプロバイダにログインします。
 
-Once these basics are out of the way, it’s time to open the **Terminal** and let the scripts do the heavy lifting.
+これらの基本作業が終わったら、**ターミナル**を開いて、面倒な作業をスクリプトに任せましょう。
 
 
 
 ---
-## Phase 2: The Automated Script Execution
+## フェーズ2：自動化スクリプトの実行
 
-I’ve divided my setup process into six numbered scripts to ensure dependencies are installed in the correct order. 
+依存関係が正しい順番でインストールされるように、セットアッププロセスを6つの番号付きスクリプトに分割しています。
 
-*(Note: If you are following along, you'll need to adapt the file paths in the scripts—like dotfile locations—to match your own directory structure).*
+*（注：この記事に沿って進める場合、dotfilesの場所など、スクリプト内のファイルパスをご自身のディレクトリ構造に合わせて変更する必要があります）。*
 
-### Step 1: Install Xcode Command Line Tools
-Before installing any developer tools, macOS requires the Xcode Command Line tools. This allows you to use `git`.
+### ステップ1：Xcodeコマンドラインツールのインストール
+開発ツールをインストールする前に、macOS には Xcode コマンドラインツールが必要です。これにより、`git` が使用できるようになります。
 
 ```bash[title=1_xcode.sh]
 # install to use git
 xcode-select --install
 ```
-*A prompt will appear. Click "Install" and wait for it to finish before moving to Step 2.*
+*ポップアップが表示されます。「インストール」をクリックし、完了するのを待ってからステップ2に進んでください。*
 
 
-### Step 2: Install Homebrew
-Homebrew is the missing package manager for macOS. It allows us to install CLI tools and GUI applications directly from the terminal.
+### ステップ2：Homebrewのインストール
+Homebrew は macOS に欠かせないパッケージマネージャーです。これを使えば、CLI ツールや GUI アプリケーションをターミナルから直接インストールできます。
 
 ```bash[title=2_homebrew.sh]
 #!/bin/bash
@@ -59,14 +59,14 @@ exec ${SHELL} -l # Reload the shell
 ```
 
 
-### Step 3: Install Apps and Packages
-With Homebrew ready, we can batch-install all our applications. My script handles three categories:
-1. **CLI Tools (`brew install`):** Modern tools like `bat` (a better `cat`), `fzf` (fuzzy finder), `neovim`, `node`, `uv` (Python toolchain), and various Zsh plugins for syntax highlighting and autosuggestions.
-2. **GUI Apps (`brew install --cask`):** Browsers, IDEs, and utilities. My must-haves include **Visual Studio Code**, **Aerospace** (tiling window manager), **Rectangle** (window management), and **Shottr** (screenshots).
-3. **Mac App Store Apps (`mas`):** Using the `mas` CLI, you can install App Store apps via their App ID. For example, `mas install 302584613` installs Kindle.
-4. *Bonus:* This script also handles GitHub CLI (`gh`) authentication and sets up custom aliases, like a shortcut to delete repos directly from the terminal.
+### ステップ3：アプリとパッケージのインストール
+Homebrew の準備ができたら、すべてのアプリケーションを一括でインストールします。私のスクリプトは以下の3つのカテゴリを処理します：
+1. **CLI ツール（`brew install`）:** `bat`（進化した`cat`）、`fzf`（あいまい検索）、`neovim`、`node`、`uv`（Python ツールチェーン）、そしてシンタックスハイライトや自動補完のための各種Zshプラグインなどのモダンなツール。
+2. **GUI アプリ（`brew install --cask`）:** ブラウザ、IDE、ユーティリティツール。私にとっての必須アプリは、**Visual Studio Code**、**Aerospace**（タイル型ウィンドウマネージャー）、**Rectangle**（ウィンドウ管理）、**Shottr**（スクリーンショット）です。
+3. **Mac App Storeアプリ（`mas`）:** `mas` CLI を使用すると、App Store のアプリをアプリ ID 経由でインストールできます。たとえば、`mas install 302584613` で Kindle がインストールされます。
+4. *おまけ:* このスクリプトは GitHub CLI（`gh`）の認証も処理し、リポジトリをターミナルから直接削除するショートカットなどのカスタムエイリアスも設定します。
 
-Installing CLI Tools and GUI Apps with Homebrew:
+Homebrew による CLI ツールと GUI アプリのインストール：
 ```bash[title=3_brew_install.sh]
 #!/bin/bash
 
@@ -141,7 +141,7 @@ brew install --cask zoom
 brew install --cask zotero
 ```
 
-Installing from App Store with `mas` CLI:
+App Store からの `mas` CLI を使ったインストール：
 ```bash
 # LINE
 mas install 539883307
@@ -151,7 +151,7 @@ mas install 1502839586
 mas install 302584613
 ```
 
-Registering GitHub CLI Aliases:
+GitHub CLI のエイリアスの登録：
 ```bash
 ----------------------------------------------------
 gh alias set repo-delete 'api -X DELETE "repos/$1"'
@@ -167,17 +167,17 @@ gh auth login -s delete_repo
 ----------------------------------------------------
 ```
 
-Reloading the Shell:
+シェルの再読み込み：
 ```bash
 exec ${SHELL} -l
 
 ```
 
 
-### Step 4: Symlink Dotfiles
-Managing configuration files (`.gitconfig`, `.zshenv`, etc.) is much easier if you keep them in a centralized Git repository and symlink them to your home directory.
+### ステップ4：Dotfilesのシンボリックリンク作成
+設定ファイル（`.gitconfig`、`.zshenv` など）の管理は、一元化されたGitリポジトリに保存し、ホームディレクトリにシンボリックリンクを張るようにすると非常に簡単になります。
 
-This script iterates through my dotfiles repo and creates symbolic links (`ln -sf`) for everything in the `home/` directory. It also handles the `.zshenv` file separately since I keep it in a different location.
+このスクリプトは dotfiles リポジトリ内をループ処理し、`home/` ディレクトリ内のすべてに対してシンボリックリンク（`ln -sf`）を作成します。また、`.zshenv` ファイルは別の場所に保存しているため、個別に処理しています。
 
 ```bash[title=4_lns.sh]
 #!/bin/bash
@@ -190,7 +190,7 @@ set -u
 cd ~/Desktop/github/dotfiles/home/
 for i in .[a-z]*
 do
-	ln -sf ~/Desktop/github/dotfiles/home/"$i" ~/"$i"
+    ln -sf ~/Desktop/github/dotfiles/home/"$i" ~/"$i"
 done
 
 # .zshenv
@@ -199,12 +199,12 @@ ln -sf ~/Desktop/github/dotfiles/zsh/.zshenv ~/.zshenv
 
 
 
-### Step 5: Configure macOS System Preferences
-Check out another post I wrote specifically about this script `5_mac.sh`: [MacOS Default Setup](./mac-default-setup).
+### ステップ5：macOSのシステム環境設定
+このスクリプト `5_mac.sh` については、専用の別の記事を書いているのでそちらをご覧ください：[MacOS デフォルトセットアップ](./mac-default-setup)
 
 
-### Step 6: Set Default File Associations
-By default, Mac opens files like `.txt` or `.md` in TextEdit. Using a CLI tool called `duti`, this script forcefully binds all common text and programming extensions to **Visual Studio Code** (`com.microsoft.VSCode`). No more :btn[Right Click -> Open With]!
+### ステップ6：デフォルトのファイル関連付けを設定する
+デフォルトでは、Mac は `.txt` や `.md` などのファイルをテキストエディット（TextEdit）で開きます。`duti` というCLIツールを使うことで、このスクリプトは一般的なテキストやプログラミング関連の拡張子を強制的に **Visual Studio Code** (`com.microsoft.VSCode`) に紐付けます。これで、いちいち :btn[右クリック -> このアプリケーションで開く] をする必要がなくなります！
 
 ```bash[title=6_extension.sh]
 #!/bin/bash
@@ -230,14 +230,14 @@ echo "Default editor associations updated!"
 
 
 ---
-## Phase 3: Quality of Life Improvements
+## フェーズ3：QoL（生活の質）の向上
 
-With the core system installed, there are two final tweaks to perfect the environment.
+コアシステムのインストールが完了したら、環境を完璧にするための2つの最後の調整を行います。
 
-### 1. Enable Touch ID for `sudo`
-Typing your password every time you run a `sudo` command gets old fast. By modifying the PAM (Pluggable Authentication Modules) configuration, you can use your Mac's fingerprint reader for the terminal.
+### 1. `sudo` で Touch ID を有効にする
+`sudo` コマンドを実行するたびにパスワードを入力するのはすぐにうんざりしてきます。PAM（Pluggable Authentication Modules）の設定を変更することで、ターミナルで Mac の指紋認証リーダーを使用できるようになります。
 
-I run a script that appends the required configuration:
+必要な設定を追記する以下のスクリプトを実行します：
 ```bash[title=enable_TouchID_for_sudo.sh]
 #!/bin/sh
 
@@ -252,37 +252,38 @@ EOF
 ```
 
 
-### 2. Final Manual System Settings (For Japanese Users)
-A few things still require manual intervention in System Settings:
-* Under Keyboard settings, set the input source to **only** `Japanese - Romaji`.
-* Map the `¥` (Yen) key to output a backslash (`\`), which is crucial for programming.
+### 2. 最後のシステム手動設定（日本のユーザー向け）
+システム設定で手動での介入が必要な項目がいくつか残っています：
+* キーボード設定で、入力ソースを **「日本語 - ローマ字入力」のみ** に設定します。
+* プログラミングに不可欠なバックスラッシュ（`\`）を入力できるように、`¥`（円）キーの割り当てを変更します。
 
 
 
 ---
-## Troubleshooting: The Zsh Compinit Error
+## トラブルシューティング：Zshのcompinitエラー
 
-If you rely on Zsh completions (installed via Homebrew), you might occasionally see this error when opening a new terminal window:
+（Homebrew 経由でインストールした）Zshの補完機能を使用している場合、新しいターミナルウィンドウを開いたときに以下のエラーが表示されることがあります：
 
 ```text
 zsh compinit: insecure directories, run compaudit for list.
 Ignore insecure directories and continue [y] or abort compinit [n]?
 ```
 
-This happens because Homebrew sometimes changes folder permissions, making Zsh flag them as insecure. 
+これは、Homebrew がフォルダの権限を変更することがあり、Zsh がそれらを「安全でない（insecure）」と判断するために起こります。
 
-**The Fix:**
-1. Run `compaudit` in the terminal to list the problematic directories (usually something like `/opt/homebrew/share`).
-2. Fix the permissions for those directories using `chmod`. For example:
-   ```bash
-   chmod 755 /opt/homebrew/share
-   ```
+**解決策:**
+1. ターミナルで `compaudit` を実行して、問題のあるディレクトリ（通常は `/opt/homebrew/share` のようなパス）をリストアップします。
+2. `chmod` を使用して、それらのディレクトリの権限を修正します。例：
+    ```bash
+    chmod 755 /opt/homebrew/share
+    ```
 
 
 
 ---
-## Conclusion
-By treating your machine's configuration as code, you eliminate the friction of setting up a new device. If my Mac breaks today, I know I can be back up and running with my exact aliases, window manager configurations, and developer tools in less than 30 minutes.
+## おわりに
+マシンの設定をコードとして扱うことで、新しいデバイスをセットアップする際の時間と労力を大幅に削減できます。
+もし今日私の Mac が壊れたとしても、自分のエイリアスやウィンドウマネージャーの設定、開発ツールが完全に揃った状態を30分で復元できます。
 
-If you haven't automated your Mac setup yet, I highly recommend creating a Git repository for your dotfiles and writing scripts to handle the installation of your essential tools and apps.
-Your future self will thank you.
+もしまだ Mac のセットアップを自動化していないのであれば、dotfiles 用の Git リポジトリを作成し、必須ツールやアプリのインストールを処理するスクリプトを書くことを強くお勧めします。
+未来の自分がきっと感謝するはずです。（2ヶ月前に MacbookPro が突然壊れて、新しく買い替えせざるを得なかった時の私のように！）
