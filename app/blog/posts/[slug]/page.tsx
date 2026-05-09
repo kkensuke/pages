@@ -149,7 +149,7 @@ const PostContent = (props: any) => {
               children={post.content}
               remarkPlugins={[
                 remarkGfm,
-                remarkBreaks,
+                // remarkBreaks,
                 remarkDirective,
                 remarkDirectiveRehype,
                 remarkTextDirectives,
