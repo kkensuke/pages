@@ -7,7 +7,7 @@ tags: ["Shell", "Code", "Zsh"]
 
 
 ## 1. Introduction
-Are you tired of a cluttered home directory and a massive, unmaintainable `.zshrc` file? As you customize your terminal, configuration files can easily spiral out of control. 
+Are you tired of a cluttered home directory and a massive, unmaintainable `.zshrc` file? As you customize your terminal, configuration files can easily spiral out of control.
 
 This article will guide you through the essentials of managing Zsh efficiently. We will cover how to keep your home directory clean by utilizing the `$ZDOTDIR` environment variable, and how to break down a bloated `.zshrc` into highly maintainable, modular files.
 
@@ -20,9 +20,9 @@ https://github.com/kkensuke/dotfiles/tree/main/zsh
 
 ## 2. What is Zsh?
 
-Z shell (Zsh) is a highly versatile and incredibly powerful command-line shell that has become the default and favorite choice for many developers. While it was originally built upon the foundation of the classic Bourne shell, Zsh takes the terminal experience to the next level by integrating the most useful features from Bash, ksh, and tcsh. 
+**Zsh** (Z shell) is a highly versatile and incredibly powerful command-line shell that has become the default and favorite choice for many developers. While it was originally built upon the foundation of the classic Bourne shell, Zsh takes the terminal experience to the next level by integrating the most useful features from **Bash**, **ksh**, and **tcsh**. 
 
-What truly sets Zsh apart is its superior auto-completion, advanced globbing (file matching), extreme customizability, and a massive ecosystem of plugins and themes. Whether you're navigating directories, managing version control, or writing complex automated scripts, Zsh provides an intuitive and highly productive environment tailored to modern development workflows.
+What truly sets `Zsh` apart is its superior auto-completion, advanced globbing (file matching), extreme customizability, and a massive ecosystem of plugins and themes. Whether you're navigating directories, managing version control, or writing complex automated scripts, Zsh provides an intuitive and highly productive environment tailored to modern development workflows.
 
 
 

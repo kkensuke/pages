@@ -3,6 +3,7 @@ import matter from "gray-matter";
 import rehypeSlug from 'rehype-slug'; // rehype plugin to add id attributes to headings so that they can be linked to
 import Markdown from 'react-markdown';
 import { Components } from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
 import remarkDirective from 'remark-directive';
 import remarkDirectiveRehype from 'remark-directive-rehype';
@@ -77,8 +78,20 @@ const PostContent = (props: any) => {
   const post = getPostContent(slug);
   
   // Define your components with proper typing
+  const CustomParagraph = ({ children }: { children?: React.ReactNode }) => {
+    const hasBlockElement = React.Children.toArray(children).some(
+      (child) =>
+        React.isValidElement(child) &&
+        (
+          typeof child.type !== 'string' ||  // Reactコンポーネントはすべてブロック扱い
+          ['div', 'figure', 'img'].includes(child.type)
+        )
+    );
+    return hasBlockElement ? <>{children}</> : <p>{children}</p>;
+  };
+  
   const components: Components = {
-    p: React.Fragment,
+    p: CustomParagraph,
     img: CustomImage as Components['img'],
     pre: Pre,
     ...AdmonitionComponents,
@@ -135,6 +148,7 @@ const PostContent = (props: any) => {
               children={post.content}
               remarkPlugins={[
                 remarkGfm,
+                remarkBreaks,
                 remarkDirective,
                 remarkDirectiveRehype,
                 remarkTextDirectives,
