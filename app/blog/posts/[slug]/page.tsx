@@ -83,7 +83,8 @@ const PostContent = (props: any) => {
       (child) =>
         React.isValidElement(child) &&
         (
-          typeof child.type !== 'string' ||  // Reactコンポーネントはすべてブロック扱い
+          // All React components are treated as blocks.
+          typeof child.type !== 'string' ||
           ['div', 'figure', 'img'].includes(child.type)
         )
     );
@@ -126,7 +127,7 @@ const PostContent = (props: any) => {
         {titleSection}
       </div>
       
-      <div className="lg:sticky lg:top-10 lg:order-3 lg:ml-8 lg:mr-0 lg:w-80 lg:shrink-0">
+      <div className="mb-2 lg:sticky lg:top-10 lg:order-3 lg:ml-8 lg:mr-0 lg:w-80 lg:shrink-0">
           <div className="mx-auto max-w-[400px] lg:mt-10">
             <TOC />
           </div>
