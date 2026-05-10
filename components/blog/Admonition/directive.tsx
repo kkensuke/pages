@@ -2,6 +2,7 @@ import { visit } from 'unist-util-visit';
 import { h } from 'hastscript';
 import { YouTubeEmbed } from './YouTubeEmbed';
 import KeyboardButtonWithSymbol from './KeyboardButton';
+import ArtBlock from '../Art/ArtBlock';
 
 // Define directive handlers for different types of text directives
 const directiveHandlers = {
@@ -34,6 +35,20 @@ const directiveHandlers = {
         title,
         embed: 'true'
       });
+    },
+
+    // ── Art block ──────────────────────────────────────────────────────────
+    // Usage: ::art{type="wave" color="blue" height="160px"}
+    //
+    // type  : wave | grid | mandala | flow | mosaic   (default: wave)
+    // color : blue | purple | green | amber | rose | teal | slate | indigo
+    //         (default: blue)
+    // height: any CSS height string, e.g. "200px"     (default: 160px)
+    art: (node: any) => {
+      const type   = node.attributes?.type   || 'wave';
+      const color  = node.attributes?.color  || 'blue';
+      const height = node.attributes?.height || '160px';
+      return h('art-block', { type, color, height });
     },
   }
 };
@@ -75,7 +90,21 @@ export const TextDirectiveComponents = {
       />
     );
   },
+
   'keyboard-button': ({ keyName }: { keyName: string }) => {
     return <KeyboardButtonWithSymbol keyName={keyName} />;
+  },
+
+  // ── Art block renderer ───────────────────────────────────────────────────
+  'art-block': ({
+    type,
+    color,
+    height,
+  }: {
+    type?:   string;
+    color?:  string;
+    height?: string;
+  }) => {
+    return <ArtBlock type={type} color={color} height={height} />;
   },
 };
