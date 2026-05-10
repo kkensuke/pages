@@ -20,17 +20,7 @@ type PaletteName = keyof typeof PALETTES;
 const WaveArt = ({ p }: { p: string[] }) => (
   <svg viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg"
     style={{ width: '100%', height: '100%', display: 'block' }}>
-    <defs>
-      <linearGradient id="wg-bg" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%"   stopColor={p[2]} />
-        <stop offset="100%" stopColor={p[1]} stopOpacity="0.4" />
-      </linearGradient>
-      <linearGradient id="wg-wave" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%"   stopColor={p[3]} />
-        <stop offset="100%" stopColor={p[0]} />
-      </linearGradient>
-    </defs>
-    <rect width="800" height="160" fill="url(#wg-bg)" />
+    <rect width="800" height="160" fill={p[1]} opacity="0.2" />
 
     {/* back wave */}
     <path
@@ -40,12 +30,12 @@ const WaveArt = ({ p }: { p: string[] }) => (
     {/* mid wave */}
     <path
       d="M0,120 C130,70 250,150 420,105 C590,60 700,130 800,100 L800,160 L0,160 Z"
-      fill={p[0]} opacity="0.4" />
+      fill={p[1]} opacity="0.4" />
 
     {/* front wave */}
     <path
       d="M0,135 C80,110 180,155 340,130 C500,105 640,150 800,125 L800,160 L0,160 Z"
-      fill="url(#wg-wave)" opacity="0.75" />
+      fill={p[3]} opacity="0.1" />
 
     {/* fine line highlights */}
     <path d="M0,90 Q200,45 400,110 T800,75"
@@ -144,12 +134,6 @@ const MandalaArt = ({ p }: { p: string[] }) => {
 const FlowArt = ({ p }: { p: string[] }) => (
   <svg viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg"
     style={{ width: '100%', height: '100%', display: 'block' }}>
-    <defs>
-      <linearGradient id="flg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%"   stopColor={p[0]} />
-        <stop offset="100%" stopColor={p[3]} />
-      </linearGradient>
-    </defs>
     <rect width="800" height="160" fill={p[2]} />
 
     {/* thick ribbon strokes */}
@@ -158,7 +142,7 @@ const FlowArt = ({ p }: { p: string[] }) => (
     <path d="M-50,80  C100,160 300,30  520,120 C680,190 790,70  850,110"
       stroke={p[0]} strokeWidth="35" fill="none" opacity="0.3" strokeLinecap="round" />
     <path d="M-50,40  C200,120 400,10  600,100 C730,160 800,60  850,90"
-      stroke="url(#flg)" strokeWidth="22" fill="none" opacity="0.45" strokeLinecap="round" />
+      stroke={p[1]} strokeWidth="22" fill="none" opacity="0.8" strokeLinecap="round" />
 
     {/* fine line accents */}
     <path d="M0,100 Q200,30 400,130 T800,80"
