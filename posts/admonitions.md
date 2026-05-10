@@ -9,6 +9,8 @@ tags: [Markdown, Admonitions]
 This guide shows how to use admonitions and directives in this blog’s markdown to improve content presentation.
 
 ## Inline Directives `:name[label]{attributes}`
+You can use inline directives to add special formatting or functionality to specific parts of your text.
+One common use case is to create styled buttons for keyboard shortcuts or UI elements:
 ::::simple{title="Button"}
 ```markdown
 :btn[cmd], :btn[shift], :btn[ctrl], :btn[opt], :btn[enter],
@@ -20,6 +22,7 @@ This guide shows how to use admonitions and directives in this blog’s markdown
 :::
 ::::
 
+Another example is embedding YouTube links directly in your text:
 ::::simple{title="YouTube Link"}
 ```markdown
 Watch this video on YouTube: :youtube[Click here]{#dQw4w9WgXcQ}.
@@ -31,6 +34,7 @@ Watch this video on YouTube: :youtube[Click here]{#dQw4w9WgXcQ}.
 
 
 ## Block Directives `::name[label]{attributes}`
+You can also embed YouTube videos as standalone blocks using block directives:
 ::::simple{title="YouTube Embed"}
 ```markdown
 ::youtube[Watch this amazing video]{#dQw4w9WgXcQ}
@@ -38,6 +42,13 @@ Watch this video on YouTube: :youtube[Click here]{#dQw4w9WgXcQ}.
 ::youtube[Watch this amazing video]{#dQw4w9WgXcQ}
 ::::
 
+We also have a `::art` directive for embedding decorative SVG patterns, which can be used to add visual interest to your posts:
+::::simple{title="Art Block"}
+```markdown
+::art{type="wave" color="blue"}
+```
+::art{type="wave" color="blue"}
+::::
 
 
 ## Link card

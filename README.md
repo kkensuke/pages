@@ -7,9 +7,13 @@
 - Tags
 - Preview image
 - Code block with highlighting, line numbers and copy button, file name
-- Admonitions
-- Link card
-- Youtube embedding
+- Directives
+    - Admonitions (tip, note, warning, etc.)
+    - button shortcode
+    - Link card
+    - Youtube link
+    - Youtube embedding
+    - Art block (decorative SVG patterns)
 - Latex math
 - remark-gfm package (footnote, strikethrough, tasklist, table, etc.)
 - Buy me a coffee widget
