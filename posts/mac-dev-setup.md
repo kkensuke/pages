@@ -1,6 +1,6 @@
 ---
 title: "MacOS セットアップスクリプト"
-date: "2026-5-9"
+date: "2025-10-9"
 subtitle: "MacOSの開発環境セットアップを自動化しよう"
 tags: [MacOS]
 ---

@@ -1,6 +1,6 @@
 ---
 title: "MacOS Setup Script"
-date: "2026-5-9"
+date: "2025-10-9"
 subtitle: "The Ultimate Guide to Automating Your macOS Developer Setup"
 tags: [MacOS]
 ---

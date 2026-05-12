@@ -2,6 +2,7 @@
 # Features added
 - Header, Footer, Homepage
 - Sort blog posts by date
+- Pagination
 - Markdown image
 - Table of contents
 - Tags
