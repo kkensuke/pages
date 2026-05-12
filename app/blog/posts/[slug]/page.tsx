@@ -11,6 +11,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import React from "react";
+import path from "path";
 
 import { Suspense } from 'react';
 import { FEATURES } from '@/config/constants';
@@ -29,9 +30,8 @@ import { remarkTextDirectives, TextDirectiveComponents } from '@/components/blog
 import { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site';
 
-const getPostContent = (slug: string) => {
-  const folder = "posts/";
-  const file = `${folder}${slug}.md`;
+const getPostContent = (slug: string) => {  
+  const file = path.join(process.cwd(), "posts", `${slug}.md`);
   const content = fs.readFileSync(file, "utf8");
   const matterResult = matter(content);
   return matterResult;

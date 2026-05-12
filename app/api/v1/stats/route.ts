@@ -7,6 +7,11 @@ export async function GET() {
   try {
     // Read posts directory
     const postsDir = path.join(process.cwd(), 'posts');
+    
+    if (!fs.existsSync(postsDir)) {
+      return NextResponse.json({ totalPosts: 0, totalTags: 0, totalViews: 0, totalUsers: 0 });
+    }
+    
     const files = fs.readdirSync(postsDir);
     const markdownPosts = files.filter(file => file.endsWith('.md'));
 
