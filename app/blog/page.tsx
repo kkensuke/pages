@@ -1,30 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { Bookmark, Pencil } from 'lucide-react';
-import getPostMetadata from "@/lib/blog/getPostMetadata";
 import getAllTags from "@/lib/blog/getAllTags";
 import PostPreview from "@/components/blog/PostPreview";
 import Pagination from '@/components/blog/Pagination';
 import { getPaginatedPosts } from '@/lib/blog/getPaginatedPosts';
-
-
-const TagSection = ({ tags, activeTag }: { tags: string[]; activeTag?: string }) => (
-  <div className="flex flex-wrap justify-center gap-2">
-    {tags.map((tag: string) => (
-      
-      <a
-        key={tag}
-        href={`/blog/tags/${tag}`}
-        className={`group flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 transition-all hover:bg-slate-200 hover:shadow-md ${
-          tag === activeTag ? 'bg-cyan-100 text-cyan-700 hover:bg-cyan-200' : ''
-        }`}
-      >
-        <Bookmark size={14} className="opacity-60 group-hover:opacity-100" />
-        {tag}
-      </a>
-    ))}
-  </div>
-);
+import TagSection from '@/components/blog/TagSection';
 
 
 const BlogPage = ({ searchParams }: { searchParams: { page?: string } }) => {
@@ -45,7 +26,7 @@ const BlogPage = ({ searchParams }: { searchParams: { page?: string } }) => {
         <div className="h-px flex-1 bg-slate-200"></div>
       </div>
 
-      {allTags.length > 0 && <TagSection tags={allTags} />}
+      <TagSection tags={allTags} />
 
       <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2">
         {posts.map((post) => (
