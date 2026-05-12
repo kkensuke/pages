@@ -62,6 +62,9 @@ const TagPage = ({ params, searchParams }: {
         <h1 className="bg-clip-text text-4xl font-bold text-slate-700">
           <Link href="/blog"> Blog </Link>
         </h1>
+        <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-sm font-medium text-slate-500">
+          {allTagPosts.length} {allTagPosts.length === 1 ? 'post' : 'posts'}
+        </span>
         <div className="h-px flex-1 bg-slate-200"></div>
       </div>
       <div>

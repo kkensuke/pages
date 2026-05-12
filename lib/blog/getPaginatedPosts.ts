@@ -7,6 +7,7 @@ export function getPaginatedPosts(page: number): {
   posts: PostMetadata[];
   totalPages: number;
   currentPage: number;
+  totalPosts: number;
 } {
   const allPosts = getPostMetadata();
   const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
@@ -17,5 +18,6 @@ export function getPaginatedPosts(page: number): {
     posts: allPosts.slice(start, start + POSTS_PER_PAGE),
     totalPages,
     currentPage,
+    totalPosts: allPosts.length,
   };
 }
