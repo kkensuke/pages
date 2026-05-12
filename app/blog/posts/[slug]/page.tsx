@@ -18,6 +18,7 @@ import Comment from "@/components/blog/Comment/Comment";
 import Loading from '@/components/common/Loading';
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import getPostMetadata from "@/lib/blog/getPostMetadata";
+import TagSection from '@/components/blog/TagSection';
 import TOC from "@/components/blog/TableOfContents/index";
 import Pre from "@/components/blog/CodeBlock";
 import CustomImage from "@/components/blog/Image";
@@ -106,13 +107,9 @@ const PostContent = (props: any) => {
       <p className="mt-2 text-slate-600">{post.data.subtitle}</p>
       {/* if post.data.tags exist, return list of tags below */}
       {post.data.tags && (
-        <ul className="mt-2 flex flex-wrap justify-center gap-1">
-          {post.data.tags.map((tag: string) => (
-            <li key={tag} className="mr-2">
-              <a href={`/blog/tags/${tag}`} className="group flex items-center gap-1 rounded-full bg-slate-100 px-4 py-1.5 text-sm font-medium text-slate-700 transition-all hover:bg-slate-200 hover:shadow-md">{tag}</a>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-4">
+          <TagSection tags={post.data.tags} />
+        </div>
       )}
     </>
   )

@@ -29,7 +29,6 @@ const TagPage = ({ params, searchParams }: {
   const { slug } = params;
   const page = Number(searchParams.page) || 1;
   const allTagPosts = getTagPosts(slug);
-  const allTags = getAllTags();
   
   const totalPages = Math.ceil(allTagPosts.length / POSTS_PER_PAGE);
   const currentPage = Math.max(1, Math.min(page, totalPages));
