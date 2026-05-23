@@ -11,7 +11,6 @@ export const SITE_CONFIG = {
   links: {
     twitter: 'https://x.com',
     github: 'https://github.com/kkensuke/pages',
-    linkedin: 'https://linkedin.com',
     email: 'example.12345@gmail.com',
   },
   navigation: [
