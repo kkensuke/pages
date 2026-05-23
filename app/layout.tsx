@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { FEATURES } from "@/config/constants";
 import Header from "./header";
-import Footer from "./footer";
+import Footer from "../posts_dev/footer";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import { Metadata } from "next";
 import { SITE_CONFIG } from "@/config/site";
