@@ -62,7 +62,7 @@ exec ${SHELL} -l # Reload the shell
 ### Step 3: Install Apps and Packages
 With Homebrew ready, we can batch-install all our applications. My script handles three categories:
 1. **CLI Tools (`brew install`):** Modern tools like `bat` (a better `cat`), `fzf` (fuzzy finder), `neovim`, `node`, `uv` (Python toolchain), and various Zsh plugins for syntax highlighting and autosuggestions.
-2. **GUI Apps (`brew install --cask`):** Browsers, IDEs, and utilities. My must-haves include **Visual Studio Code**, **Aerospace** (tiling window manager), **Rectangle** (window management), and **Shottr** (screenshots).
+2. **GUI Apps (`brew install --cask`):** Browsers, IDEs, and utilities. My must-haves include **Visual Studio Code**, **Rectangle** (window management), and **Shottr** (screenshots).
 3. **Mac App Store Apps (`mas`):** Using the `mas` CLI, you can install App Store apps via their App ID. For example, `mas install 302584613` installs Kindle.
 4. *Bonus:* This script also handles GitHub CLI (`gh`) authentication and sets up custom aliases, like a shortcut to delete repos directly from the terminal.
 
@@ -170,8 +170,26 @@ gh auth login -s delete_repo
 Reloading the Shell:
 ```bash
 exec ${SHELL} -l
-
 ```
+
+
+:::tip{title="🚀 Next Steps: Evolving to a `Brewfile`"}
+If you want to take your setup to the absolute highest level of automation, consider migrating your long list of `brew install` commands into a **`Brewfile`**—a clean blueprint of your environment.
+
+Instead of hardcoding dozens of installation commands in a shell script, a `Brewfile` allows you to manage everything in two simple steps:
+
+**1. Export (Backup):** You can generate a `Brewfile` blueprint of your current machine right now by running:
+```bash
+brew bundle dump
+```
+
+**2. Import (Restore):** When setting up a fresh Mac, you can read that blueprint and install everything at once with a single command:
+
+```bash
+brew bundle --file=Brewfile
+```
+:::
+
 
 
 ### Step 4: Symlink Dotfiles
@@ -201,6 +219,7 @@ ln -sf ~/Desktop/github/dotfiles/zsh/.zshenv ~/.zshenv
 
 ### Step 5: Configure macOS System Preferences
 Check out another post I wrote specifically about this script `5_mac.sh`: [MacOS Default Setup](./mac-default-setup).
+This script uses the defaults command to deeply configure macOS without touching the UI.
 
 
 ### Step 6: Set Default File Associations
