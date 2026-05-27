@@ -27,7 +27,7 @@ Terminal のカレントディレクトリを Finder で開くには、`open　.
 ここでは、便利なシェル関数を紹介します。Terminal を使っているときに、ちょうど Finder で開いているディレクトリに Terminal 上で移動したい場合に使います。それは以下の `cdf` コマンドによって実現できます。([このページ](https://github.com/webpro/dotfiles/blob/master/system/.function.macos)から引用しました。)
 使いたい方は、`.zhsrc` や `.bashrc` に追加してみてください。
 
-```shell
+```bash
 # Change working directory to the top-most Finder window location
 cdf() {
 	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";

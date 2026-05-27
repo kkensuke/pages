@@ -242,7 +242,7 @@ However, be mindful of Gemini's token limits.
 
 ### 9.3. Create an alias in Zsh
 You can create aliases in Zsh to invoke them with shorter commands.
-```sh
+```bash
 you() {
     if [ $# -lt 1 ]; then
         echo "Usage: you [summary-lang] 'URL'"
@@ -282,7 +282,7 @@ you() {
 ### 9.4. Quicklook で Markdown をレンダリング
 QLMarkdown is an app that renders Markdown in QuickLook.
 It displays the content of generated subtitle and summary files in an easy-to-read format.
-```sh
+```bash
 brew install --cask qlmarkdown
 ```
 

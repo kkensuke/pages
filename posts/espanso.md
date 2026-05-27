@@ -36,7 +36,7 @@ https://espanso.org/docs/get-started/
 
 Espanso の設定は主に2つのファイルで行います。
 
-```sh
+```bash
 espanso/
 ├── config/
 │   └── default.yml
@@ -193,7 +193,7 @@ matches:
 espanso のディレクトリを GitHub などで管理したいが、一部プライベートな情報を含むような場合は、それを`params.yml` にグローバル変数として入れておき、`params.yml` を `.gitignore` に追加する方法があります。`match` ディレクトリにある `*.yml` ファイルは全て読み込まれます。それ以外の場合は、直接パスを指定して import することもできます。
 
 
-```sh
+```bash
 espanso/
 ├── config/
 │   └── default.yml

@@ -26,7 +26,7 @@ To actually open Terminal from Finder, either select a directory in Finder and u
 Here's a useful shell function. When using Terminal, you might want to navigate to the directory currently open in Finder. This can be achieved with the `cdf` command below. (Quoted from [this page](https://github.com/webpro/dotfiles/blob/master/system/.function.macos).)
 If you want to use it, add it to your `.zshrc` or `.bashrc`.
 
-```shell
+```bash
 # Change working directory to the top-most Finder window location
 cdf() {
     cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";

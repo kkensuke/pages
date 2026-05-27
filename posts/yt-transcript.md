@@ -245,7 +245,7 @@ MAX_SUMMARY_LENGTH = 100000  # より長い動画に対応
 
 ### 9.3. Zsh でエイリアスを作成
  Zsh でエイリアスを作成し、より短いコマンドで呼び出すことができます。
-```sh
+```bash
 you() {
     if [ $# -lt 1 ]; then
         echo "Usage: you [summary-lang] 'URL'"
@@ -285,7 +285,7 @@ you() {
 ### 9.4. Quicklook で Markdown をレンダリング
 `QLMarkdown` は Quicklook で Markdown をレンダリングするアプリです。
 生成された字幕と要約のファイルの内容を見易く表示してくれます。
-```sh
+```bash
 brew install --cask qlmarkdown
 ```
 
