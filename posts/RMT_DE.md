@@ -279,7 +279,7 @@ $$
 テストリスク $R_{\lambda, \hat{\Sigma}}$ は、予測モデルのバイアス（Bias）、分散（Variance）、および観測不可能なノイズ（$\sigma^2$）の3つの項に分解されます。この式にRubio & Mestreの定理と複素解析の手法を適用すると、以下の定理が得られます。
 
 :::tip{title="Theorem 1 (Deterministic Equivalent of Test Risk)"}
-$p, N_{\mathrm{s}} \to \infty$ の極限において、リッジ回帰のテストリスク $R_{\lambda, \hat{\Sigma}}$ は以下の決定論的等価物 $R_{\lambda, \Sigma}^{\mathrm{DE}}$ に漸近する。
+$p, N_{\mathrm{s}} \to \infty$ で $p/N_{\mathrm{s}} \to \gamma \in (0, \infty)$ となる極限において、リッジ回帰のテストリスク $R_{\lambda, \hat{\Sigma}}$ は以下の決定論的等価物 $R_{\lambda, \Sigma}^{\mathrm{DE}}$ に漸近する。
 
 $$
     R_{\lambda, \Sigma}^{\mathrm{DE}} := \underbrace{\frac{\kappa_\lambda^2}{1 - \eta_\kappa} \boldsymbol{\beta}_*^{\mathsf{T}} (\Sigma + \kappa_\lambda I_p)^{-2} \boldsymbol{\beta}_*}_{\text{DE of Bias}} + \underbrace{\sigma^2 \frac{\eta_\kappa}{1 - \eta_\kappa}}_{\text{DE of Variance}} + \sigma^2
