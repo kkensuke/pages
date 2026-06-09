@@ -151,7 +151,8 @@ plt.hist(eigvals_W, bins=50, density=True, alpha=0.6, label="Gaussian")
 plt.hist(eigvals_W_rademacher, bins=50, density=True, alpha=0.6, label="Rademacher (Coin Toss)")
 plt.title("Universality of Marchenko-Pastur Law")
 plt.legend()
-plt.show() # ガウス分布もコイントスも完全に同じ分布に重なる
+plt.show()
+# 有限の実験でも共にほぼ同じ分布に収束することがわかる（極限においては完全に同一の分布）
 ```
 
 
