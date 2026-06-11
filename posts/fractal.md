@@ -3,7 +3,7 @@ title: "計算機が描く自然の美：数式とアルゴリズムが生み出
 date: "2026-05-23"
 subtitle: "チューリング・パターンからフラクタルまで、自然界の模様を数式とコードで視覚的に読み解く"
 previewImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Mandel_zoom_00_mandelbrot_set.jpg/1920px-Mandel_zoom_00_mandelbrot_set.jpg"
-tags: [Math, Python, Science]
+tags: [Algorithm, Python, Art]
 ---
 
 シマウマの美しい縞模様、雪の結晶の対称性、海岸線の複雑な入り組み方——。

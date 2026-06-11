@@ -2,7 +2,7 @@
 title: "Art Blocks — Decorative Patterns in Markdown"
 date: "2026-05-10"
 subtitle: "How to add visual accents to your posts with the art directive"
-tags: [Markdown, Design]
+tags: [Markdown, Art]
 ---
 
 

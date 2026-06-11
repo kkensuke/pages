@@ -3,7 +3,7 @@ title: "Nature's Beauty Drawn by Computers: Patterns Created by Formulas and Alg
 date: "2026-05-23"
 subtitle: "From Turing patterns to fractals: visually decoding nature's designs through math and code"
 previewImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Mandel_zoom_00_mandelbrot_set.jpg/1920px-Mandel_zoom_00_mandelbrot_set.jpg"
-tags: [Math, Python, Science]
+tags: [Algorithm, Python, Art]
 ---
 
 The beautiful stripes of a zebra, the symmetry of a snowflake, the complex indentations of a coastline—.
