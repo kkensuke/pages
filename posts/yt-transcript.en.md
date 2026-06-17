@@ -3,7 +3,7 @@ title: "YouTube Video Transcription & Summary Tool"
 date: "2025-10-17"
 subtitle: "A Python tool (CLI & GUI) that extracts YouTube video transcripts and automatically generates summaries using Google Gemini API"
 previewImage: https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/b2b8c4e8-951e-4be0-a001-8bd514db63dc.png
-tags: [Python, YouTube, AI, FastAPI]
+tags: [Python, Productivity]
 ---
 
 

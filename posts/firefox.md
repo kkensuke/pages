@@ -2,7 +2,7 @@
 title: "Firefox"
 date: "2024-10-31"
 subtitle: "Firefox の便利な機能と設定"
-tags: [Firefox, Browser]
+tags: [Browser]
 ---
 
 

@@ -2,7 +2,7 @@
 title: "Alias in Zsh"
 date: "2022-10-18"
 subtitle: "A Guide to Setting Up Aliases for Efficient Command Line Operations"
-tags: [Alias, Zsh]
+tags: [Zsh]
 ---
 
 

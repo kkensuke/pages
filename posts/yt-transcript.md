@@ -3,7 +3,7 @@ title: "YouTube 動画の文字起こし＆要約ツール紹介"
 date: "2025-10-17"
 subtitle: "YouTube 動画の文字起こしを取得し、Google Gemini API で要約まで自動生成する Python ツール（CLI & GUI）"
 previewImage: https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/b2b8c4e8-951e-4be0-a001-8bd514db63dc.png
-tags: [Python, YouTube, AI, FastAPI]
+tags: [Python, Productivity]
 ---
 
 

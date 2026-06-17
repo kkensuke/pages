@@ -2,7 +2,7 @@
 title: "Finder, Terminal, VScode 間を簡単に移動する方法"
 date: "2024-10-31"
 subtitle: "Finder, Terminal, VScode 間を簡単に移動する方法"
-tags: [MacOS, Finder, Terminal]
+tags: [MacOS, Terminal]
 ---
 
 

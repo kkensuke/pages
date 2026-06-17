@@ -2,7 +2,7 @@
 title: "10 examples of decorators"
 date: "2024-10-31"
 subtitle: "Extend the functionality of functions with decorators"
-tags: [Python, Decorator]
+tags: [Python]
 ---
 
 

@@ -2,7 +2,7 @@
 title: "ランダム行列理論の進化：Marchenko-Pastur から非線形な相関を持つデータへの拡張まで"
 date: "2026-06-08"
 subtitle: "サンプル共分散行列のスペクトル解析は、いかにして現代の機械学習の理論的基盤となったか"
-tags: [Math, ML, RMT]
+tags: [Math, ML]
 ---
 
 

@@ -3,7 +3,7 @@ title: "Let's Use Espanso"
 date: "2024-10-31"
 subtitle: "A Free and Open Source Snippet App"
 previewImage: https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/1beaf074-0f49-9d46-a9c1-df9602a1d95a.png
-tags: [Snippets]
+tags: [Productivity]
 ---
 
 

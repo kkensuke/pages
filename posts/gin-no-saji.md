@@ -207,3 +207,6 @@ tags: [Book]
 * 著者：中　勘助
 * 出典：[青空文庫](https://www.aozora.gr.jp/)
 * 備考：読みやすさを考慮し、青空文庫の元テキストから一部表記を改変して引用しています。
+
+
+::youtube[thermosento]{#maVxoI9UJik}

@@ -2,7 +2,7 @@
 title: "Zsh"
 date: "2022-06-12"
 subtitle: "How to Organize Your Configurations and Modularize `.zshrc`"
-tags: ["Shell", "Code", "Zsh"]
+tags: [Zsh]
 ---
 
 
