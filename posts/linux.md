@@ -2,7 +2,7 @@
 title: "Command Line Guide"
 date: "2022-10-18"
 subtitle: "A Comprehensive Overview of Command Line Operations"
-tags: [Linux]
+tags: [CLI]
 ---
 
 

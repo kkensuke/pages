@@ -9,7 +9,7 @@ tags: [Zsh]
 ## 1. Introduction
 Are you tired of a cluttered home directory and a massive, unmaintainable `.zshrc` file? As you customize your terminal, configuration files can easily spiral out of control.
 
-This article will guide you through the essentials of managing Zsh efficiently. We will cover how to keep your home directory clean by utilizing the `$ZDOTDIR` environment variable, and how to break down a bloated `.zshrc` into highly maintainable, modular files.
+This article will guide you through the essentials of managing `.zshrc` efficiently. We will cover how to keep your home directory clean by utilizing the `$ZDOTDIR` environment variable, and how to break down a bloated `.zshrc` into highly maintainable, modular files.
 
 ![Image](/images/zsh.png)
 
@@ -33,8 +33,7 @@ As you use Zsh, your home directory (`~/`) quickly becomes crowded with various 
 **The Solution:**
 By setting the `$ZDOTDIR` environment variable, most of the files related to Zsh can be moved away from the home directory. In the following example, all `.zsh*` files are neatly managed in a centralized directory named `zsh/`.
 
-Here is the ideal directory structure:
-
+Here is my actual file structure for Zsh configurations:
 ```bash
 - zsh/
 	|-- aliases/
@@ -76,8 +75,8 @@ ln -s ~/path/to/zsh/.zshenv ~/.zshenv
 Contents in a single `.zshrc` are also easy to get messy. As you add more aliases, functions, and plugins, it can easily grow into hundreds of lines, making it extremely difficult to maintain (often called the "monolithic" `.zshrc` problem).
 
 **The Solution:**
-Divide your configurations into smaller, purpose-specific files and import them in `.zshrc`. Here, we have prepared directories called `aliases` and `settings` in the same hierarchy as `.zshrc`, and put the files to be read in them.
-
+Divide your configurations into smaller, purpose-specific files and import them in `.zshrc`. Here, I have two subdirectories: `settings/` for general Zsh settings and plugin configurations, and `aliases/` for command aliases. Each file is focused on a specific topic, making it easier to manage and update. 
+These are in the same hierarchy as `.zshrc`, and put the files to be read in them.
 You can then dynamically load (source) these files inside your main `.zshrc`:
 
 ```bash
