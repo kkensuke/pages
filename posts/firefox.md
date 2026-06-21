@@ -8,10 +8,11 @@ tags: [Productivity]
 
 ## 0　Firefox も結構使いやすい
 最近は新しいブラウザがもてはやされていますが、全てのブラウザを使ってきた上で、Firefox はかなり便利なブラウザだなと思っているので、開発者への感謝としてこの記事を書かせていただきます。
-まだ使ったことが無い方は、ぜひ一度[インストール](https://www.mozilla.org/ja/firefox/new/)して試してみてください。
+まだ使ったことが無い方は、ぜひ一度インストールして試してみてください。
 
-![screenshot.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/a80af07f-48ce-5173-c6ef-8203769de4fe.png)
-
+:::linkcard
+https://www.mozilla.org/ja/firefox/new/
+:::
 
 
 ## 1　設定を変更する
