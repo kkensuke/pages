@@ -177,7 +177,7 @@ MacOSのシステム設定や、ファイル操作を高度化するユーティ
     brew install mole
     ```
     :::linkcard
-    https://mole.fit/
+    https://github.com/tw93/Mole
     :::
 - `rename`: 正規表現を使って、複数のファイル名を一括で変更できる強力なツールです。大量の画像ファイルやログファイルの整理に役立ちます。
     ```bash

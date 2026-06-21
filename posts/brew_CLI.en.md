@@ -173,7 +173,7 @@ Utilities to automate macOS system settings and enhance file manipulation.
     brew install mole
     ```
     :::linkcard
-    https://mole.fit/
+    https://github.com/tw93/Mole
     :::
 - `rename`: A powerful utility to rename multiple files at once using regular expressions. Great for organizing large batches of photos or log files.
     ```bash
