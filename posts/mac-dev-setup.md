@@ -212,7 +212,7 @@ ln -sf ~/Desktop/github/dotfiles/zsh/.zshenv ~/.zshenv
 
 
 ### ステップ5：macOSのシステム環境設定
-このスクリプト `5_mac.sh` については、専用の別の記事を書いているのでそちらをご覧ください：[MacOS デフォルトセットアップ](./mac-default-setup.en)
+このスクリプト `5_mac.sh` については、専用の別の記事を書いているのでそちらをご覧ください：[MacOS デフォルトセットアップ](./mac-default-setup)
 
 
 ### ステップ6：デフォルトのファイル関連付けを設定する
