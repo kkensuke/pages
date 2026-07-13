@@ -23,7 +23,7 @@ https://github.com/kkensuke/dotfiles/tree/main/setup
 Before running any scripts, there are a few manual steps required right out of the box:
 
 1. **Sign in to iCloud:** Sync your basic data and settings.
-2. **Install a Browser & Cloud Drive:** I usually install **Google Chrome** (via Safari) and **Google Drive** immediately. *(Note: Depending on your workflow, you might prefer relying completely on iCloud Drive for better system integration).*
+2. **Install a Browser & Cloud Drive:** I usually install **Google Chrome** (via Safari) and **Google Drive** immediately. This will prepare the account for authentication. *(Note: While relying entirely on iCloud Drive and Safari might be better in terms of system integration and simplicity, this is a matter of personal preference.)*
 3. **Mail Setup:** Log into Gmail or your preferred email provider.
 
 Once these basics are out of the way, it’s time to open the **Terminal** and let the scripts do the heavy lifting.
@@ -174,7 +174,7 @@ exec ${SHELL} -l
 
 
 :::tip{title="🚀 Next Steps: Evolving to a `Brewfile`"}
-If you want to take your setup to the absolute highest level of automation, consider migrating your long list of `brew install` commands into a **`Brewfile`**—a clean blueprint of your environment.
+If you want to take your `Homebrew` setup to the absolute highest level of automation, consider migrating your long list of `brew install` commands into a **`Brewfile`**—a clean blueprint of your environment.
 
 Instead of hardcoding dozens of installation commands in a shell script, a `Brewfile` allows you to manage everything in two simple steps:
 
@@ -218,12 +218,14 @@ ln -sf ~/Desktop/github/dotfiles/zsh/.zshenv ~/.zshenv
 
 
 ### Step 5: Configure macOS System Preferences
-Check out another post I wrote specifically about this script `5_mac.sh`: [MacOS Default Setup](./mac-default-setup).
+Check out another post I wrote specifically about this script `5_mac.sh`: [MacOS Default Setup](./mac-default-setup.en).
 This script uses the defaults command to deeply configure macOS without touching the UI.
 
 
 ### Step 6: Set Default File Associations
-By default, Mac opens files like `.txt` or `.md` in TextEdit. Using a CLI tool called `duti`, this script forcefully binds all common text and programming extensions to **Visual Studio Code** (`com.microsoft.VSCode`). No more :btn[Right Click -> Open With]!
+By default, Mac opens files like `.txt` or `.md` in TextEdit.
+Honestly, this app is not useful for programming.
+Using a CLI tool called `duti`, this script forcefully binds all common text and programming extensions to **Visual Studio Code** (`com.microsoft.VSCode`). No more :btn[Right Click -> Open With]!
 
 ```bash[title=6_extension.sh]
 #!/bin/bash

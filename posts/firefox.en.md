@@ -6,7 +6,7 @@ tags: [Productivity]
 ---
 
 ## 0. Firefox is Quite User-Friendly
-While new browsers are constantly being hyped, after using all available browsers, I find Firefox to be quite convenient. I'm writing this article as a thank you to the developers. If you haven't tried it yet, please [install it](https://www.mozilla.org/en-US/firefox/new/) and give it a try.
+While new browsers are constantly being hyped, after using all available browsers, I find Firefox to be quite convenient. I'm writing this article as a thank you to the developers. If you haven't tried it yet, please install it and give it a try.
 
 :::linkcard
 https://www.mozilla.org/en-US/firefox/new/
