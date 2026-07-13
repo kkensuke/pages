@@ -61,7 +61,7 @@ exec ${SHELL} -l # Reload the shell
 
 ### Step 3: Install Apps and Packages
 With Homebrew ready, we can batch-install all our applications. My script handles three categories:
-1. **CLI Tools (`brew install`):** Modern tools like `bat` (a better `cat`), `fzf` (fuzzy finder), `neovim`, `node`, `uv` (Python toolchain), and various Zsh plugins for syntax highlighting and autosuggestions.
+1. **CLI Tools (`brew install`):** Modern tools like `bat` (a better `cat`), `fzf` (fuzzy finder), `neovim`, `node`, `uv` (Python toolchain), and various Zsh plugins for syntax highlighting and autosuggestions. For details on individual tools, please refer to [this article](./brew_CLI.en)
 2. **GUI Apps (`brew install --cask`):** Browsers, IDEs, and utilities. My must-haves include **Visual Studio Code**, **Rectangle** (window management), and **Shottr** (screenshots).
 3. **Mac App Store Apps (`mas`):** Using the `mas` CLI, you can install App Store apps via their App ID. For example, `mas install 302584613` installs Kindle.
 4. *Bonus:* This script also handles GitHub CLI (`gh`) authentication and sets up custom aliases, like a shortcut to delete repos directly from the terminal.
