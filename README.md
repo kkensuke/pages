@@ -21,3 +21,4 @@
 - Stripe payment
 - Comment section (utterances)
 - Analytics (Vercel Analytics)
+- Download or show markdown of the blog post

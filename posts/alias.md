@@ -57,7 +57,7 @@ alias path='echo -e ${PATH//:/\\n}'
 - `ls`: To use `gls`, you need to install `coreutils` with `brew install coreutils`. You can use the same colorization as the `tree` command.
     - `--color` option colorize the output of `gls` command.
     - `--group-directories-first` option puts directories first.
-    - `-F` option adds a trailing `/` to directory names, `@` to symbolic links, and so on. 
+    - `-F` option adds a trailing `/` to directory names, `@` to symbolic links, and so on.
 
 - `la`, `ll`: `ls` is defined as `gls --color --group-directories-first -F` before `la='ls -A'`. This means `la='gls --color --group-directories-first -F -A'` and the same for `ll`.
     - `-A` option shows all files and directories except `.` and `..`.
@@ -100,7 +100,13 @@ alias grep='grep --color'
 :::note{title="Function"}
 You can make an alias with arguments, which is called a function. Functions are defined as `function_name() { commands }`. For example, `fb` takes two arguments, `$1` and `$2`. `$1` is the first argument and `$2` is the second argument. Use it like `fb "*.pdf" 10` to find files with the name `pdf` larger than 10 MB.
 
-In addition to `$1` and `$2`, there are other special variables: `$0` is the function name. `$@` is all arguments. `$#` is the number of arguments. `$?` is the exit status of the last command. `$$` is the process ID of the current shell. `$!` is the process ID of the last command run in the background.
+In addition to `$1` and `$2`, there are other special variables:
+- `$0` is the function name.
+- `$@` is all arguments.
+- `$#` is the number of arguments.
+- `$?` is the exit status of the last command.
+- `$$` is the process ID of the current shell.
+- `$!` is the process ID of the last command run in the background.
 :::
 
 - `fb` finds files larger than `$2` MB with the name `$1` in the current directory.
