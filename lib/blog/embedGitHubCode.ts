@@ -1,0 +1,134 @@
+import path from 'path';
+
+type DirectiveAttributes = Record<string, string>;
+
+const GITHUB_BLOB_URL = /^\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/;
+
+const languages: Record<string, string> = {
+  bash: 'bash',
+  css: 'css',
+  html: 'html',
+  js: 'javascript',
+  jsx: 'jsx',
+  json: 'json',
+  md: 'markdown',
+  py: 'python',
+  rb: 'ruby',
+  rs: 'rust',
+  sh: 'bash',
+  ts: 'typescript',
+  tsx: 'tsx',
+  yaml: 'yaml',
+  yml: 'yaml',
+  zsh: 'zsh',
+};
+
+function parseAttributes(value: string): DirectiveAttributes {
+  const attributes: DirectiveAttributes = {};
+  const pattern = /(\w+)=(?:"([^"]*)"|'([^']*)'|([^\s]+))/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = pattern.exec(value)) !== null) {
+    attributes[match[1]] = match[2] ?? match[3] ?? match[4];
+  }
+
+  return attributes;
+}
+
+function getGitHubFile(urlString: string) {
+  const url = new URL(urlString);
+  const match = url.protocol === 'https:' && url.hostname === 'github.com'
+    ? url.pathname.match(GITHUB_BLOB_URL)
+    : null;
+
+  if (!match) {
+    throw new Error(`GitHub code URL must be an https://github.com/.../blob/... URL: ${urlString}`);
+  }
+
+  const [, owner, repository, ref, filePath] = match;
+
+  return {
+    filePath,
+    rawUrl: `https://raw.githubusercontent.com/${owner}/${repository}/${ref}/${filePath}`,
+  };
+}
+
+function inferLanguage(filePath: string) {
+  const fileName = path.posix.basename(filePath).toLowerCase();
+
+  if (fileName === '.zshrc') return 'zsh';
+  if (fileName === '.bashrc') return 'bash';
+  if (fileName === 'dockerfile') return 'docker';
+
+  return languages[path.posix.extname(fileName).slice(1)] ?? 'plaintext';
+}
+
+async function renderDirective(attributes: DirectiveAttributes) {
+  if (!attributes.url) {
+    throw new Error('github-code directive requires a url attribute');
+  }
+
+  const { filePath, rawUrl } = getGitHubFile(attributes.url);
+  const response = await fetch(rawUrl);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch GitHub code (${response.status}): ${attributes.url}`);
+  }
+
+  const code = (await response.text()).replace(/\n$/, '');
+  const longestBacktickRun = Math.max(2, ...(code.match(/`+/g) ?? []).map(run => run.length));
+  const fence = '`'.repeat(longestBacktickRun + 1);
+  const language = attributes.language || inferLanguage(filePath);
+  const title = (attributes.title || decodeURIComponent(path.posix.basename(filePath)))
+    .replace(/[,\]]/g, '_');
+  const showLineNumbers = attributes.showLineNumbers === 'true'
+    ? ',showLineNumbers=true'
+    : '';
+
+  return [
+    `${fence}${language}[title=${title}${showLineNumbers}]`,
+    code,
+    fence,
+    '',
+    `[Source on GitHub](${attributes.url})`,
+  ].join('\n');
+}
+
+export default async function embedGitHubCode(markdown: string) {
+  const lines = markdown.split('\n');
+  const directives = new Map<number, Promise<string>>();
+  let openFence: { character: string; length: number } | null = null;
+
+  lines.forEach((line, index) => {
+    const fence = line.match(/^\s*(`{3,}|~{3,})/);
+
+    if (fence) {
+      const marker = fence[1];
+
+      if (!openFence) {
+        openFence = { character: marker[0], length: marker.length };
+      } else if (marker[0] === openFence.character && marker.length >= openFence.length) {
+        openFence = null;
+      }
+
+      return;
+    }
+
+    if (!openFence) {
+      const directive = line.match(/^\s*::github-code\{(.+)\}\s*$/);
+
+      if (directive) {
+        directives.set(index, renderDirective(parseAttributes(directive[1])));
+      }
+    }
+  });
+
+  if (directives.size === 0) return markdown;
+
+  const rendered = await Promise.all(directives.values());
+  const replacements = new Map(
+    Array.from(directives.keys(), (lineIndex, index) => [lineIndex, rendered[index]])
+  );
+
+  return lines.map((line, index) => replacements.get(index) ?? line).join('\n');
+}
