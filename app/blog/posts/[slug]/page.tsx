@@ -29,7 +29,7 @@ import { remarkTextDirectives, TextDirectiveComponents } from '@/components/blog
 import { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site';
 
-const getPostContent = (slug: string) => {  
+const getPostContent = (slug: string) => {
   const file = path.join(process.cwd(), "posts", `${slug}.md`);
   const content = fs.readFileSync(file, "utf8");
   const matterResult = matter(content);
@@ -39,8 +39,8 @@ const getPostContent = (slug: string) => {
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const post = getPostContent(params.slug);
   const postUrl = `${SITE_CONFIG.url}/blog/posts/${params.slug}`;
-  
-  const imageUrl = post.data.previewImage 
+
+  const imageUrl = post.data.previewImage
     ? post.data.previewImage.startsWith('http')
       ? post.data.previewImage
       : `${SITE_CONFIG.url}${post.data.previewImage}`
@@ -77,8 +77,8 @@ const PostContent = async (props: any) => {
   const slug = props.params.slug;
   const post = getPostContent(slug);
   const content = await embedGitHubCode(post.content);
-  const markdownUrl = `${SITE_CONFIG.links.github}/blob/main/posts/${slug}.md`;
-  
+  const markdownUrl = `${SITE_CONFIG.links.github}/blob/main/posts/${slug}.md?plain=1`;
+
   // Define your components with proper typing
   const CustomParagraph = ({ children }: { children?: React.ReactNode }) => {
     const hasBlockElement = React.Children.toArray(children).some(
@@ -92,7 +92,7 @@ const PostContent = async (props: any) => {
     );
     return hasBlockElement ? <>{children}</> : <p>{children}</p>;
   };
-  
+
   const components: Components = {
     p: CustomParagraph,
     img: CustomImage as Components['img'],
@@ -100,7 +100,7 @@ const PostContent = async (props: any) => {
     ...AdmonitionComponents,
     ...TextDirectiveComponents,
   };
-  
+
   const titleSection = (
     <>
       <p className="mt-2 text-right text-slate-600">{post.data.date}</p>
@@ -122,28 +122,28 @@ const PostContent = async (props: any) => {
       )}
     </>
   )
-  
+
   return (
     <div className="mb-20 flex flex-col lg:flex-row lg:items-start">
-      
+
       <div className="lg:order-1 lg:w-96 lg:min-w-[10px] lg:shrink">
       </div>
-      
+
       <div className="mx-auto my-12 max-w-screen-sm text-center lg:order-2 lg:hidden">
         {titleSection}
       </div>
-      
+
       <div className="mb-2 lg:sticky lg:top-10 lg:order-3 lg:ml-8 lg:mr-0 lg:w-80 lg:shrink-0">
           <div className="mx-auto max-w-[400px] lg:mt-10">
             <TOC />
           </div>
       </div>
-      
+
       <div className="lg:order-2 lg:mx-auto lg:shrink-0">
         <div className="mx-auto my-12 hidden max-w-screen-sm text-center lg:block"> {/* hidden lg:block  <-> lg:hidden */}
           {titleSection}
         </div>
-        
+
         <ErrorBoundary fallback={
           <div className="prose mx-auto p-6 text-center">
             <h3>Failed to render post content</h3>
@@ -170,7 +170,7 @@ const PostContent = async (props: any) => {
           </article>
         </ErrorBoundary>
       </div>
-      
+
     </div>
   );
 };
@@ -181,7 +181,7 @@ export default async function PostPage(props: any) {
   return (
     <>
       {postContent}
-      
+
       <div className="mb-28">
         {FEATURES.ENABLE_COMMENTS && <Comment />}
       </div>
@@ -191,7 +191,7 @@ export default async function PostPage(props: any) {
 
 export const generateStaticParams = async () => {
   const posts = getPostMetadata();
-  
+
   return posts.map((post) => ({
     slug: post.slug,
   }));

@@ -62,8 +62,8 @@ import matplotlib.pyplot as plt
 
 
 :::important
-No spaces are allowed after commas in the code attributes.  
-✅ [title=asdf.py,showLineNumbers=true]  
+No spaces are allowed after commas in the code attributes.
+✅ [title=asdf.py,showLineNumbers=true]
 ❌ [title=asdf.py, showLineNumbers=true]
 :::
 
@@ -118,9 +118,10 @@ post is rendered and uses the same highlighting, copy button, and optional line
 numbers as a regular code block.
 
 ````md[title=markdown]
-::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" language="javascript" showLineNumbers=true}
+# If title is not specified, the filename is used as the title.
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true}
 ````
 
 Output:
 
-::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" language="javascript" showLineNumbers=true}
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true}
