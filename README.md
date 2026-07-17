@@ -23,3 +23,14 @@
 - Analytics (Vercel Analytics)
 - Download or show markdown of the blog post
 - import code from github repository
+
+## GitHub code embedding
+
+Add a leaf directive with a GitHub `blob` URL to a post:
+
+```md
+::github-code{url="https://github.com/kkensuke/dotfiles/blob/main/zsh/.zshrc" language="zsh" showLineNumbers=true}
+```
+
+`language`, `title`, and `showLineNumbers` are optional. The source file is fetched
+when the post is rendered, and a link to the original GitHub file is shown below it.
