@@ -41,6 +41,9 @@ defaults write com.apple.LaunchServices LSQuarantine -bool false
 # 通知センターを無効にする
 launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
 
+# 最近使用した順に操作スペースを自動的に並べ替えない
+defaults write com.apple.dock mru-spaces -bool false
+
 
 ## キーボード
 

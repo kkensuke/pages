@@ -41,6 +41,9 @@ defaults write com.apple.LaunchServices LSQuarantine -bool false
 # Disable Notification Center
 launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
 
+# Do not automatically rearrange Spaces based on most recent use
+defaults write com.apple.dock mru-spaces -bool false
+
 
 ## Keyboard
 
