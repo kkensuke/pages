@@ -76,7 +76,9 @@ async function renderDirective(attributes: DirectiveAttributes) {
   }
 
   const code = (await response.text()).replace(/\n$/, '');
-  const longestBacktickRun = Math.max(2, ...(code.match(/`+/g) ?? []).map(run => run.length));
+  const backtickRuns: string[] = code.match(/`+/g) || [];
+  const longestBacktickRun = backtickRuns
+    .reduce((longest, run) => Math.max(longest, run.length), 2);
   const fence = '`'.repeat(longestBacktickRun + 1);
   const language = attributes.language || inferLanguage(filePath);
   const title = (attributes.title || decodeURIComponent(path.posix.basename(filePath)))
@@ -96,10 +98,9 @@ async function renderDirective(attributes: DirectiveAttributes) {
 
 export default async function embedGitHubCode(markdown: string) {
   const lines = markdown.split('\n');
-  const directives = new Map<number, Promise<string>>();
   let openFence: { character: string; length: number } | null = null;
 
-  lines.forEach((line, index) => {
+  const rendered = lines.map((line) => {
     const fence = line.match(/^\s*(`{3,}|~{3,})/);
 
     if (fence) {
@@ -111,24 +112,14 @@ export default async function embedGitHubCode(markdown: string) {
         openFence = null;
       }
 
-      return;
+      return line;
     }
 
-    if (!openFence) {
-      const directive = line.match(/^\s*::github-code\{(.+)\}\s*$/);
+    if (openFence) return line;
 
-      if (directive) {
-        directives.set(index, renderDirective(parseAttributes(directive[1])));
-      }
-    }
+    const directive = line.match(/^\s*::github-code\{(.+)\}\s*$/);
+    return directive ? renderDirective(parseAttributes(directive[1])) : line;
   });
 
-  if (directives.size === 0) return markdown;
-
-  const rendered = await Promise.all(directives.values());
-  const replacements = new Map(
-    Array.from(directives.keys(), (lineIndex, index) => [lineIndex, rendered[index]])
-  );
-
-  return lines.map((line, index) => replacements.get(index) ?? line).join('\n');
+  return (await Promise.all(rendered)).join('\n');
 }
