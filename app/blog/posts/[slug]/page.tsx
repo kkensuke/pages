@@ -13,12 +13,11 @@ import 'katex/dist/katex.min.css';
 import React from "react";
 import path from "path";
 
-import { Suspense } from 'react';
 import { FEATURES } from '@/config/constants';
 import Comment from "@/components/blog/Comment/Comment";
-import Loading from '@/components/common/Loading';
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import getPostMetadata from "@/lib/blog/getPostMetadata";
+import embedGitHubCode from "@/lib/blog/embedGitHubCode";
 import TagSection from '@/components/blog/TagSection';
 import TOC from "@/components/blog/TableOfContents/index";
 import Pre from "@/components/blog/CodeBlock";
@@ -74,9 +73,11 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
 }
 
 
-const PostContent = (props: any) => {
+const PostContent = async (props: any) => {
   const slug = props.params.slug;
   const post = getPostContent(slug);
+  const content = await embedGitHubCode(post.content);
+  const markdownUrl = `${SITE_CONFIG.links.github}/blob/main/posts/${slug}.md`;
   
   // Define your components with proper typing
   const CustomParagraph = ({ children }: { children?: React.ReactNode }) => {
@@ -105,6 +106,14 @@ const PostContent = (props: any) => {
       <p className="mt-2 text-right text-slate-600">{post.data.date}</p>
       <h1 className="text-2xl text-slate-600">{post.data.title}</h1>
       <p className="mt-2 text-slate-600">{post.data.subtitle}</p>
+      <a
+        className="mt-3 inline-block text-sm text-slate-500 underline hover:text-slate-700"
+        href={markdownUrl}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Markdown on GitHub
+      </a>
       {/* if post.data.tags exist, return list of tags below */}
       {post.data.tags && (
         <div className="mt-4">
@@ -143,7 +152,7 @@ const PostContent = (props: any) => {
         }>
           <article className="post prose mx-auto">
             <Markdown
-              children={post.content}
+              children={content}
               remarkPlugins={[
                 remarkGfm,
                 // remarkBreaks,
@@ -166,12 +175,12 @@ const PostContent = (props: any) => {
   );
 };
 
-export default function PostPage(props: any) {
+export default async function PostPage(props: any) {
+  const postContent = await PostContent(props);
+
   return (
     <>
-      <Suspense fallback={<Loading fullWidth text="Loading post..." />}>
-        <PostContent {...props} />
-      </Suspense>
+      {postContent}
       
       <div className="mb-28">
         {FEATURES.ENABLE_COMMENTS && <Comment />}
