@@ -110,3 +110,17 @@ function createElement({ node, style, useInlineStyles, key }) {
   }
 }
 ```
+
+## Import code from GitHub
+
+Use a GitHub `blob` URL in a `github-code` directive. The code is fetched when the
+post is rendered and uses the same highlighting, copy button, and optional line
+numbers as a regular code block.
+
+````md[title=markdown]
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" language="javascript" showLineNumbers=true}
+````
+
+Output:
+
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" language="javascript" showLineNumbers=true}
