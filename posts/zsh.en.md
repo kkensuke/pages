@@ -165,7 +165,7 @@ Source order matters when one file depends on settings defined by another. Load 
 
 Choose one filename extension, such as `.zsh`, for sourced fragments. A consistent naming rule makes it clear that these files are configuration modules rather than standalone executable scripts.
 
-For practical files to place under `aliases/`, see [Useful Zsh Aliases and Functions](./alias.en.md).
+For practical files to place under `aliases/`, see [Useful Zsh Aliases and Functions](./alias.en).
 
 
 ## Verify and Troubleshoot
@@ -243,4 +243,4 @@ precmd() { precmd() { echo } }
 
 ## Next Steps
 
-The configuration is now organized under `$ZDOTDIR`, divided into focused modules, and verified with a fresh login shell. Continue with [Useful Zsh Aliases and Functions](./alias.en.md) for practical files to place under `aliases/`.
+The configuration is now organized under `$ZDOTDIR`, divided into focused modules, and verified with a fresh login shell. Continue with [Useful Zsh Aliases and Functions](./alias.en) for practical files to place under `aliases/`.
