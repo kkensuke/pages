@@ -11,15 +11,15 @@ Aliases and functions give short names to commands that you run frequently. This
 
 ## Aliases vs. Functions
 
-Use an alias for a fixed command replacement and a function when the shortcut needs arguments, multiple commands, or conditional logic.
+Use an alias for a fixed command or fixed options. Additional arguments can still be appended when the alias is used. Use a function when you need to validate, reorder, or reuse arguments; run multiple commands; or add conditional logic.
 
 | | Alias | Function |
 | --- | --- | --- |
-| Best for | A fixed command or fixed options | Arguments or multiple commands |
-| Example use | Replace `cd ~` with `h` | Create a directory and enter it |
+| Best for | A fixed command or fixed options | Argument handling, multiple commands, or conditional logic |
+| Example use | Use `h` instead of `cd ~` | Create a directory and enter it |
 | Definition | `alias h='cd ~'` | `mkcd() { mkdir -p "$1" && cd "$1"; }` |
 
-```bash
+```zsh
 alias h='cd ~'
 
 mkcd() {
@@ -38,19 +38,19 @@ These examples are intended for interactive Zsh sessions, not shell scripts. Man
 
 For a small configuration, add aliases directly to `~/.zshrc`:
 
-```bash
+```zsh
 alias h='cd ~'
 ```
 
 Reload the file after editing it, or start a new shell:
 
-```bash
+```zsh
 source ~/.zshrc
 ```
 
 For a larger configuration, keep aliases in purpose-specific files such as `$ZDOTDIR/aliases/git.zsh` and load them from `.zshrc`:
 
-```bash
+```zsh
 [[ -f "$ZDOTDIR/aliases/git.zsh" ]] && source "$ZDOTDIR/aliases/git.zsh"
 ```
 
@@ -77,7 +77,7 @@ Copy only the shortcuts that match your tools and workflow. Test each addition i
 
 ### Change Directories
 
-```bash
+```zsh
 cs() { builtin cd "$@" && command ls -A }
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -99,13 +99,13 @@ The `cs` function changes directory and then runs `ls -A`. `builtin cd` ensures 
 
 ### List Files
 
-```bash
+```zsh
 alias l='gls --color --group-directories-first -F'
 alias la='gls --color --group-directories-first -F -A'
 alias ll='gls --color --group-directories-first -F -AhlS'
 alias ds='du -d 1 -h 2>/dev/null | sort -h'
 alias p='pwd'
-alias path='echo -e ${PATH//:/\\n}'
+path() { print -l -- "${path[@]}" }
 ```
 
 - `l`, `la`, `ll`: To use `gls`, install GNU core utilities with `brew install coreutils`.
@@ -119,7 +119,7 @@ alias path='echo -e ${PATH//:/\\n}'
 - `ds`: `du -d 1` shows the size of entries one level below the current directory.
     - `2>/dev/null` hides error messages.
     - `sort -h` sorts human-readable sizes through a [pipe](./linux.en#pipes).
-- `p` prints the working directory, and `path` prints one `$PATH` entry per line.
+- `p` prints the working directory, and the `path` function prints one `$PATH` entry per line without interpreting backslash escapes.
 
 :::tip
 Short options can usually be combined: `ls -AhlS` is equivalent to `ls -A -h -l -S`.
@@ -128,7 +128,7 @@ Short options can usually be combined: `ls -AhlS` is equivalent to `ls -A -h -l 
 
 ### Edit Files
 
-```bash
+```zsh
 alias v='vi'
 ```
 
@@ -139,7 +139,7 @@ Replace `vi` with your preferred editor if necessary.
 
 ### Search and Compare
 
-```bash
+```zsh
 fb() {
     find . -size "+${2}M" -type f -name "$1" -exec ls -lhS {} +
 }
@@ -182,7 +182,7 @@ Functions are defined as `name() { commands }` and can receive positional argume
 
 ### Other Shortcuts
 
-```bash
+```zsh
 alias his='history'
 alias rl='exec ${SHELL} -l'       # Reload the login shell
 ```
@@ -190,7 +190,7 @@ alias rl='exec ${SHELL} -l'       # Reload the login shell
 
 ### Create an Encrypted ZIP Archive
 
-```bash
+```zsh
 zipen() {
     zip -er enc.zip "$@"
 }
@@ -198,12 +198,16 @@ zipen() {
 
 `zipen file1 file2 dir1` creates the password-protected archive `enc.zip`. Quoted `"$@"` preserves each supplied path as a separate argument, including paths that contain spaces.
 
+:::warning
+The encryption provided by `zip -e` is intended for basic password protection. Use a stronger encryption tool for sensitive data.
+:::
+
 
 ## Optional Command Overrides
 
 The following aliases replace existing commands rather than introducing new names. They are convenient, but they change command behavior throughout the interactive shell.
 
-```bash
+```zsh
 alias cd='cs'
 alias ls='gls --color --group-directories-first -F'
 alias pwd='sed "s/ /\\\ /g" <<< ${PWD/#$HOME/"~"}'
@@ -219,7 +223,7 @@ alias rf='rm -rf'
 
 - The `cd` alias lists directory contents after every successful move.
 - The `ls` alias uses GNU `ls` with color and directory grouping.
-- The `pwd` alias prints the current directory with spaces escaped and the home directory replaced by `~`. For example, `/Users/<USERNAME>/My Drive` becomes `~/My\ Drive` in MacOS.
+- The `pwd` alias prints the current directory with spaces escaped and the home directory replaced by `~`. For example, `/Users/<USERNAME>/My Drive` becomes `~/My\ Drive` in macOS.
 - The `cp`, `mv`, and `rm` aliases add confirmation and verbose output.
 - Replacing `pip` can interfere with the executable selected by a Python virtual environment; `python -m pip` is more explicit.
 
@@ -232,7 +236,7 @@ alias rf='rm -rf'
 
 ### Open Applications
 
-```bash
+```zsh
 alias hr='open .'
 alias c='open /Applications/CotEditor.app'
 alias vs='code'
@@ -246,7 +250,7 @@ alias chrome='open /Applications/Google\ Chrome.app'
 
 ### Show or Hide Hidden Files in Finder
 
-```bash
+```zsh
 alias show='defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder'
 alias hide='defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder'
 ```
@@ -258,7 +262,7 @@ You can also press `Command + Shift + .` in Finder to show or hide hidden files.
 
 ### Hide or Show Desktop Icons
 
-```bash
+```zsh
 alias dhide='defaults write com.apple.finder CreateDesktop -bool false && killall Finder'
 alias dshow='defaults write com.apple.finder CreateDesktop -bool true && killall Finder'
 ```
@@ -266,7 +270,7 @@ alias dshow='defaults write com.apple.finder CreateDesktop -bool true && killall
 
 ### Screenshot Settings
 
-```bash
+```zsh
 alias dwl='defaults write com.apple.screencapture location'
 alias ddl='defaults delete com.apple.screencapture location'
 alias drl='defaults read com.apple.screencapture location'
@@ -276,8 +280,10 @@ For example, `dwl ~/Desktop` changes the screenshot destination to the Desktop.
 
 
 ### Sleep Settings
+
 If you want to prevent your Mac from sleeping, use the following aliases:
-```bash
+
+```zsh
 alias sleepon='sudo pmset -a disablesleep 0'
 alias sleepoff='sudo pmset -a disablesleep 1'
 ```
@@ -285,21 +291,23 @@ alias sleepoff='sudo pmset -a disablesleep 1'
 
 ## Python
 
-```bash
+```zsh
 alias wpy='command -v python'
 alias pin='python -m pip install'
 alias puin='python -m pip uninstall'
 alias pup='python -m pip install --upgrade pip'
 alias pinreq='python -m pip install -r requirements.txt'
-alias pf='python -m pip list --format=freeze'
-alias pfr='python -m pip list --format=freeze > requirements.txt'
+alias pf='python -m pip freeze'
+alias pfr='python -m pip freeze > requirements.txt'
 ```
 
 Using `python -m pip` makes it explicit which Python interpreter owns the selected `pip` installation.
 
+`pfr` overwrites `requirements.txt`. Run `pf` first if you want to review the generated package list.
+
 ### Activate or Deactivate a Virtual Environment
 
-```bash
+```zsh
 alias acv='source venv/bin/activate'
 alias deac='deactivate'
 ```
@@ -307,7 +315,7 @@ alias deac='deactivate'
 
 ## Git and GitHub
 
-```bash
+```zsh
 alias g='git'
 alias ga='git add'
 alias gb='git branch'
@@ -328,7 +336,7 @@ alias gs='git status'
 
 The following function initializes the current directory and creates a repository through GitHub CLI:
 
-```bash
+```zsh
 # Usage: ginit private
 #        ginit public
 ginit() {
@@ -346,9 +354,16 @@ Install [GitHub CLI](https://cli.github.com/) before using the `gh` command.
 
 ### Commit Messages with Emoji
 
-```bash
-# Add all changes, commit, and push the current branch.
-gacp() { git add . && git commit -m "$*" && git push }
+```zsh
+# Stage all changes in the repository, commit, and push the current branch.
+gacp() {
+    if (( $# == 0 )); then
+        print -u2 -- "Usage: gacp commit message"
+        return 2
+    fi
+
+    git add -A && git commit -m "$*" && git push
+}
 
 gini() { gacp "🎉 Initial commit" }
 gnew() { gacp "✨ NEW: $*" }
@@ -392,13 +407,13 @@ $green gsec$normal — 👮 SECURITY"
 ```
 
 :::warning
-`gacp` stages every change in the repository. Run `git status` and review the diff before using it.
+`gacp` stages modified, deleted, and untracked files throughout the repository. Run `git status` and review the diff before using it. `git push` also requires an upstream branch to be configured.
 :::
 
 #### Commit-message References
 
 - [Jupyter Book Development Conventions](https://github.com/executablebooks/.github/blob/master/CONTRIBUTING.md#commit-messages)
-- [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
+- [How to Write a Git Commit Message](https://chris.beams.io/git-commit)
 - [Emoji-Log](https://github.com/ahmadawais/Emoji-Log)
 - [gitmoji-cli](https://github.com/carloscuesta/gitmoji-cli)
 - [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
@@ -410,7 +425,7 @@ $green gsec$normal — 👮 SECURITY"
 
 The following function downloads a `.gitignore` template from the gitignore.io API. The name `gignore` avoids conflicting with the `gi='git init'` alias above.
 
-```bash
+```zsh
 gignore() {
     local IFS=,
     curl -sL "https://www.toptal.com/developers/gitignore/api/$*"
