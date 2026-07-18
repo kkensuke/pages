@@ -6,15 +6,23 @@ tags: [Zsh]
 ---
 
 
-## 1. Introduction
+## Introduction
 
-As you customize Zsh, the home directory can fill with `.zsh*` files and `.zshrc` can grow into a long, difficult-to-maintain configuration.
+Zsh, or Z shell, is an interactive command-line shell with completion, advanced globbing, prompt customization, plugins, and themes. macOS uses Zsh as its default interactive shell.
 
-This guide shows how to:
+You can confirm the current shell and Zsh version with:
+
+```bash
+echo "$SHELL"
+zsh --version
+```
+
+As you customize Zsh, the home directory can fill with `.zsh*` files and `.zshrc` can grow into a long, difficult-to-maintain configuration. This guide shows how to:
 
 1. keep Zsh configuration files in a dedicated directory with `$ZDOTDIR`;
-2. divide `.zshrc` into smaller files by purpose; and
-3. customize the Zsh prompt without mixing prompt code into unrelated alias files.
+2. divide `.zshrc` into smaller files by purpose;
+3. verify the new configuration safely; and
+4. optionally customize the prompt in its own module.
 
 ![Image](/images/zsh.png)
 
@@ -25,19 +33,7 @@ https://github.com/kkensuke/dotfiles/tree/main/zsh
 :::
 
 
-## 2. What Is Zsh?
-
-Zsh, or Z shell, is an interactive command-line shell with features such as completion, advanced globbing, prompt customization, plugins, and themes. It is largely compatible with Bourne-style shell syntax while also providing features found in Bash, ksh, and tcsh.
-
-macOS uses Zsh as its default interactive shell. You can confirm the current shell and Zsh version with:
-
-```bash
-echo "$SHELL"
-zsh --version
-```
-
-
-## 3. Understand Zsh Startup Files
+## Zsh Startup Files
 
 Zsh reads different configuration files depending on how the shell starts. The most commonly edited files are:
 
@@ -51,11 +47,11 @@ Zsh reads different configuration files depending on how the shell starts. The m
 Keep `.zshenv` small because it is read even for non-interactive Zsh commands. Interactive settings normally belong in `.zshrc` or files sourced from it.
 
 
-## 4. Keep Zsh Files in a Dedicated Directory
+## Move Configuration to `ZDOTDIR`
 
-Without additional configuration, files such as `.zshenv`, `.zprofile`, `.zshrc`, and `.zsh_history` usually appear directly in the home directory. Setting `$ZDOTDIR` lets Zsh look for most user startup files in another directory.
+Without additional configuration, startup files such as `.zshenv`, `.zprofile`, and `.zshrc` normally appear directly in the home directory. Setting `$ZDOTDIR` tells Zsh to look for most user startup files in another directory.
 
-For example, the configuration can be organized like this:
+The final configuration will look like this:
 
 ```text
 zsh/
@@ -72,25 +68,56 @@ zsh/
 └── .zshenv
 ```
 
-### 4.1 Set `ZDOTDIR` in `.zshenv`
+### Create the Configuration Directory
 
-The initial `.zshenv` must be discoverable from the home directory. Put the following setting in the managed `.zshenv` file:
+Choose a permanent location and create directories for aliases and settings:
+
+```bash
+config_dir="$HOME/path/to/zsh"
+mkdir -p "$config_dir"/{aliases,settings}
+```
+
+Replace `$HOME/path/to/zsh` with the actual location of your managed configuration.
+
+### Copy Existing Startup Files
+
+Copy existing files first instead of moving them. This keeps the current configuration available while you prepare and test the new one.
+
+```bash
+for file in .zshenv .zprofile .zshrc; do
+    [[ -f "$HOME/$file" ]] && cp -p "$HOME/$file" "$config_dir/$file"
+done
+
+touch "$config_dir/.zshenv" "$config_dir/.zshrc"
+```
+
+`touch` creates `.zshenv` and `.zshrc` only when they do not already exist; existing contents are preserved.
+
+### Set `ZDOTDIR` in the Managed `.zshenv`
+
+Add the following setting to `$config_dir/.zshenv`:
 
 ```bash
 export ZDOTDIR="$HOME/path/to/zsh"
 ```
 
-Quote the value so that the path remains one argument if a directory name contains spaces.
+The initial `.zshenv` must still be discoverable from the home directory. Quote the value so that it remains one path if a directory name contains spaces.
 
-### 4.2 Link `.zshenv` from the Home Directory
+### Link `.zshenv` from the Home Directory
 
-Create a symbolic link at `~/.zshenv` that points to the managed file:
+Back up the original `.zshenv`, if present, and create a symbolic link to the managed file:
 
 ```bash
+if [[ -e "$HOME/.zshenv" || -L "$HOME/.zshenv" ]]; then
+    mv "$HOME/.zshenv" "$HOME/.zshenv.backup"
+fi
+
 ln -s "$HOME/path/to/zsh/.zshenv" "$HOME/.zshenv"
 ```
 
-The startup sequence is then:
+Choose a different backup name if `~/.zshenv.backup` already exists.
+
+The startup sequence is now:
 
 ```text
 ~/.zshenv
@@ -100,19 +127,21 @@ The startup sequence is then:
 ```
 
 :::warning
-If `~/.zshenv` already exists, inspect and back it up before creating the link. Do not overwrite an existing configuration without moving its required settings into the managed file.
+Do not remove the original `.zprofile` or `.zshrc` until the managed configuration has passed the checks below and a new login shell starts successfully.
 :::
 
-`ZDOTDIR` controls the location of startup files, but not the history file by itself. Set `HISTFILE` separately in `.zshrc` if you also want to store history in the managed directory:
+:::note{title="History Is Configured Separately"}
+`ZDOTDIR` controls startup-file locations, but it does not move the history file by itself. Add the following line to `.zshrc` if you want to keep history in the managed directory:
 
 ```bash
 HISTFILE="$ZDOTDIR/.zsh_history"
 ```
+:::
 
 
-## 5. Modularize `.zshrc`
+## Modularize `.zshrc`
 
-A single `.zshrc` becomes difficult to maintain when it contains aliases, functions, completion settings, plugins, and prompt definitions together. Divide these settings into purpose-specific files and source them from `.zshrc`.
+A single `.zshrc` becomes difficult to maintain when aliases, functions, completion settings, plugins, and prompt definitions are mixed together. Divide them into purpose-specific files and source them from `.zshrc`.
 
 ```bash
 # $ZDOTDIR/.zshrc
@@ -132,12 +161,59 @@ A single `.zshrc` becomes difficult to maintain when it contains aliases, functi
 `[[ -f "$file" ]] && source "$file"` loads a file only when it exists. This prevents startup errors when an optional configuration file is moved or temporarily removed.
 :::
 
-Choose one filename extension, such as `.zsh`, for sourced Zsh fragments. A consistent naming rule makes it clear that these files are configuration fragments rather than standalone executable scripts.
+Source order matters when one file depends on settings defined by another. Load general environment and completion settings before plugins or aliases that use them, and load prompt configuration after any plugin that modifies the prompt.
+
+Choose one filename extension, such as `.zsh`, for sourced fragments. A consistent naming rule makes it clear that these files are configuration modules rather than standalone executable scripts.
 
 For practical files to place under `aliases/`, see [Useful Zsh Aliases and Functions](./alias.en.md).
 
 
-## 6. Customize the Prompt
+## Verify and Troubleshoot
+
+### Check Syntax
+
+Run `zsh -n` on the main startup files and each sourced module:
+
+```bash
+for file in \
+    "$ZDOTDIR/.zshenv" \
+    "$ZDOTDIR/.zprofile" \
+    "$ZDOTDIR/.zshrc" \
+    "$ZDOTDIR"/aliases/*.zsh(N) \
+    "$ZDOTDIR"/settings/*.zsh(N); do
+    [[ -f "$file" ]] || continue
+    zsh -n "$file" || break
+done
+```
+
+`zsh -n` parses the files without executing their commands. It detects syntax errors but cannot detect every runtime problem.
+
+### Start a Fresh Login Shell
+
+After the syntax check succeeds, start a new login shell:
+
+```bash
+exec zsh -l
+```
+
+Confirm that Zsh loaded the expected directory and history path:
+
+```bash
+print -r -- "$ZDOTDIR"
+print -r -- "$HISTFILE"
+```
+
+If either value is unexpected, inspect the link and the managed `.zshenv`:
+
+```bash
+ls -l "$HOME/.zshenv"
+cat "$HOME/.zshenv"
+```
+
+After the new setup works, archive or remove the old home-directory copies of `.zprofile` and `.zshrc`.
+
+
+## Optional: Customize the Prompt
 
 Prompt configuration belongs in a settings file such as `$ZDOTDIR/settings/prompt.zsh`, rather than in an alias collection.
 
@@ -165,29 +241,6 @@ precmd() { precmd() { echo } }
 ```
 
 
-## 7. Apply and Test Changes
+## Next Steps
 
-After editing the configuration, start a fresh login shell:
-
-```bash
-exec zsh -l
-```
-
-For syntax checking without starting a new interactive shell:
-
-```bash
-zsh -n "$ZDOTDIR/.zshrc"
-
-for file in "$ZDOTDIR"/aliases/*.zsh(N) "$ZDOTDIR"/settings/*.zsh(N); do
-    zsh -n "$file" || break
-done
-```
-
-`zsh -n` parses the files without executing their commands. It detects syntax errors but cannot detect every runtime problem.
-
-
-## 8. Conclusion
-
-Use `$ZDOTDIR` to keep Zsh startup files together, split `.zshrc` into focused settings and alias files, and keep prompt configuration in its own module. This structure keeps the home directory clean and makes each part of the shell configuration easier to understand, test, and update.
-
-Continue with [Useful Zsh Aliases and Functions](./alias.en.md) for practical alias and function examples.
+The configuration is now organized under `$ZDOTDIR`, divided into focused modules, and verified with a fresh login shell. Continue with [Useful Zsh Aliases and Functions](./alias.en.md) for practical files to place under `aliases/`.
