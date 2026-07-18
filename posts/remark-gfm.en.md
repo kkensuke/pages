@@ -6,14 +6,6 @@ tags: [Markdown]
 ---
 
 ## Introduction
-
-```markdown
-| Package | Purpose | Downloads |
-| :--- | :---: | ---: |
-| `remark-gfm` | GFM syntax | 1200 |
-| `remark-rehype` | HTML transformation | 950 |
-```
-
 [remark-gfm](https://github.com/remarkjs/remark-gfm) is a plugin for [remark](https://github.com/remarkjs/remark) that adds support for GitHub Flavored Markdown (GFM) features. This guide covers all the GFM features supported by the package and provides practical examples for each.
 
 ## Installation and Setup
