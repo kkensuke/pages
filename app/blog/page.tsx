@@ -21,7 +21,7 @@ const BlogPage = ({ searchParams }: {
 
   return (
     <div className="mx-auto mb-20 mt-12 max-w-screen-md">
-      <div className="mb-8 flex items-center gap-3">
+      <div className="mb-8 flex flex-wrap items-center gap-3">
         <Pencil className="text-slate-600" size={32} />
         <h1 className="bg-clip-text text-4xl font-bold text-slate-700">
           <Link href={blogHref}> Blog </Link>
@@ -31,10 +31,11 @@ const BlogPage = ({ searchParams }: {
             ? `${totalPosts} 記事`
             : `${totalPosts} ${totalPosts === 1 ? 'post' : 'posts'}`}
         </span>
-        <div className="h-px flex-1 bg-slate-200"></div>
+        <div className="hidden h-px flex-1 bg-slate-200 sm:block"></div>
+        <div className="ml-auto">
+          <LanguageToggle language={language} />
+        </div>
       </div>
-
-      <LanguageToggle language={language} />
 
       <div className="mt-6">
         <TagSection tags={allTags} language={language} />
