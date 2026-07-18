@@ -2,7 +2,7 @@
 title: "Organizing Zsh Configuration"
 date: "2022-06-12"
 subtitle: "Use ZDOTDIR, modularize .zshrc, and customize the prompt"
-tags: [Zsh]
+tags: [CLI]
 ---
 
 
