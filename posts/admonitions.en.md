@@ -34,6 +34,7 @@ Watch this video on YouTube: :youtube[Click here]{#dQw4w9WgXcQ}.
 
 
 ## Block Directives `::name[label]{attributes}`
+### YouTube Embeds
 You can also embed YouTube videos as standalone blocks using block directives:
 ::::simple{title="YouTube Embed"}
 ```markdown
@@ -42,12 +43,28 @@ You can also embed YouTube videos as standalone blocks using block directives:
 ::youtube[Watch this amazing video]{#dQw4w9WgXcQ}
 ::::
 
-We also have a `::art` directive for embedding decorative SVG patterns, which can be used to add visual interest to your posts:
+
+### Art Blocks
+We also have `::art` directives for embedding decorative SVG patterns, which can be used to add visual interest to your posts:
 ::::simple{title="Art Block"}
 ```markdown
 ::art{type="wave" color="blue"}
 ```
+
 ::art{type="wave" color="blue"}
+::::
+
+
+
+### Import code from GitHub
+Use a GitHub `blob` URL in a `github-code` directive. The code is fetched when the post is rendered and uses the same highlighting, copy button, and optional line numbers as a regular code block. If title is not specified, the filename is used as the title.
+
+::::simple{title="GitHub Code Block"}
+```markdown
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
+```
+
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
 ::::
 
 
@@ -71,22 +88,6 @@ https://www.mozilla.org
 :::linkcard
 https://github.com
 :::
-
-
-## Import code from GitHub
-
-Use a GitHub `blob` URL in a `github-code` directive. The code is fetched when the
-post is rendered and uses the same highlighting, copy button, and optional line
-numbers as a regular code block.
-
-````md[title=markdown]
-# If title is not specified, the filename is used as the title.
-::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
-````
-
-Output:
-
-::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
 
 
 

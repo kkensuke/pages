@@ -9,7 +9,6 @@ tags: [Markdown]
 このガイドでは、記事を分かりやすく見せるために、このブログのMarkdownでAdmonitionとディレクティブを使う方法を説明します。
 
 ## インラインディレクティブ `:name[label]{attributes}`
-
 インラインディレクティブを使うと、文章の一部に特別な書式や機能を追加できます。
 よくある用途の1つは、キーボードショートカットやUI要素を表すボタンの作成です。
 
@@ -37,23 +36,37 @@ YouTubeで動画を見る：:youtube[ここをクリック]{#dQw4w9WgXcQ}
 
 
 ## ブロックディレクティブ `::name[label]{attributes}`
-
+### YouTube埋め込み
 ブロックディレクティブを使うと、YouTube動画を独立したブロックとして埋め込めます。
-
 ::::simple{title="YouTube埋め込み"}
 ```markdown
 ::youtube[この動画を見る]{#dQw4w9WgXcQ}
 ```
+
 ::youtube[この動画を見る]{#dQw4w9WgXcQ}
 ::::
 
-装飾用のSVGパターンを埋め込む `::art` ディレクティブもあります。記事に視覚的なアクセントを加えられます。
 
+### アートブロック
+装飾用のSVGパターンを埋め込む `::art` ディレクティブもあります。記事に視覚的なアクセントを加えられます。
 ::::simple{title="アートブロック"}
 ```markdown
 ::art{type="wave" color="blue"}
 ```
+
 ::art{type="wave" color="blue"}
+::::
+
+
+### GitHubからコードを読み込む
+`github-code` ディレクティブにGitHubの `blob` URLを指定します。記事の表示時にコードが取得され、通常のコードブロックと同じシンタックスハイライト、コピーボタン、任意の行番号が適用されます。titleを省略すると、ファイル名がタイトルとして使われます。
+
+::::simple{title="GitHub Code Block"}
+```markdown
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
+```
+
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
 ::::
 
 
@@ -78,20 +91,6 @@ https://www.mozilla.org
 :::linkcard
 https://github.com
 :::
-
-
-## GitHubからコードを読み込む
-
-`github-code` ディレクティブにGitHubの `blob` URLを指定します。記事の表示時にコードが取得され、通常のコードブロックと同じシンタックスハイライト、コピーボタン、任意の行番号が適用されます。
-
-````md[title=markdown]
-# titleを省略すると、ファイル名がタイトルとして使われます。
-::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
-````
-
-出力：
-
-::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
 
 
 
