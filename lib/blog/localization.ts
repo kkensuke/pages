@@ -33,8 +33,9 @@ export const getLocalizedPosts = (language: BlogLanguage): PostMetadata[] => {
   });
 
   const posts = Array.from(groups.values())
-    .map((group) => group[language] || group.ja || group.en)
-    .filter((post): post is PostMetadata => Boolean(post));
+  .map((group) => group[language])
+  // .map((group) => group[language] || group.ja || group.en) // Fallback to ja or en if the requested language is not available
+  .filter((post): post is PostMetadata => Boolean(post));
 
   return posts.sort((a, b) => {
     const dateComparison = new Date(b.date).getTime() - new Date(a.date).getTime();

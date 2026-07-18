@@ -68,7 +68,7 @@ alias path='echo -e ${PATH//:/\\n}'
 - `ds`: `du -d 1` shows the size of directories in the current directory.
     - `-h` option shows the size in human readable format.
     - `2>/dev/null` hides error messages.
-    - `sort -h` sorts by file size using [pipe](./linux.md#pipeline-and-redirect).
+    - `sort -h` sorts by file size using [pipe](./linux.en.md#pipeline-and-redirect).
 
 - `pwd`: `sed "s/ /\\\ /g"` puts `\` before every space. `<<<` is a "here string". `${PWD/#$HOME/"~"}` replaces `$HOME` with `~` in the current directory path.
 
