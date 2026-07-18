@@ -119,9 +119,9 @@ numbers as a regular code block.
 
 ````md[title=markdown]
 # If title is not specified, the filename is used as the title.
-::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true}
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
 ````
 
 Output:
 
-::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true}
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}

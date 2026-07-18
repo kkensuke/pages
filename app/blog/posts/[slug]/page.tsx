@@ -30,6 +30,8 @@ import { remarkTextDirectives, TextDirectiveComponents } from '@/components/blog
 import { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site';
 import { getAlternatePostSlug, getPostLanguage } from '@/lib/blog/localization';
+import getPostLinks from '@/lib/blog/getPostLinks';
+import PostNavigation from '@/components/blog/PostNavigation';
 
 const getPostContent = (slug: string) => {
   const file = path.join(process.cwd(), "posts", `${slug}.md`);
@@ -203,10 +205,14 @@ const PostContent = async (props: any) => {
 
 export default async function PostPage(props: any) {
   const postContent = await PostContent(props);
+  const language = getPostLanguage(props.params.slug);
+  const postLinks = getPostLinks(props.params.slug);
 
   return (
     <>
       {postContent}
+
+      <PostNavigation {...postLinks} language={language} />
 
       <div className="mb-28">
         {FEATURES.ENABLE_COMMENTS && <Comment />}
