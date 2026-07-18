@@ -12,7 +12,7 @@ Zsh, or Z shell, is an interactive command-line shell with completion, advanced 
 
 You can check the configured login shell and the installed Zsh version with:
 
-```zsh
+```bash
 print -r -- "$SHELL"
 zsh --version
 ```
@@ -77,7 +77,7 @@ zsh/
 
 Choose a permanent location and create directories for aliases and settings:
 
-```zsh
+```bash
 config_dir="$HOME/path/to/zsh"
 mkdir -p "$config_dir"/{aliases,settings}
 ```
@@ -88,7 +88,7 @@ Replace `$HOME/path/to/zsh` with the actual location of your managed configurati
 
 Copy existing files first instead of moving them. This keeps the current configuration available while you prepare and test the new one.
 
-```zsh
+```bash
 for file in .zshenv .zprofile .zshrc .zlogin .zlogout; do
     [[ -f "$HOME/$file" ]] && cp -p "$HOME/$file" "$config_dir/$file"
 done
@@ -102,7 +102,7 @@ touch "$config_dir/.zshenv" "$config_dir/.zshrc"
 
 Add the following setting to `$config_dir/.zshenv`:
 
-```zsh
+```bash
 export ZDOTDIR="$HOME/path/to/zsh"
 ```
 
@@ -112,7 +112,7 @@ The initial `.zshenv` must still be discoverable from the home directory. Quote 
 
 Back up the original `.zshenv`, if present, and create a symbolic link to the managed file:
 
-```zsh
+```bash
 config_dir="$HOME/path/to/zsh"
 backup="$HOME/.zshenv.backup"
 
@@ -151,7 +151,7 @@ Do not remove the original `.zprofile`, `.zshrc`, `.zlogin`, or `.zlogout` until
 :::note{title="History Is Configured Separately"}
 `ZDOTDIR` controls startup-file locations, but it does not move the history file by itself. To preserve existing history, close other Zsh sessions and copy the history file before starting the new configuration:
 
-```zsh
+```bash
 config_dir="$HOME/path/to/zsh"
 
 if [[ -f "$HOME/.zsh_history" && ! -e "$config_dir/.zsh_history" ]]; then
@@ -161,7 +161,7 @@ fi
 
 Active shells can continue writing to the old history file, so repeat the copy if another session remained open during the migration. Then add the following line to `.zshrc`:
 
-```zsh
+```bash
 HISTFILE="$ZDOTDIR/.zsh_history"
 ```
 :::
@@ -171,7 +171,7 @@ HISTFILE="$ZDOTDIR/.zsh_history"
 
 A single `.zshrc` becomes difficult to maintain when aliases, functions, completion settings, plugins, and prompt definitions are mixed together. Divide them into purpose-specific files and source them from `.zshrc`.
 
-```zsh
+```bash
 # $ZDOTDIR/.zshrc
 
 # General settings
@@ -202,7 +202,7 @@ For practical files to place under `aliases/`, see [Useful Zsh Aliases and Funct
 
 Run `zsh -n` on the main startup files and each sourced module:
 
-```zsh
+```bash
 for file in \
     "$ZDOTDIR/.zshenv" \
     "$ZDOTDIR/.zprofile" \
@@ -222,7 +222,7 @@ done
 
 After the syntax check succeeds, start a new login shell:
 
-```zsh
+```bash
 zsh -l
 ```
 
@@ -230,14 +230,14 @@ This starts a nested login shell, so you can run `exit` to return to the previou
 
 Confirm that Zsh loaded the expected directory and history path:
 
-```zsh
+```bash
 print -r -- "$ZDOTDIR"
 print -r -- "$HISTFILE"
 ```
 
 If either value is unexpected, inspect the link and the managed `.zshenv`:
 
-```zsh
+```bash
 ls -l "$HOME/.zshenv"
 cat "$HOME/.zshenv"
 ```
@@ -246,7 +246,7 @@ After the new setup works, run `exit` to return to the previous shell. You can t
 
 To replace the current shell with the verified login shell, run:
 
-```zsh
+```bash
 exec zsh -l
 ```
 
@@ -255,7 +255,7 @@ exec zsh -l
 
 Prompt configuration belongs in a settings file such as `$ZDOTDIR/settings/prompt.zsh`, rather than in an alias collection.
 
-```zsh
+```bash
 PS1='%F{082}%n%f %F{051}%~%f %# '
 RPROMPT='%T'
 ```
@@ -274,7 +274,7 @@ The color values follow the terminal's color palette. See the [ANSI escape code 
 
 To print a blank line before each prompt except the first one:
 
-```zsh
+```bash
 autoload -Uz add-zsh-hook
 
 typeset -gi _prompt_count=0

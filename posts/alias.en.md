@@ -19,7 +19,7 @@ Use an alias for a fixed command or fixed options. Additional arguments can stil
 | Example use | Use `h` instead of `cd ~` | Create a directory and enter it |
 | Definition | `alias h='cd ~'` | `mkcd() { mkdir -p "$1" && cd "$1"; }` |
 
-```zsh
+```bash
 alias h='cd ~'
 
 mkcd() {
@@ -38,19 +38,19 @@ These examples are intended for interactive Zsh sessions, not shell scripts. Man
 
 For a small configuration, add aliases directly to `~/.zshrc`:
 
-```zsh
+```bash
 alias h='cd ~'
 ```
 
 Reload the file after editing it, or start a new shell:
 
-```zsh
+```bash
 source ~/.zshrc
 ```
 
 For a larger configuration, keep aliases in purpose-specific files such as `$ZDOTDIR/aliases/git.zsh` and load them from `.zshrc`:
 
-```zsh
+```bash
 [[ -f "$ZDOTDIR/aliases/git.zsh" ]] && source "$ZDOTDIR/aliases/git.zsh"
 ```
 
@@ -77,7 +77,7 @@ Copy only the shortcuts that match your tools and workflow. Test each addition i
 
 ### Change Directories
 
-```zsh
+```bash
 cs() { builtin cd "$@" && command ls -A }
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -99,7 +99,7 @@ The `cs` function changes directory and then runs `ls -A`. `builtin cd` ensures 
 
 ### List Files
 
-```zsh
+```bash
 alias l='gls --color --group-directories-first -F'
 alias la='gls --color --group-directories-first -F -A'
 alias ll='gls --color --group-directories-first -F -AhlS'
@@ -128,7 +128,7 @@ Short options can usually be combined: `ls -AhlS` is equivalent to `ls -A -h -l 
 
 ### Edit Files
 
-```zsh
+```bash
 alias v='vi'
 ```
 
@@ -139,7 +139,7 @@ Replace `vi` with your preferred editor if necessary.
 
 ### Search and Compare
 
-```zsh
+```bash
 fb() {
     find . -size "+${2}M" -type f -name "$1" -exec ls -lhS {} +
 }
@@ -182,7 +182,7 @@ Functions are defined as `name() { commands }` and can receive positional argume
 
 ### Other Shortcuts
 
-```zsh
+```bash
 alias his='history'
 alias rl='exec ${SHELL} -l'       # Reload the login shell
 ```
@@ -190,7 +190,7 @@ alias rl='exec ${SHELL} -l'       # Reload the login shell
 
 ### Create an Encrypted ZIP Archive
 
-```zsh
+```bash
 zipen() {
     zip -er enc.zip "$@"
 }
@@ -207,7 +207,7 @@ The encryption provided by `zip -e` is intended for basic password protection. U
 
 The following aliases replace existing commands rather than introducing new names. They are convenient, but they change command behavior throughout the interactive shell.
 
-```zsh
+```bash
 alias cd='cs'
 alias ls='gls --color --group-directories-first -F'
 alias pwd='sed "s/ /\\\ /g" <<< ${PWD/#$HOME/"~"}'
@@ -236,7 +236,7 @@ alias rf='rm -rf'
 
 ### Open Applications
 
-```zsh
+```bash
 alias hr='open .'
 alias c='open /Applications/CotEditor.app'
 alias vs='code'
@@ -250,7 +250,7 @@ alias chrome='open /Applications/Google\ Chrome.app'
 
 ### Show or Hide Hidden Files in Finder
 
-```zsh
+```bash
 alias show='defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder'
 alias hide='defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder'
 ```
@@ -262,7 +262,7 @@ You can also press `Command + Shift + .` in Finder to show or hide hidden files.
 
 ### Hide or Show Desktop Icons
 
-```zsh
+```bash
 alias dhide='defaults write com.apple.finder CreateDesktop -bool false && killall Finder'
 alias dshow='defaults write com.apple.finder CreateDesktop -bool true && killall Finder'
 ```
@@ -270,7 +270,7 @@ alias dshow='defaults write com.apple.finder CreateDesktop -bool true && killall
 
 ### Screenshot Settings
 
-```zsh
+```bash
 alias dwl='defaults write com.apple.screencapture location'
 alias ddl='defaults delete com.apple.screencapture location'
 alias drl='defaults read com.apple.screencapture location'
@@ -283,7 +283,7 @@ For example, `dwl ~/Desktop` changes the screenshot destination to the Desktop.
 
 If you want to prevent your Mac from sleeping, use the following aliases:
 
-```zsh
+```bash
 alias sleepon='sudo pmset -a disablesleep 0'
 alias sleepoff='sudo pmset -a disablesleep 1'
 ```
@@ -291,7 +291,7 @@ alias sleepoff='sudo pmset -a disablesleep 1'
 
 ## Python
 
-```zsh
+```bash
 alias wpy='command -v python'
 alias pin='python -m pip install'
 alias puin='python -m pip uninstall'
@@ -307,7 +307,7 @@ Using `python -m pip` makes it explicit which Python interpreter owns the select
 
 ### Activate or Deactivate a Virtual Environment
 
-```zsh
+```bash
 alias acv='source venv/bin/activate'
 alias deac='deactivate'
 ```
@@ -315,7 +315,7 @@ alias deac='deactivate'
 
 ## Git and GitHub
 
-```zsh
+```bash
 alias g='git'
 alias ga='git add'
 alias gb='git branch'
@@ -336,7 +336,7 @@ alias gs='git status'
 
 The following function initializes the current directory and creates a repository through GitHub CLI:
 
-```zsh
+```bash
 # Usage: ginit private
 #        ginit public
 ginit() {
@@ -354,7 +354,7 @@ Install [GitHub CLI](https://cli.github.com/) before using the `gh` command.
 
 ### Commit Messages with Emoji
 
-```zsh
+```bash
 # Stage all changes in the repository, commit, and push the current branch.
 gacp() {
     if (( $# == 0 )); then
@@ -425,7 +425,7 @@ $green gsec$normal — 👮 SECURITY"
 
 The following function downloads a `.gitignore` template from the gitignore.io API. The name `gignore` avoids conflicting with the `gi='git init'` alias above.
 
-```zsh
+```bash
 gignore() {
     local IFS=,
     curl -sL "https://www.toptal.com/developers/gitignore/api/$*"
