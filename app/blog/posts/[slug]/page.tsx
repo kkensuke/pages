@@ -12,6 +12,7 @@ import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import React from "react";
 import path from "path";
+import Link from 'next/link';
 
 import { FEATURES } from '@/config/constants';
 import Comment from "@/components/blog/Comment/Comment";
@@ -28,6 +29,7 @@ import { remarkTextDirectives, TextDirectiveComponents } from '@/components/blog
 
 import { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site';
+import { getAlternatePostSlug, getPostLanguage } from '@/lib/blog/localization';
 
 const getPostContent = (slug: string) => {
   const file = path.join(process.cwd(), "posts", `${slug}.md`);
@@ -39,6 +41,12 @@ const getPostContent = (slug: string) => {
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const post = getPostContent(params.slug);
   const postUrl = `${SITE_CONFIG.url}/blog/posts/${params.slug}`;
+  const language = getPostLanguage(params.slug);
+  const alternateSlug = getAlternatePostSlug(params.slug);
+  const alternateLanguage = language === 'en' ? 'ja' : 'en';
+  const alternateUrl = alternateSlug
+    ? `${SITE_CONFIG.url}/blog/posts/${alternateSlug}`
+    : null;
 
   const imageUrl = post.data.previewImage
     ? post.data.previewImage.startsWith('http')
@@ -68,6 +76,12 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     },
     alternates: {
       canonical: postUrl,
+      languages: alternateUrl
+        ? {
+            [language]: postUrl,
+            [alternateLanguage]: alternateUrl,
+          }
+        : undefined,
     },
   };
 }
@@ -78,6 +92,8 @@ const PostContent = async (props: any) => {
   const post = getPostContent(slug);
   const content = await embedGitHubCode(post.content);
   const markdownUrl = `${SITE_CONFIG.links.github}/blob/main/posts/${slug}.md?plain=1`;
+  const language = getPostLanguage(slug);
+  const alternateSlug = getAlternatePostSlug(slug);
 
   // Define your components with proper typing
   const CustomParagraph = ({ children }: { children?: React.ReactNode }) => {
@@ -106,18 +122,28 @@ const PostContent = async (props: any) => {
       <p className="mt-2 text-right text-slate-600">{post.data.date}</p>
       <h1 className="text-2xl text-slate-600">{post.data.title}</h1>
       <p className="mt-2 text-slate-600">{post.data.subtitle}</p>
-      <a
-        className="mt-3 inline-block text-sm text-slate-500 underline hover:text-slate-700"
-        href={markdownUrl}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Markdown on GitHub
-      </a>
+      <div className="mt-3 flex justify-center gap-4 text-sm">
+        <a
+          className="text-slate-500 underline hover:text-slate-700"
+          href={markdownUrl}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Markdown on GitHub
+        </a>
+        {alternateSlug && (
+          <Link
+            className="font-medium text-sky-600 hover:text-sky-700 hover:underline"
+            href={`/blog/posts/${alternateSlug}`}
+          >
+            {language === 'en' ? '日本語で読む' : 'Read in English'}
+          </Link>
+        )}
+      </div>
       {/* if post.data.tags exist, return list of tags below */}
       {post.data.tags && (
         <div className="mt-4">
-          <TagSection tags={post.data.tags} />
+          <TagSection tags={post.data.tags} language={language} />
         </div>
       )}
     </>

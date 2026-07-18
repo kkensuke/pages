@@ -1,13 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
 import { Bookmark } from 'lucide-react';
+import type { BlogLanguage } from '@/lib/blog/localization';
 
 type TagSectionProps = {
   tags: string[];
   activeTag?: string;
+  language?: BlogLanguage;
 };
 
-const TagSection = ({ tags, activeTag }: TagSectionProps) => {
+const TagSection = ({ tags, activeTag, language = 'ja' }: TagSectionProps) => {
   if (!tags || tags.length === 0) return null;
 
   // URLエンコードされている文字（日本語など）を元の文字に戻し、比較用に小文字にする
@@ -22,7 +24,7 @@ const TagSection = ({ tags, activeTag }: TagSectionProps) => {
         return (
           <Link
             key={tag}
-            href={`/blog/tags/${tag}`}
+            href={`/blog/tags/${tag}${language === 'en' ? '?lang=en' : ''}`}
             // 共通のスタイル
             className={`group flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium transition-all hover:shadow-md ${
               // アクティブなら水色、そうでないならグレー（どちらか片方だけ付与する）
