@@ -73,6 +73,23 @@ https://github.com
 :::
 
 
+## Import code from GitHub
+
+Use a GitHub `blob` URL in a `github-code` directive. The code is fetched when the
+post is rendered and uses the same highlighting, copy button, and optional line
+numbers as a regular code block.
+
+````md[title=markdown]
+# If title is not specified, the filename is used as the title.
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
+````
+
+Output:
+
+::github-code{url="https://github.com/kkensuke/pages/blob/main/next.config.js" title="next.config.js" language="javascript" showLineNumbers=true lines="2-8"}
+
+
+
 ## Admonitions
 
 Admonitions are specially formatted content blocks that help highlight important information.
