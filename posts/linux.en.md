@@ -1,610 +1,143 @@
 ---
 title: "Command Line Guide"
 date: "2022-10-18"
-subtitle: "A Comprehensive Overview of Command Line Operations"
+subtitle: "A Practical Guide to Files, Pipes, Permissions, Processes, and Shell Scripts"
 tags: [CLI]
 ---
 
 
-Here we learn the command line - a text interface to computers. You input text commands to perform operations like creating or removing files, changing file permissions, and more.
+The command line is a text interface for controlling a computer. Instead of clicking through folders and menus, you enter commands to move between directories, inspect and modify files, connect programs, manage processes, and automate repeated work.
 
-On Mac, you can use the command line in `Terminal.app`.
+On macOS, open `Terminal.app`. Most Linux distributions provide a terminal application as well. macOS uses Zsh as its default interactive shell, while Bash is common on Linux. The basic commands in this guide work in both unless a section is marked as Bash-specific.
+
+:::warning
+Commands such as `rm`, `chmod`, and `chown` can remove data or make it inaccessible. Check the current directory with `pwd`, inspect the target with `ls`, and preview wildcard matches with `echo` before running a destructive command.
+:::
+
 
 ## Keyboard Shortcuts
 
-Essential keyboard shortcuts for efficient terminal usage:
+These shortcuts make an interactive terminal much faster to use.
 
-### Basic Control
-| Shortcut | Description |
-| :-----: | :---------: |
-|Ctrl + C| Interrupt the current process|
-|Ctrl + Z| Suspend the current process|
-|Ctrl + D| Exit the shell|
-|Ctrl + L| Clear the screen|
-|Ctrl + S| Pause command output|
-|Ctrl + Q| Resume output (after Ctrl+S)|
+### Process and Screen Control
 
-### Navigation & Editing
 | Shortcut | Description |
-| :-----: | :---------: |
-|Ctrl + A| Move cursor to start of line|
-|Ctrl + E| Move cursor to end of line|
-|Ctrl + Left/Right| Move by word|
-|Alt + B / Alt + F| Move backward/forward by word|
-|Ctrl + T| Swap characters|
-|Alt + T| Swap words|
+| --- | --- |
+| `Ctrl + C` | Interrupt the foreground process |
+| `Ctrl + Z` | Suspend the foreground process |
+| `Ctrl + D` | Send end-of-file; at an empty prompt, exit the shell |
+| `Ctrl + L` | Clear the screen |
+| `Ctrl + S` | Pause terminal output in terminals that use flow control |
+| `Ctrl + Q` | Resume output paused by `Ctrl + S` |
 
-### Cut, Copy, and Undo
+### Cursor Movement and Editing
+
 | Shortcut | Description |
-| :-----: | :---------: |
-|Ctrl + W| Cut the word before cursor|
-|Ctrl + U| Cut everything before cursor|
-|Ctrl + K| Cut everything after cursor|
-|Ctrl + Y| Paste the last cut text|
-|Ctrl + _| Undo|
+| --- | --- |
+| `Ctrl + A` | Move to the beginning of the line |
+| `Ctrl + E` | Move to the end of the line |
+| `Alt + B` / `Alt + F` | Move backward or forward by one word |
+| `Ctrl + T` | Swap the current character with the previous character |
+| `Alt + T` | Swap the current word with the previous word |
+| `Ctrl + W` | Cut the word before the cursor |
+| `Ctrl + U` | Cut from the cursor to the beginning of the line |
+| `Ctrl + K` | Cut from the cursor to the end of the line |
+| `Ctrl + Y` | Paste the most recently cut text |
+| `Ctrl + _` | Undo the last edit |
+
+On many macOS terminal configurations, `Esc`, then `B` or `F`, can be used when `Option + B` or `Option + F` is not configured as `Alt`.
 
 ### Command History
+
 | Shortcut | Description |
-| :-----: | :---------: |
-|↑ / ↓| Previous/next command|
-|Ctrl + R| Search command history (reverse)|
-|Ctrl + G| Exit history search|
+| --- | --- |
+| `Up` / `Down` | Move through previous and next commands |
+| `Ctrl + R` | Search command history backward |
+| `Ctrl + G` | Cancel the history search |
 
----
 
-## Special Symbols
+## Paths and Special Symbols
 
-Four special symbols represent important locations:
+The filesystem is a hierarchy that begins at the root directory `/`.
 
-|Symbol|Meaning|Example|
-|:----:|:-----:|:-----:|
-|`/`|root directory|`cd /`|
-|`.`|current directory|`ls .`|
-|`..`|parent directory|`cd ..`|
-|`~`|home directory|`cd ~`|
+| Symbol | Meaning | Example |
+| --- | --- | --- |
+| `/` | Root directory | `cd /` |
+| `.` | Current directory | `ls .` |
+| `..` | Parent directory | `cd ..` |
+| `~` | Current user's home directory | `cd ~` |
+| `-` | Previous working directory when used with `cd` | `cd -` |
 
----
+An **absolute path** begins at `/`. A **relative path** begins at the current directory.
 
-## Basic Commands
+```bash
+/Users/username/Documents/report.txt   # Absolute path on macOS
+Documents/report.txt                   # Relative path from the home directory
+../report.txt                           # A file in the parent directory
+```
 
-### Navigation and Information
+Quote or escape paths that contain spaces:
 
-`pwd`: Print working directory (show current location)
+```bash
+cd "My Projects"
+cd My\ Projects
+```
+
+
+## Navigating and Inspecting Directories
+
+### `pwd`: Show the Current Directory
+
 ```bash
 pwd
 # /Users/username/Documents
 ```
 
-`cd`: Change directory
+### `cd`: Change Directory
+
 ```bash
-cd ~/Documents        # Go to Documents
-cd ..                 # Go up one level
-cd -                  # Go to previous directory
+cd ~/Documents       # Go to Documents in the home directory
+cd ..                # Go up one level
+cd ../..             # Go up two levels
+cd -                 # Return to the previous directory
+cd                   # Go to the home directory
 ```
 
-`ls`: List files and directories
+### `ls`: List Directory Contents
+
 ```bash
-ls                    # List current directory
-ls -l                 # Long format with details
-ls -a                 # Show hidden files (starting with .)
-ls -lh                # Human-readable file sizes
-ls -ltr               # Sort by time, reverse order
+ls                   # List the current directory
+ls -l                # Long format: permissions, owner, size, and time
+ls -a                # Include hidden names that begin with .
+ls -lh               # Use human-readable file sizes
+ls -ltr              # Sort by modification time, oldest first
+ls -AhlS             # Combine options: almost all, long, readable, by size
 ```
 
----
+Most short options can be combined: `ls -A -h -l -S` and `ls -AhlS` are equivalent.
 
-### Working with Directories
+### `tree`: Display a Directory Hierarchy
 
-`mkdir`: Make directory
+The `tree` command may need to be installed first:
+
 ```bash
-mkdir project                    # Create single directory
-mkdir -p dir/subdir/subsubdir    # Create nested directories
+brew install tree                 # macOS with Homebrew
+sudo apt install tree             # Debian or Ubuntu
 ```
 
-`rmdir`: Remove empty directory
 ```bash
-mkdir temp
-rmdir temp                       # Only works if empty
+tree                              # Show the full hierarchy
+tree -L 2                         # Limit output to two levels
+tree -d                           # Show directories only
+tree -a                           # Include hidden entries
+tree -I 'node_modules|*.pyc'      # Ignore matching names
+tree --dirsfirst                  # Put directories before files
+tree -h                           # Use human-readable file sizes
 ```
 
-`rmdir -p`: Remove directory hierarchy
-```bash
-mkdir -p dir/subdir/subsubdir
-rmdir -p dir/subdir/subsubdir    # Removes all three
-```
+Example output:
 
----
-
-### Working with Files
-
-`touch`: Create empty file or update timestamp
-```bash
-touch file.txt                   # Create new file
-touch existing.txt               # Update modification time
-```
-
-`cat`: Display file contents
-```bash
-cat file.txt                    # Show entire file
-cat file1.txt file2.txt         # Show multiple files
-cat > newfile.txt               # Create file with input (Ctrl+D to finish)
-```
-
-`head` / `tail`: Show beginning or end of file
-```bash
-head file.txt                   # First 10 lines (default)
-head -n 5 file.txt              # First 5 lines
-tail -f logfile.txt             # Follow file in real-time (useful for logs)
-```
-
-`less` / `more`: View files page by page
-```bash
-less largefile.txt              # Navigate with arrow keys, q to quit
-```
-
-`rm`: Remove files
-```bash
-rm file.txt                     # Remove file
-rm -i file.txt                  # Confirm before removing
-rm -v file.txt                  # Verbose (show what's removed)
-rm -f file.txt                  # Force remove (no confirmation)
-```
-
-`rm -r`: Remove directories recursively
-```bash
-rm -r directory                  # Remove directory and contents
-rm -rf directory                 # Force remove (CAUTION: no recovery!)
-```
-
-:::warning
-Be extremely careful with `rm -rf` - it permanently deletes without confirmation!
-:::
-
----
-
-### Copying and Moving
-
-`cp`: Copy files or directories
-```bash
-cp source.txt dest.txt           # Copy file
-cp -r dir1 dir2                  # Copy directory recursively
-cp -i source.txt dest.txt        # Confirm before overwriting
-cp file1 file2 file3 target/     # Copy multiple files to directory
-```
-
-:::note
-Copy behavior:
-- `cp file1 file2` - This overwrite file2 with contents of file1.
-- `cp -r dir1 dir2` - If dir2 exists, creates dir1 inside dir2. If dir2 doesn't exist, creates exact copy
-:::
-
-`mv`: Move or rename files/directories
-```bash
-mv old.txt new.txt              # Rename file
-mv file.txt directory/          # Move file to directory
-mv dir1 dir2                    # Move/rename directory
-```
-
----
-
-### File Information
-
-`file`: Determine file type
-```bash
-file document.pdf
-# document.pdf: PDF document, version 1.4
-```
-
-`wc`: Word count
-```bash
-wc file.txt                     # Lines, words, bytes
-wc -l file.txt                  # Count lines only
-wc -w file.txt                  # Count words only
-```
-
-`du`: Disk usage
-```bash
-du -h file.txt                  # Human-readable size
-du -sh directory/               # Summary of directory size
-```
-
----
-
-## Text Processing
-
-`echo`: Print text or create files with content
-```bash
-echo "Hello World"              # Print to screen
-echo $PATH                      # Print environment variable
-echo "text" > file.txt          # Create/overwrite file
-echo "more" >> file.txt         # Append to file
-```
-
-`grep`: Search for patterns in files
-```bash
-grep "word" file.txt            # Search for word
-grep -i "Word" file.txt         # Case-insensitive search
-grep -n "word" file.txt         # Show line numbers
-grep -r "word" directory/       # Search recursively in directory
-grep -v "word" file.txt         # Show lines NOT containing word
-grep -c "word" file.txt         # Count matching lines
-grep -w "word" file.txt         # Match whole word only
-grep -l "word" *.txt            # List files containing word
-grep -o "word" file.txt         # Show only matched parts
-grep --color "word" file.txt    # Highlight matches in color
-```
-
-`sed`: Stream editor for text manipulation
-```bash
-sed 's/old/new/' file.txt         # Replace first occurrence per line
-sed 's/old/new/g' file.txt        # Replace all occurrences
-sed '2d' file.txt                 # Delete line 2
-sed -i '' 's/old/new/g' file.txt  # Edit file in-place (Mac)
-```
-
-`awk`: Pattern scanning and processing
-```bash
-awk '{print $1}' file.txt       # Print first column
-awk '{print $NF}' file.txt      # Print last column
-awk '/pattern/ {print $0}' file.txt  # Print lines matching pattern
-```
-
----
-
-## Permissions
-
-Permissions control who can **open**, **modify**, or **run** a file or directory. You can set file permissions for the file owner, group, and others using a symbolic or numeric (octal) method with the `chmod` command.
-
-### Checking Current Permissions
-You can view current permissions using `ls -l`:
-```bash
-ls -l file.txt
-# -rwxr-xr--  1 user  group  1234 Aug  4 15:18 file.txt
-```
-
-The first 10 characters represent the file type and permissions:
-- The first character indicates the file type (`-` for regular file, `d` for directory).
-- The next 9 characters `rwxr-xr--` represent permissions for owner, group, and others.
-- `r` = read, `w` = write, `x` = execute, `-` = no permission.
-- owner: `rwx` (read, write, execute)
-- group: `r-x` (read, execute)
-- others: `r--` (read only)
-
-
-### Symbolic Permission Changes
-You can change permissions using the following symbols and syntax with `chmod`:
-
-**Targets:**
-- `u` = user (owner)
-- `g` = group
-- `o` = others
-- `a` = all (user + group + others)
-
-**Operations:**
-- `=` = set exact permissions
-- `+` = add permission
-- `-` = remove permission
-
-**Permission Types:**
-- `r` = read the file's contents (for directories: list files).
-- `w` = modify the file (for directories: create/delete files).
-- `x` = run the file as a program (for directories: enter the directory / use `cd`).
-
-**Examples:**
-```bash
-chmod u+x script.sh             # Make executable for owner
-chmod g-w file.txt              # Remove write for group
-chmod o-r secret.txt            # Remove read for others
-chmod a+r file.txt              # Add read for all
-chmod u=rwx,g=rx,o=r file.txt   # Set specific permissions
-```
-
-### Numeric (Octal) Permission Changes (Advanced)
-You can also set file permissions using a three-digit octal number, like `chmod 755 file.txt`.
-The three digits represent permissions for: **[owner] [group] [others]**.
-Each digit is a sum of the following values:
-- **4** = read (r)
-- **2** = write (w)
-- **1** = execute (x)
-- **0** = no permission
-
-**Common permission codes:**
-```bash
-chmod 755 file.txt
-# 7 (owner):  4+2+1 = read + write + execute
-# 5 (group):  4+1   = read + execute
-# 5 (others): 4+1   = read + execute
-
-chmod 644 file.txt
-# 6 (owner):  4+2 = read + write
-# 4 (group):  4   = read only
-# 4 (others): 4   = read only
-
-chmod 777 file.txt              # Full permissions for everyone (rarely needed)
-chmod 700 file.txt              # Private file (owner only)
-```
-
-`chmod -R`: Change permissions on directories and their contents recursively
-```bash
-chmod -R 755 directory/         # Apply to directory and all contents
-```
-Be careful — applying `755` recursively can make private files readable by everyone.
-
-### Permission Code Correspondence
-
-| Permission | Owner | Group | Others | Description |
-|------------|-------|-------|--------|-------------|
-| `700` | `rwx` | `---` | `---` | Private file (owner full access only) |
-| `755` | `rwx` | `r-x` | `r-x` | Common for executable scripts |
-| `644` | `rw-` | `r--` | `r--` | Common for documents/config files |
-| `600` | `rw-` | `---` | `---` | Read/write for owner only |
-| `777` | `rwx` | `rwx` | `rwx` | Full access for everyone (rarely safe) |
-
-
-### Changing owner and group
-
-`chown`: Change file owner:
-```bash
-chown user file.txt             # Change owner
-chown user:group file.txt       # Change owner and group
-chown -R user directory/        # Recursive
-```
-
----
-
-## Finding Files
-
-`find`: Search for files and directories
-```bash
-# Basic syntax
-find [path] [options] [expression]
-
-# Find by name
-find . -name "*.txt"                 # Find all .txt files
-find . -iname "*.TXT"                # Case-insensitive
-
-# Find by type
-find . -type f                       # Find files only
-find . -type d                       # Find directories only
-
-# Find by time (days)
-find . -mtime -7                     # Modified in last 7 days
-find . -atime +30                    # Accessed more than 30 days ago
-
-# Find by size
-find . -size +10M                    # Larger than 10MB
-find . -size -100k                   # Smaller than 100KB
-find . -size +1M -size -10M          # Between 1MB and 10MB
-
-# Combine conditions
-find . -name "*.log" -mtime +30      # Old log files
-find . -type f -empty                # Empty files
-
-# Execute commands on results
-find . -name "*.tmp" -delete         # Delete all .tmp files
-find . -name "*.txt" -exec rm {} \;  # Remove each file
-find . -name "*.txt" -exec rm {} +   # Remove all at once (faster)
-```
-
-`locate`: Fast file search using database
-```bash
-locate filename                 # Quick search (may need: sudo updatedb)
-```
-
-`which`: Find command location
-```bash
-which python                    # Shows path to python executable
-```
-
-`whereis`: Find binary, source, and manual pages
-```bash
-whereis python                  # Shows multiple related paths
-```
-
----
-
-## Wildcards and Pattern Matching
-
-### Shell Globbing
-
-**Basic wildcards:**
-```bash
-*                               # Matches zero or more characters
-?                               # Matches exactly one character
-[abc]                           # Matches any character in set
-[a-z]                           # Matches any character in range
-[!abc]                          # Matches any character NOT in set
-```
-
-**Examples:**
-```bash
-ls *.txt                        # All .txt files
-ls file?.txt                    # file1.txt, fileA.txt, etc.
-ls [abc]*.txt                   # Files starting with a, b, or c
-ls [0-9][0-9].txt               # Two-digit numbered files
-rm temp*                        # Remove all files starting with temp
-```
-
-### Extended Pattern Matching
-
-Enable with: `shopt -s extglob`
-
-```bash
-*(pattern)                      # Matches 0 or more times
-+(pattern)                      # Matches 1 or more times
-?(pattern)                      # Matches 0 or 1 time
-@(pattern)                      # Matches exactly once
-!(pattern)                      # Matches anything except pattern
-```
-
-**Examples:**
-```bash
-# Setup
-shopt -s extglob
-ls
-# file1 file2 file3 file11 file123
-
-# Examples
-ls !(file1)                     # Everything except file1
-ls !(file1|file2)               # Everything except file1 and file2
-ls file[0-9]                    # file1 file2 file3 file4
-ls file+([0-9])                 # file1 file2 file3 file4 file11 file123
-```
-
-### Brace Expansion
-
-Generate arbitrary strings:
-```bash
-echo {1,2,3}                     # 1 2 3
-echo file{1..5}.txt              # file1.txt file2.txt ... file5.txt
-echo {a..z}                      # a b c ... z
-
-# Combine patterns
-echo {A,B}{1,2}                  # A1 A2 B1 B2
-
-# Practical examples
-mkdir -p project/{src,test,docs}
-touch file{1..10}.txt
-cp file.txt{,.backup}            # Quick backup: file.txt.backup
-mv /path/{foo,bar,baz}.txt dir/  # Move multiple specific files
-```
-
----
-
-## Pipes and Redirection
-
-### Understanding Streams
-
-Unix has three standard streams:
-- **stdin (0)** - Standard input (keyboard)
-- **stdout (1)** - Standard output (screen)
-- **stderr (2)** - Standard error (screen)
-
-### Redirection Operators
-
-```bash
-command > file                  # Redirect stdout to file (overwrite)
-command >> file                 # Redirect stdout to file (append)
-command 2> file                 # Redirect stderr to file
-command &> file                 # Redirect both stdout and stderr
-command > file 2>&1             # Redirect stdout and stderr (alternative)
-command < file                  # Read stdin from file
-command 2>/dev/null             # Discard error messages
-command &>/dev/null             # Discard all output
-```
-
-**Examples:**
-```bash
-ls -l > listing.txt               # Save output to file
-echo "log entry" >> log.txt       # Append to log file
-find / -name "*.txt" 2>/dev/null  # Search without permission errors
-```
-
-### Pipes
-
-Chain commands by sending output of one as input to another:
-
-```bash
-command1 | command2                  # Pipe stdout of command1 to command2
-
-# Examples
-ls -l | grep ".txt"                  # List only .txt files
-cat file.txt | wc -l                 # Count lines in file
-history | tail -20                   # Show last 20 commands
-ps aux | grep python                 # Find Python processes
-cat access.log | grep "404" | wc -l  # Count 404 errors
-```
-
-**Useful pipe combinations:**
-```bash
-# Sort and remove duplicates
-cat file.txt | sort | uniq
-
-# Count unique occurrences
-cat file.txt | sort | uniq -c
-
-# Find largest files
-du -h | sort -rh | head -10
-
-# Monitor system processes
-ps aux | grep -i chrome | wc -l
-```
-
----
-
-## Combining Commands
-
-**Sequential execution (`;`)** - Run commands one after another
-```bash
-command1 ; command2             # command2 runs regardless of command1's success
-cd /tmp ; ls ; pwd
-```
-
-**Background execution (`&`)** - Run command in background
-```bash
-command1 & command2             # Both run simultaneously
-long_process & echo "Started"
-```
-
-**Conditional AND (`&&`)** - Run next command only if previous succeeds
-```bash
-command1 && command2            # command2 runs only if command1 succeeds
-mkdir project && cd project
-make && make test && make install
-```
-
-**Conditional OR (`||`)** - Run next command only if previous fails
-```bash
-command1 || command2            # command2 runs only if command1 fails
-cd /tmp || echo "Failed to change directory"
-```
-
-**Command substitution (`$(...)`)** - Use output of command as argument
-```bash
-echo "Today is $(date)"
-touch file_$(date +%Y%m%d).txt
-ls $(dirname $(which python))   # Nested commands
-```
-
-`xargs`: Build and execute commands from standard input
-```bash
-# Basic usage
-echo "file1 file2 file3" | xargs rm
-
-# Common patterns
-find . -name "*.tmp" | xargs rm              # Remove found files
-find . -type f -name "*.txt" | xargs grep "pattern"  # Search in found files
-
-# Handle filenames with spaces
-find . -name "*.txt" -print0 | xargs -0 rm   # Use null separator
-
-# Control execution
-ls *.txt | xargs -n 1 echo "Processing:"     # One argument at a time
-ls *.txt | xargs -I {} cp {} backup/         # Use placeholder
-```
-
----
-
-## Directory Visualization
-
-`tree`: Display directory structure in tree format
-
-Install first (if needed):
-```bash
-brew install tree               # macOS
-```
-
-**Usage:**
-```bash
-tree                            # Show full tree
-tree -L 2                       # Limit depth to 2 levels
-tree -d                         # Directories only
-tree -a                         # Include hidden files
-tree -I 'node_modules|*.pyc'    # Ignore patterns
-tree --dirsfirst                # List directories first
-tree -h                         # Human-readable sizes
-
-# Example output
+```text
 project/
 ├── src/
 │   ├── main.py
@@ -614,192 +147,860 @@ project/
 └── README.md
 ```
 
----
 
-## Symbolic Links
+## Creating Files and Directories
 
-`ln -s`: Create symbolic links (symlinks). A symbolic link is a file that points to another file or directory. It's like a shortcut or alias.
+### `mkdir`: Create Directories
+
+```bash
+mkdir project                     # Create one directory
+mkdir dir1 dir2                   # Create several directories
+mkdir -p project/src/components   # Create missing parent directories
+```
+
+### `touch`: Create a File or Update Its Timestamp
+
+```bash
+touch file.txt                    # Create an empty file if it does not exist
+touch existing.txt                # Update its access and modification times
+touch file{1..3}.txt              # Create file1.txt, file2.txt, and file3.txt
+```
+
+### `rmdir`: Remove Empty Directories
+
+```bash
+rmdir empty-directory
+rmdir -p dir/subdir/leaf          # Also remove empty parent directories
+```
+
+`rmdir` fails if a target directory contains anything. Use this behavior when you want to avoid removing files accidentally.
+
+
+## Viewing and Measuring Files
+
+### `cat`, `less`, `head`, and `tail`
+
+```bash
+cat file.txt                      # Print the entire file
+cat file1.txt file2.txt           # Print several files in order
+less largefile.txt                # View a file page by page; press q to quit
+head file.txt                     # Print the first 10 lines
+head -n 5 file.txt                # Print the first 5 lines
+tail file.txt                     # Print the last 10 lines
+tail -f application.log           # Follow new lines as they are written
+```
+
+### `file`: Identify a File Type
+
+```bash
+file document.pdf
+# document.pdf: PDF document, version 1.4
+```
+
+### `wc`: Count Lines, Words, and Bytes
+
+```bash
+wc file.txt                       # Lines, words, and bytes
+wc -l file.txt                    # Lines only
+wc -w file.txt                    # Words only
+wc -c file.txt                    # Bytes only
+```
+
+### `du`: Measure Disk Usage
+
+```bash
+du -h file.txt                    # Human-readable file size
+du -sh directory/                 # Total size of a directory
+du -h -d 1 .                      # Size of each item one level below, on macOS
+du -h --max-depth=1 .             # GNU/Linux equivalent
+```
+
+
+## Copying, Moving, and Removing
+
+### `cp`: Copy Files and Directories
+
+```bash
+cp source.txt destination.txt     # Copy a file
+cp -i source.txt destination.txt  # Ask before overwriting
+cp -v source.txt destination.txt  # Print the copied names
+cp file1 file2 target/            # Copy several files into a directory
+cp -R source-dir destination-dir  # Copy a directory recursively
+```
+
+The meaning of the destination depends on whether it already exists:
+
+- `cp source.txt destination.txt` replaces `destination.txt` if it exists. Add `-i` to request confirmation.
+- If `destination-dir` does not exist, `cp -R source-dir destination-dir` creates it as a copy of `source-dir`.
+- If `destination-dir` exists, the result is usually `destination-dir/source-dir/...`.
+
+### `mv`: Move or Rename
+
+```bash
+mv old.txt new.txt                # Rename a file
+mv -i old.txt new.txt             # Ask before overwriting
+mv file.txt directory/            # Move a file into a directory
+mv dir1 dir2                      # Rename dir1, or move it into dir2 if dir2 exists
+```
+
+### `rm`: Remove Files and Nonempty Directories
+
+```bash
+rm file.txt                       # Remove one file
+rm -i file.txt                    # Ask before removing
+rm -v file.txt                    # Print removed names
+rm -r directory/                  # Remove a directory recursively
+rm -ri directory/                 # Recursively remove with confirmation
+rm -rf directory/                 # Force recursive removal without confirmation
+```
+
+:::warning
+`rm` does not provide a built-in undo operation. Treat `rm -rf` as a last resort. Never paste it without first checking the exact expanded targets, for example with `echo directory/*` or `find directory -maxdepth 1`.
+:::
+
+
+## Creating Text and Redirecting Output
+
+### `echo` and `printf`
+
+```bash
+echo "Hello, world"               # Print a line
+echo "$PATH"                      # Print an environment variable
+printf '%s\n' "Hello, world"      # Print using an explicit format
+```
+
+`printf` is preferable when formatting matters because its behavior is more predictable across shells.
+
+### Standard Streams
+
+Every command can work with three standard streams:
+
+| Stream | Number | Default destination |
+| --- | ---: | --- |
+| Standard input (`stdin`) | `0` | Keyboard |
+| Standard output (`stdout`) | `1` | Terminal |
+| Standard error (`stderr`) | `2` | Terminal |
+
+### Redirection Operators
+
+```bash
+command > file                    # Write stdout to file, replacing it
+command >> file                   # Append stdout to file
+command < file                    # Read stdin from file
+command 2> errors.log             # Write stderr to file
+command > output.log 2>&1         # Write stdout and stderr to one file
+command &> output.log             # Bash and Zsh shorthand for the line above
+command 2>/dev/null               # Discard stderr
+```
+
+```bash
+echo "first line" > notes.txt
+echo "second line" >> notes.txt
+cat notes.txt
+# first line
+# second line
+```
+
+### Pipes
+
+A pipe, `|`, sends the standard output of the command on its left to the standard input of the command on its right.
+
+```bash
+history | tail -20                # Last 20 history entries
+grep "ERROR" application.log | wc -l
+ps aux | grep '[p]ython'
+du -h ./* | sort -h | tail -10
+```
+
+Each stage should do one job: select data, transform it, sort it, count it, or save it.
+
+### `tee`: Display and Save Output
+
+`tee` copies its input both to the terminal and to a file, which is useful when you want to continue a pipeline while keeping a record.
+
+```bash
+ls / | tee root-contents.txt | head
+grep "ERROR" application.log | tee errors.txt | wc -l
+command | tee -a history.log      # Append instead of replacing
+```
+
+
+## Text Processing
+
+### `grep`: Search Lines
+
+`grep` uses regular expressions to select matching lines.
+
+```bash
+grep 'word' file.txt              # Lines containing word
+grep -i 'word' file.txt           # Ignore letter case
+grep -n 'word' file.txt           # Include line numbers
+grep -w 'word' file.txt           # Match a whole word
+grep -v 'word' file.txt           # Select nonmatching lines
+grep -r 'word' directory/         # Search recursively
+grep -l 'word' *.txt              # Print matching filenames only
+grep -c 'word' file.txt           # Count matching lines
+grep -o '[0-9]\+' file.txt        # Print only matching parts with basic regex
+grep -E '[0-9]+' file.txt         # Use extended regular expressions
+```
+
+Common options:
+
+| Option | Meaning |
+| --- | --- |
+| `-i` | Ignore case |
+| `-w` | Match whole words |
+| `-v` | Select nonmatching lines |
+| `-n` | Include line numbers |
+| `-H` / `-h` | Show or suppress filename prefixes |
+| `-r` | Search directories recursively |
+| `-R` | Search recursively and follow symbolic links |
+| `-l` / `-L` | List files with or without matches |
+| `-c` | Count matching lines |
+| `-m NUMBER` | Stop after `NUMBER` matches per file |
+| `-o` | Print only the matched text |
+
+### `sed`: Transform Text
+
+```bash
+sed 's/old/new/' file.txt          # Replace the first match on each line
+sed 's/old/new/g' file.txt         # Replace every match
+sed '2d' file.txt                  # Delete the second line in the output
+sed -i '' 's/old/new/g' file.txt   # Edit in place on macOS
+sed -i 's/old/new/g' file.txt      # Edit in place with GNU sed on Linux
+```
+
+Without `-i`, `sed` prints the transformed text and leaves the original file unchanged.
+
+### `awk`: Process Records and Columns
+
+```bash
+awk '{print $1}' file.txt          # Print the first whitespace-separated field
+awk '{print $NF}' file.txt         # Print the last field
+awk '/pattern/ {print $0}' file.txt
+awk -F, '{print $2}' data.csv      # Use a comma as the field separator
+```
+
+### `sort`, `uniq`, `cut`, and `tr`
+
+```bash
+sort names.txt                     # Sort lines
+sort names.txt | uniq              # Remove adjacent duplicates
+sort names.txt | uniq -c           # Count each distinct line
+cut -d, -f2 data.csv               # Print the second comma-separated field
+tr '[:lower:]' '[:upper:]' < file.txt
+```
+
+
+## Finding Files and Commands
+
+### `find`: Search the Filesystem
+
+The basic form is `find PATH CONDITIONS ACTIONS`.
+
+```bash
+find . -name '*.txt'               # Names ending in .txt
+find . -iname '*.TXT'              # Case-insensitive name match
+find . -type f                     # Regular files only
+find . -type d                     # Directories only
+find . -empty                      # Empty files or directories
+
+find . -mtime -7                   # Modified during the last 7 days
+find . -mmin -60                   # Modified during the last 60 minutes
+find . -atime +30                  # Accessed more than 30 days ago
+
+find . -size +10M                  # Larger than 10 MiB
+find . -size +30k -size -1M        # Between 30 KiB and 1 MiB
+
+find . -name '*.log' -mtime +30    # Combine conditions with implicit AND
+find . \( -name '*.py' -o -name '*.sh' \) -type f
+find . -not -path './node_modules/*' -type f
+```
+
+Quote patterns such as `'*.txt'`. Otherwise, the shell may expand them before `find` receives them.
+
+### Run a Command on Search Results
+
+```bash
+find . -name '*.txt' -exec grep -n 'word' {} +
+find . -name '*.tmp' -exec rm -i {} +
+find . -name '*.tmp' -delete
+```
+
+`{}` is replaced with the found paths. The final `+` groups as many paths as possible into each command invocation; `\;` runs the command once per path.
+
+:::warning
+Place `-delete` only after confirming the same `find` expression without it. `find` descends into subdirectories unless you restrict it with options such as `-maxdepth`.
+:::
+
+### `find` with `xargs`
+
+Use a null character as the separator so that filenames containing spaces, quotes, or newlines remain intact.
+
+```bash
+find . -type f -name '*.txt' -print0 | xargs -0 grep -n 'word'
+find . -type f -name '*.tmp' -print0 | xargs -0 rm -i
+```
+
+When possible, `find ... -exec command {} +` is simpler and provides the same safe filename handling.
+
+### Find an Executable
+
+```bash
+command -v python                  # Portable: show how a command resolves
+type python                        # Explain whether it is an alias, function, or file
+which python                       # Common, but less informative than type
+whereis python                     # Binary, source, and manual locations on many Linux systems
+locate filename                    # Fast database search when locate is installed
+```
+
+
+## Shell Globbing and Brace Expansion
+
+### Globs Match Filenames
+
+The shell expands a glob into matching filenames before it runs the command.
+
+| Pattern | Meaning |
+| --- | --- |
+| `*` | Zero or more characters |
+| `?` | Exactly one character |
+| `[abc]` | One character from the set |
+| `[a-z]` | One character from the range |
+| `[!abc]` | One character not in the set |
+
+```bash
+ls *.txt                           # Every .txt file
+ls file?.txt                       # file1.txt, fileA.txt, and similar names
+ls [abc]*.txt                      # Names beginning with a, b, or c
+ls [0-9][0-9].txt                  # Names with exactly two digits
+mv *.{py,sh} scripts/              # Python and shell files
+```
+
+Preview a glob without performing the intended operation:
+
+```bash
+echo rm temp*
+printf '%s\n' temp*
+```
+
+:::note
+Globs and regular expressions are different languages. The shell expands `*.txt` as a glob, while `grep -E '^[0-9]+$'` interprets its quoted pattern as a regular expression.
+:::
+
+### Extended Globs in Bash
+
+Enable extended pattern matching in Bash:
+
+```bash
+shopt -s extglob
+```
+
+| Pattern | Meaning |
+| --- | --- |
+| `*(pattern)` | Zero or more occurrences |
+| `+(pattern)` | One or more occurrences |
+| `?(pattern)` | Zero or one occurrence |
+| `@(pattern)` | Exactly one occurrence |
+| `!(pattern)` | Anything except the pattern |
+
+```bash
+ls
+# file1 file2 file3 file11 file123
+
+ls !(file1)
+# file2 file3 file11 file123
+
+ls !(file1|file2)
+# file3 file11 file123
+
+ls file+([0-9])
+# file1 file2 file3 file11 file123
+```
+
+These examples are Bash-specific. Zsh provides its own extended glob syntax and options.
+
+### Brace Expansion Generates Strings
+
+Brace expansion does not inspect the filesystem; it generates strings.
+
+```bash
+echo {1,2,3}                       # 1 2 3
+echo file{1..5}.txt                # file1.txt through file5.txt
+echo {a..z}                        # a through z
+echo {A,B}{1,2}                    # A1 A2 B1 B2
+
+mkdir -p project/{src,tests,docs}
+touch file{1..10}.txt
+cp file.txt{,.backup}              # Expands to: cp file.txt file.txt.backup
+mv /path/{foo,bar,baz}.txt dir/
+```
+
+
+## Combining Commands and Expansions
+
+### Command Lists
+
+```bash
+command1 ; command2                # Run command2 regardless of command1
+command1 && command2               # Run command2 only if command1 succeeds
+command1 || command2               # Run command2 only if command1 fails
+command1 & command2                # Start command1 in the background, then command2
+```
+
+Practical examples:
+
+```bash
+mkdir project && cd project
+make && make test
+cd /tmp || echo "Could not enter /tmp"
+long_running_command & echo "Started in the background"
+```
+
+### Command Substitution: `$(...)`
+
+Command substitution runs a command and inserts its standard output into another command.
+
+```bash
+echo "Today is $(date +%F)"
+touch "report_$(date +%Y%m%d).txt"
+ls "$(dirname "$(command -v python)")"
+```
+
+Prefer `$(...)` to legacy backticks because it is easier to read and nest.
+
+### Parameter Expansion: `${...}`
+
+Parameter expansion reads or transforms the value of a shell variable. It does not run the contents as a command.
+
+```bash
+animal=cat
+echo "${animal}s"                  # cats
+echo "${animal}_food"              # cat_food
+echo "${HOME}/Documents"
+```
+
+The braces separate the variable name from adjacent text. This is the essential difference:
+
+```bash
+$(date)                            # Output of the date command
+${HOME}                            # Value of the HOME variable
+```
+
+### `xargs`: Build Commands from Input
+
+```bash
+printf '%s\n' file1 file2 file3 | xargs echo
+printf '%s\n' file1 file2 file3 | xargs -n 1 echo "Processing:"
+printf '%s\0' *.txt | xargs -0 -I {} cp {} backup/
+```
+
+Use `-0` with null-delimited input whenever filenames are involved.
+
+
+## Environment, Aliases, and History
+
+### Environment Variables
+
+```bash
+echo "$HOME"                       # Home directory
+echo "$PATH"                       # Directories searched for executables
+echo "$USER"                       # Current username
+
+export PROJECT_ROOT="$HOME/project" # Set and export a variable
+```
+
+Changes made at the prompt normally last only for the current shell session. Add persistent settings to `~/.zshrc` for Zsh or `~/.bashrc` for Bash, then start a new shell or reload the file.
+
+```bash
+source ~/.zshrc                    # Reload Zsh configuration
+source ~/.bashrc                   # Reload Bash configuration
+```
+
+### Aliases and Functions
+
+```bash
+alias ll='ls -lah'
+alias ..='cd ..'
+unalias ll
+```
+
+Aliases are suited to simple command substitutions. Use a function when you need arguments or multiple commands:
+
+```bash
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+mkcd new-project
+```
+
+### Command History
+
+```bash
+history                            # Show history
+history 20                         # Show recent entries in many shells
+!!                                 # Repeat the previous command
+!123                               # Run history entry 123
+!$                                 # Last argument of the previous command
+```
+
+History expansion depends on the shell and its configuration. Use `Ctrl + R` when you want to find and inspect a command before running it.
+
+
+## Permissions and Ownership
+
+Permissions control who may read, modify, or execute files and who may list, modify, or enter directories.
+
+### Inspect Permissions
+
+```bash
+ls -l script.sh
+# -rwxr-xr--  1 user  group  1234 Aug  4 15:18 script.sh
+```
+
+The first character is the file type: `-` for a regular file, `d` for a directory, and `l` for a symbolic link. The next nine characters are three permission groups:
+
+```text
+rwx r-x r--
+│   │   └── others
+│   └────── group
+└────────── owner (user)
+```
+
+For a regular file:
+
+- `r` allows reading the contents.
+- `w` allows modifying the contents.
+- `x` allows executing the file as a program.
+
+For a directory:
+
+- `r` allows reading its list of names.
+- `w` allows creating, renaming, or removing entries, subject to other permissions.
+- `x` allows entering the directory and accessing entries whose names are known.
+
+### Symbolic Permissions with `chmod`
+
+| Symbol | Meaning |
+| --- | --- |
+| `u` | User or owner |
+| `g` | Group |
+| `o` | Others |
+| `a` | Everyone |
+
+| Operator | Meaning |
+| --- | --- |
+| `=` | Set exact permissions |
+| `+` | Add permissions |
+| `-` | Remove permissions |
+
+```bash
+chmod u+x script.sh               # Add execute for the owner
+chmod g-w file.txt                # Remove group write access
+chmod o-r secret.txt              # Remove read access for others
+chmod a+r file.txt                # Add read access for everyone
+chmod u=rwx,g=rx,o=r file.txt     # Set each class explicitly
+```
+
+### Numeric Permissions with `chmod`
+
+Each digit is the sum of `4` for read, `2` for write, and `1` for execute. The three digits apply to owner, group, and others.
+
+| Mode | Symbolic form | Typical use |
+| --- | --- | --- |
+| `755` | `rwxr-xr-x` | Publicly executable script or traversable directory |
+| `700` | `rwx------` | Private executable or directory |
+| `644` | `rw-r--r--` | Common document or configuration file |
+| `600` | `rw-------` | Private file |
+| `777` | `rwxrwxrwx` | Full access for everyone; rarely appropriate |
+
+```bash
+chmod 755 script.sh
+chmod 644 document.txt
+chmod 600 private-key
+chmod -R u+rwX,go-rwx private-directory/
+```
+
+:::note
+New files often begin from mode `666` and new directories from `777`, but the shell's `umask` removes permissions. Run `umask` to inspect the current mask. The execute bit is omitted from the base mode for regular files so that ordinary new files do not become executable automatically.
+:::
+
+:::warning
+Apply recursive permission changes carefully. `chmod -R 755 directory/` also marks every regular file executable and readable by everyone. Symbolic mode `u+rwX` uses uppercase `X` to add execute only to directories and to files that are already executable.
+:::
+
+### Change Owner and Group
+
+```bash
+chown user file.txt                 # Change owner
+chown user:group file.txt           # Change owner and group
+chown -R user:group directory/      # Apply recursively
+```
+
+Changing ownership commonly requires administrator privileges, for example `sudo chown ...`.
+
+
+## Links
+
+### Symbolic Links
+
+A symbolic link is a small filesystem entry that stores a path to another file or directory.
 
 ```bash
 ln -s /path/to/original /path/to/link
-
-# Examples
 ln -s ~/Documents/project ~/Desktop/project-link
-ln -s /usr/local/bin/python3 ~/bin/python
-
-# Verify link
-ls -l link_file
-# lrwxr-xr-x  1 user  group  12 Aug  4 15:18 link_file -> original_file
+ls -l ~/Desktop/project-link
+# project-link -> /Users/username/Documents/project
 ```
 
-**Useful `ln` options:**
+Useful options:
+
 ```bash
-ln -sf original link            # Force create (overwrite existing)
-ln -s ~/Documents/notes.txt .   # Create link in current directory
+ln -sf original link              # Replace an existing destination
+ln -s ~/Documents/notes.txt .     # Create the link in the current directory
 ```
 
-**Key points:**
-- Symlinks can point to files or directories
-- If original is deleted, symlink breaks
-- Relative vs absolute paths affect portability
+- A symbolic link may point to a file or directory.
+- If its target is removed or moved, the link may break.
+- Relative links can be more portable within a directory tree; absolute links are independent of the current working directory.
 
 :::note
-**macOS Finder Aliases vs Symlinks:**
-- **Finder Aliases**: Remain valid if original file moves
-- **Symlinks**: Break if original file moves
-- **Compatibility**: Symlinks work in terminal (`cd symlink`), Finder aliases don't
+A macOS Finder alias is not the same as a symbolic link. Command-line tools understand symbolic links directly, while Finder aliases use macOS-specific metadata.
 :::
 
-**Hard links** (less common):
+### Hard Links
+
 ```bash
-ln original hardlink            # Create hard link (no -s flag)
-```
-- Both files point to same data
-- Deleting one doesn't affect the other
-- Cannot link directories or across filesystems
-
----
-
-## Environment and Configuration
-
-**Environment variables:**
-```bash
-echo $HOME                      # Show home directory
-echo $PATH                      # Show executable search paths
-echo $USER                      # Show current username
-
-# Set variables
-export VAR_NAME="value"         # Set for current session
+ln original.txt hardlink.txt
 ```
 
-**Aliases:**
-```bash
-alias ll='ls -lah'              # Create alias
-alias ..='cd ..'
-unalias ll                      # Remove alias
+Hard-linked filenames refer to the same underlying file data. Removing one name does not remove the data while another hard link remains. Hard links normally cannot cross filesystems or refer to directories.
 
-# Make permanent: add to ~/.zshrc or ~/.bashrc
+
+## Process and Job Management
+
+### Inspect Processes
+
+```bash
+ps                                 # Processes associated with this terminal
+ps aux                             # All processes in BSD-style output
+ps aux | grep '[p]ython'           # Find a process without matching grep itself
+pgrep -fl python                   # Find process IDs and command lines
+top                                # Interactive system process viewer
+htop                               # Alternative viewer, if installed
 ```
 
-**View command history:**
+### Foreground and Background Jobs
+
 ```bash
-history                         # Show all commands
-history 20                      # Show last 20 commands
-!123                            # Run command #123 from history
-!!                              # Repeat last command
-!$                              # Last argument of previous command
+long_running_command &             # Start in the background
+jobs                               # List jobs belonging to this shell
+fg %1                              # Bring job 1 to the foreground
+bg %1                              # Resume suspended job 1 in the background
 ```
 
----
+Press `Ctrl + Z` to suspend a foreground process, then use `bg` to continue it in the background or `fg` to bring it back.
 
-## Process Management
+### Stop Processes
 
-**View processes:**
 ```bash
-ps                              # Current shell processes
-ps aux                          # All processes
-ps aux | grep python            # Find specific processes
-top                             # Interactive process viewer
-htop                            # Better process viewer (may need install)
+kill PID                           # Request a graceful termination
+kill -TERM PID                     # Same signal, written explicitly
+killall process_name               # Signal processes by name
+kill -9 PID                        # Force termination with SIGKILL
 ```
 
-**Control processes:**
+Use `kill -9` only when normal termination does not work. It prevents the process from cleaning up files or other resources.
+
+
+## Writing Bash Scripts
+
+A shell script stores a sequence of commands in a text file so that it can be repeated reliably.
+
+### A Minimal Script
+
+Create `hello.sh`:
+
 ```bash
-command &                       # Run in background
-jobs                            # List background jobs
-fg %1                           # Bring job 1 to foreground
-bg %1                           # Resume job 1 in background
-kill PID                        # Kill process by ID
-kill -9 PID                     # Force kill
-killall process_name            # Kill all processes by name
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+name=${1:-world}
+printf 'Hello, %s!\n' "$name"
 ```
 
+Run it with Bash, or make it executable and run it directly:
 
----
-
-## Tips and Best Practices
-
-### 1. Safety First
 ```bash
-# Always use -i for interactive confirmation when deleting
-alias rm='rm -i'
-alias mv='mv -i'
-alias cp='cp -i'
+bash hello.sh Kensei
 
-# Make backups before destructive operations
-cp important.txt{,.backup}
+chmod u+x hello.sh
+./hello.sh Kensei
 ```
 
-### 2. Efficiency Tricks
-```bash
-# Quick directory navigation
-cd -                           # Go to previous directory
-pushd /path && popd            # Save and return to directories
+The first line is the **shebang** and selects the interpreter. The options in `set -euo pipefail` are a common defensive starting point for Bash scripts:
 
-# Quick file editing
-open -e file.txt               # macOS: open in TextEdit
-nano file.txt                  # Simple terminal editor
-vim file.txt                   # Powerful terminal editor
+- `-e` exits when an unhandled command fails.
+- `-u` reports an unset variable as an error.
+- `-o pipefail` makes a pipeline fail when any stage fails.
+
+These options affect control flow, so understand their behavior before adding them to a large existing script.
+
+### Script Arguments and Special Parameters
+
+| Parameter | Meaning |
+| --- | --- |
+| `$0` | Script or function name |
+| `$1` through `$9` | Individual positional arguments |
+| `${10}` and above | Positional arguments that require braces |
+| `"$@"` | All arguments, preserved as separate strings |
+| `"$*"` | All arguments combined into one string |
+| `$#` | Number of positional arguments |
+| `$$` | Process ID of the current shell |
+| `$?` | Exit status of the previous command |
+| `$!` | Process ID of the most recent background command |
+
+Use `"$@"` when forwarding arguments:
+
+```bash
+backup() {
+    cp -v -- "$@" backup/
+}
+
+backup "first file.txt" second.txt
 ```
 
-### 3. Information Gathering
+Quoting `"$@"` preserves `"first file.txt"` as one argument.
+
+### Conditional Statements
+
+Bash and Zsh support the versatile `[[ ... ]]` conditional syntax:
+
 ```bash
-man command                    # Read manual page
-command --help                 # Quick help
-which command                  # Find command location
-type command                   # Show command type (alias/function/builtin)
+file=$1
+
+if [[ -f $file ]]; then
+    echo "$file is a regular file"
+elif [[ -d $file ]]; then
+    echo "$file is a directory"
+else
+    echo "$file does not exist"
+fi
 ```
 
+Useful tests include:
 
----
+| Test | Meaning |
+| --- | --- |
+| `-e path` | Path exists |
+| `-f path` | Regular file exists |
+| `-d path` | Directory exists |
+| `-r path` | Path is readable |
+| `-w path` | Path is writable |
+| `-x path` | Path is executable or traversable |
+| `-z string` | String is empty |
+| `string1 == string2` | Strings are equal inside `[[ ... ]]` |
+
+The older `[ ... ]` form is specified by POSIX and is more portable to `/bin/sh`. It has stricter quoting and operator rules. Use `[[ ... ]]` in scripts that explicitly select Bash or Zsh, and `[ ... ]` when writing portable `sh` scripts.
+
+### Functions
+
+```bash
+find_large_files() {
+    local pattern=${1:-'*'}
+    local size_mb=${2:-10}
+    find . -type f -name "$pattern" -size "+${size_mb}M" -exec ls -lh {} +
+}
+
+find_large_files '*.pdf' 20
+```
+
+Functions share the current shell environment, so they can change directories and variables in the calling shell. Quote every expansion that should remain one argument.
+
+
+## Help and Good Habits
+
+### Learn What a Command Does
+
+```bash
+man command                        # Full manual page
+command --help                     # Common GNU-style quick help
+help command                       # Help for a Bash builtin
+type command                       # Alias, function, builtin, or executable
+command -v command                 # Show how the command resolves
+```
+
+Option syntax and behavior can differ between macOS/BSD tools and GNU/Linux tools. Check the manual on the system where the command will run.
+
+### Work Safely
+
+```bash
+pwd                                # Confirm your location
+ls -la target/                     # Inspect the target
+echo rm target/*.tmp               # Preview a wildcard expansion
+cp important.txt{,.backup}         # Make a quick backup
+rm -i file.txt                     # Request confirmation
+```
+
+Aliases such as `alias rm='rm -i'` can add a useful interactive guard, but scripts and other environments may not load the alias. Do not rely on it as the only safety measure.
+
+### Work Efficiently
+
+```bash
+cd -                               # Return to the previous directory
+pushd /path/to/project             # Save the current directory and move
+popd                               # Return to the saved directory
+nano file.txt                      # Beginner-friendly terminal editor
+vim file.txt                       # Modal terminal editor
+open -e file.txt                   # Open in TextEdit on macOS
+```
+
 
 ## Practice Exercises
 
-Try these exercises to build your command line skills:
+### Create and Inspect a Project
 
 ```bash
-# 1. Create a project structure
 mkdir -p myproject/{src,tests,docs}
 touch myproject/src/{main.py,utils.py}
 touch myproject/README.md
-
-# 2. Find and count
-find . -name "*.py" | wc -l
-
-# 3. Search and replace
-find . -name "*.txt" -exec sed -i '' 's/old/new/g' {} +
-
-# 4. Monitor log files
-tail -f /var/log/system.log | grep ERROR
+tree myproject
 ```
 
----
+### Find and Count Files
+
+```bash
+find myproject -type f -name '*.py' | wc -l
+```
+
+### Search and Transform Text
+
+```bash
+printf '%s\n' INFO ERROR INFO ERROR > application.log
+grep -n 'ERROR' application.log | tee errors.log | wc -l
+```
+
+### Write a Small Script
+
+Create a script that accepts a directory as `$1`, checks that it exists with `[[ -d ... ]]`, and prints its five largest entries using `du`, `sort`, and `tail`.
 
 
 ## Quick Reference
 
-```bash
-# Navigation
-pwd, cd, ls
-
-# File Operations  
-touch, cat, cp, mv, rm, mkdir, rmdir
-
-# Text Processing
-grep, sed, awk, sort, uniq, wc
-
-# Search
-find, locate, which
-
-# Permissions
-chmod, chown
-
-# Pipes & Redirection
-|, >, >>, <, 2>, &>
-
-# Process Control
-ps, top, kill, jobs, fg, bg
-
-# Information
-man, --help, which, type
-```
+| Task | Commands and operators |
+| --- | --- |
+| Navigate | `pwd`, `cd`, `ls`, `tree` |
+| Create | `mkdir`, `touch` |
+| View | `cat`, `less`, `head`, `tail`, `file` |
+| Copy, move, remove | `cp`, `mv`, `rm`, `rmdir` |
+| Measure | `wc`, `du` |
+| Search | `grep`, `find`, `command -v`, `type` |
+| Transform text | `sed`, `awk`, `sort`, `uniq`, `cut`, `tr` |
+| Redirect and pipe | `>`, `>>`, `<`, `2>`, `|`, `tee` |
+| Combine commands | `;`, `&`, `&&`, `||`, `$(...)` |
+| Permissions | `chmod`, `chown`, `umask` |
+| Links | `ln`, `ln -s` |
+| Processes and jobs | `ps`, `top`, `pgrep`, `kill`, `jobs`, `fg`, `bg` |
+| Help | `man`, `--help`, `help`, `type` |
