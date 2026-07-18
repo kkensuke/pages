@@ -6,20 +6,35 @@ tags: [Zsh]
 ---
 
 
-Aliases give short names to commands that you run frequently. For example, the following definition lets you enter `h` instead of `cd ~`:
+Aliases and functions give short names to commands that you run frequently. This article is a collection of practical shortcuts for navigation, files, macOS, Python, Git, and GitHub.
+
+
+## Aliases vs. Functions
+
+Use an alias for a fixed command replacement and a function when the shortcut needs arguments, multiple commands, or conditional logic.
+
+| | Alias | Function |
+| --- | --- | --- |
+| Best for | A fixed command or fixed options | Arguments or multiple commands |
+| Example use | Replace `h` with `cd ~` | Create a directory and enter it |
+| Definition | `alias h='cd ~'` | `mkcd() { mkdir -p "$1" && cd "$1"; }` |
 
 ```bash
 alias h='cd ~'
+
+mkcd() {
+    mkdir -p "$1" && builtin cd "$1"
+}
 ```
 
-An alias is best for a simple command replacement. Use a shell function when the shortcut needs arguments, multiple commands, or conditional logic.
+Use `h` to go to the home directory and `mkcd new-project` to create and enter a directory.
 
 :::note
-These examples are written for Zsh. Many simple aliases also work in Bash, but functions, prompt syntax, and command options can differ between shells and operating systems.
+These examples are intended for interactive Zsh sessions, not shell scripts. Many simple aliases also work in Bash, but functions and command options can differ between shells and operating systems.
 :::
 
 
-## Where to Define Aliases
+## Where to Define Aliases and Functions
 
 For a small configuration, add aliases directly to `~/.zshrc`:
 
@@ -42,13 +57,28 @@ For a larger configuration, keep aliases in purpose-specific files such as `$ZDO
 See [Organizing Zsh Configuration](./zsh.en.md) for a complete example using `$ZDOTDIR` and a modular `.zshrc`.
 
 
-## Basic Commands
+## Dependencies and Compatibility
+
+Most examples use standard macOS or Unix commands, but some require additional software:
+
+| Command or feature | Requirement |
+| --- | --- |
+| `gls` | GNU core utilities: `brew install coreutils` |
+| `open`, `osascript`, `defaults`, `pmset` | macOS |
+| `code` | Visual Studio Code command-line launcher |
+| `imgopt` | ImageOptim |
+| `gh` | GitHub CLI |
+| `git`, `curl`, `zip` | Install separately if unavailable |
+
+Copy only the shortcuts that match your tools and workflow. Test each addition in a new terminal before relying on it.
+
+
+## Navigation and Files
 
 ### Change Directories
 
 ```bash
 cs() { builtin cd "$@" && command ls -A }
-alias cd='cs'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -64,31 +94,24 @@ cdf() {
 }
 ```
 
-The `cs` function changes directory and then runs `ls -A`. `builtin cd` ensures that the function calls Zsh's built-in `cd` command rather than recursively calling the alias.
-
-:::note
-Replacing a shell built-in such as `cd` changes its behavior everywhere in the interactive shell. If you prefer to preserve the original command, omit `alias cd='cs'` and call `cs` explicitly.
-:::
+The `cs` function changes directory and then runs `ls -A`. `builtin cd` ensures that it always calls Zsh's built-in command. The other aliases provide short names for common destinations.
 
 
 ### List Files
 
 ```bash
-alias ls='gls --color --group-directories-first -F'
-alias l='ls'
-alias la='ls -A'
-alias ll='ls -AhlS'
+alias l='gls --color --group-directories-first -F'
+alias la='gls --color --group-directories-first -F -A'
+alias ll='gls --color --group-directories-first -F -AhlS'
 alias ds='du -d 1 -h 2>/dev/null | sort -h'
-alias pwd='sed "s/ /\\\ /g" <<< ${PWD/#$HOME/"~"}'
 alias p='pwd'
 alias path='echo -e ${PATH//:/\\n}'
 ```
 
-- `ls`: To use `gls`, install GNU core utilities with `brew install coreutils`.
+- `l`, `la`, `ll`: To use `gls`, install GNU core utilities with `brew install coreutils`.
     - `--color` colorizes the output.
     - `--group-directories-first` puts directories before files.
     - `-F` adds `/` to directory names, `@` to symbolic links, and other type indicators.
-- `la`, `ll`: Because `ls` is defined first, these aliases expand to `gls` with the shared options.
     - `-A` shows all entries except `.` and `..`.
     - `-h` uses human-readable file sizes.
     - `-l` shows size, owner, group, permissions, and other details.
@@ -96,30 +119,23 @@ alias path='echo -e ${PATH//:/\\n}'
 - `ds`: `du -d 1` shows the size of entries one level below the current directory.
     - `2>/dev/null` hides error messages.
     - `sort -h` sorts human-readable sizes through a [pipe](./linux.en.md#pipes).
-- `pwd`: `sed` escapes spaces with `\`, while `${PWD/#$HOME/"~"}` replaces the home-directory prefix with `~`.
+- `p` prints the working directory, and `path` prints one `$PATH` entry per line.
 
 :::tip
 Short options can usually be combined: `ls -AhlS` is equivalent to `ls -A -h -l -S`.
 :::
 
 
-### Edit and Remove Files
+### Edit Files
 
 ```bash
 alias v='vi'
-alias cp='cp -iv'
-alias mv='mv -iv'
-alias rm='rm -iv'
-alias rf='rm -rf'
 ```
 
-- `-i` asks before overwriting or removing a file.
-- `-v` prints the names being copied, moved, or removed.
+Replace `vi` with your preferred editor if necessary.
 
-:::warning
-`rf` removes directories recursively without confirmation. Inspect the target carefully before using it, or omit this alias if an easy-to-type destructive shortcut is not worth the risk.
-:::
 
+## Search and Utilities
 
 ### Search and Compare
 
@@ -140,7 +156,6 @@ rn() {
 
 dif() { git diff --no-index --color=always -- "$1" "$2" }
 alias imgopt='open -a ImageOptim .'
-alias grep='grep --color'
 ```
 
 `fb "*.pdf" 10` finds PDF files larger than 10 MB below the current directory:
@@ -165,21 +180,6 @@ Functions are defined as `name() { commands }` and can receive positional argume
 :::
 
 
-### Open Applications
-
-```bash
-alias hr='open .'
-alias c='open /Applications/CotEditor.app'
-alias vs='code'
-alias chrome='open /Applications/Google\ Chrome.app'
-```
-
-- `hr` opens the current directory in Finder.
-- `c` opens CotEditor.
-- `vs` opens Visual Studio Code.
-- `chrome` opens Google Chrome.
-
-
 ### Other Shortcuts
 
 ```bash
@@ -199,7 +199,49 @@ zipen() {
 `zipen file1 file2 dir1` creates the password-protected archive `enc.zip`. Quoted `"$@"` preserves each supplied path as a separate argument, including paths that contain spaces.
 
 
-## macOS Settings
+## Optional Command Overrides
+
+The following aliases replace existing commands rather than introducing new names. They are convenient, but they change command behavior throughout the interactive shell.
+
+```bash
+alias cd='cs'
+alias ls='gls --color --group-directories-first -F'
+alias pwd='sed "s/ /\\\ /g" <<< ${PWD/#$HOME/"~"}'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias grep='grep --color'
+alias pip='pip3'
+
+# Destructive shortcut: use only if you accept the risk.
+alias rf='rm -rf'
+```
+
+- The `cd` alias lists directory contents after every successful move.
+- The `ls` and `pwd` aliases replace standard output formats.
+- The `cp`, `mv`, and `rm` aliases add confirmation and verbose output.
+- Replacing `pip` can interfere with the executable selected by a Python virtual environment; `python -m pip` is more explicit.
+
+:::warning
+`rf` removes directories recursively without confirmation. Inspect the target carefully before using it, or omit this alias if an easy-to-type destructive shortcut is not worth the risk.
+:::
+
+
+## macOS Applications and Settings
+
+### Open Applications
+
+```bash
+alias hr='open .'
+alias c='open /Applications/CotEditor.app'
+alias vs='code'
+alias chrome='open /Applications/Google\ Chrome.app'
+```
+
+- `hr` opens the current directory in Finder.
+- `c` opens CotEditor.
+- `vs` opens Visual Studio Code.
+- `chrome` opens Google Chrome.
 
 ### Show or Hide Hidden Files in Finder
 
@@ -243,16 +285,16 @@ alias sleepoff='sudo pmset -a disablesleep 1'
 ## Python
 
 ```bash
-alias wpy='which python'
-
-alias pip='pip3'
-alias pin='pip install'
-alias puin='pip uninstall'
-alias pup='pip install --upgrade pip'
-alias pinreq='pip install -r requirements.txt'
-alias pf='pip list --format=freeze'
-alias pfr='pip list --format=freeze > requirements.txt'
+alias wpy='command -v python'
+alias pin='python -m pip install'
+alias puin='python -m pip uninstall'
+alias pup='python -m pip install --upgrade pip'
+alias pinreq='python -m pip install -r requirements.txt'
+alias pf='python -m pip list --format=freeze'
+alias pfr='python -m pip list --format=freeze > requirements.txt'
 ```
+
+Using `python -m pip` makes it explicit which Python interpreter owns the selected `pip` installation.
 
 ### Activate or Deactivate a Virtual Environment
 
@@ -352,6 +394,16 @@ $green gsec$normal — 👮 SECURITY"
 `gacp` stages every change in the repository. Run `git status` and review the diff before using it.
 :::
 
+#### Commit-message References
+
+- [Jupyter Book Development Conventions](https://github.com/executablebooks/.github/blob/master/CONTRIBUTING.md#commit-messages)
+- [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
+- [Emoji-Log](https://github.com/ahmadawais/Emoji-Log)
+- [gitmoji-cli](https://github.com/carloscuesta/gitmoji-cli)
+- [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
+- [Complete List of GitHub Markdown Emoji Markup](https://gist.github.com/rxaviers/7360908)
+- [Commit Message Examples](https://gist.github.com/mono0926/e6ffd032c384ee4c1cef5a2aa4f778d7)
+
 
 ### Generate `.gitignore`
 
@@ -367,17 +419,6 @@ gignore() {
 For example, run `gignore macos python visualstudiocode > .gitignore`.
 
 
-## Related Article
+## Next Steps
 
-For the recommended file layout, `$ZDOTDIR`, modular configuration files, and Zsh prompt customization, see [Organizing Zsh Configuration](./zsh.en.md).
-
-
-## References
-
-- [Jupyter Book Development Conventions](https://github.com/executablebooks/.github/blob/master/CONTRIBUTING.md#commit-messages)
-- [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
-- [Emoji-Log](https://github.com/ahmadawais/Emoji-Log)
-- [gitmoji-cli](https://github.com/carloscuesta/gitmoji-cli)
-- [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
-- [Complete List of GitHub Markdown Emoji Markup](https://gist.github.com/rxaviers/7360908)
-- [Commit Message Examples](https://gist.github.com/mono0926/e6ffd032c384ee4c1cef5a2aa4f778d7)
+For the recommended file layout, `$ZDOTDIR`, modular configuration files, and Zsh prompt customization, see [Organizing Zsh Configuration](./zsh.en.md). For the commands used inside these shortcuts, see the [Command Line Guide](./linux.en.md).
