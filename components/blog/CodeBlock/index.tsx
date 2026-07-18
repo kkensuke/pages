@@ -35,6 +35,7 @@ const Pre: Components['pre'] = ({ children, ...props }) => {
 
   const title = properties['title'] || '';
   const showLineNumbers = properties['showLineNumbers'] === 'true';
+  const startingLineNumber = Number(properties['startingLineNumber']) || 1;
 
   const handleCopy = () => {
     setIsCopied(true);
@@ -64,6 +65,7 @@ const Pre: Components['pre'] = ({ children, ...props }) => {
             language={language}
             style={coldarkDark}
             showLineNumbers={showLineNumbers}
+            startingLineNumber={startingLineNumber}
             customStyle={{
               margin: '0 1rem 0 0',
               borderRadius: 0,

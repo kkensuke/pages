@@ -63,6 +63,24 @@ function inferLanguage(filePath: string) {
   return languages[path.posix.extname(fileName).slice(1)] ?? 'plaintext';
 }
 
+function selectLines(code: string, range?: string) {
+  if (!range) return { code, startingLineNumber: 1 };
+
+  const match = /^(\d+)-(\d+)$/.exec(range);
+  const start = match ? Number(match[1]) : 0;
+  const end = match ? Number(match[2]) : 0;
+  const lines = code.split('\n');
+
+  if (!match || start < 1 || end < start || end > lines.length) {
+    throw new Error(`github-code lines must be within the file and use "start-end": ${range}`);
+  }
+
+  return {
+    code: lines.slice(start - 1, end).join('\n'),
+    startingLineNumber: start,
+  };
+}
+
 async function renderDirective(attributes: DirectiveAttributes) {
   if (!attributes.url) {
     throw new Error('github-code directive requires a url attribute');
@@ -75,7 +93,8 @@ async function renderDirective(attributes: DirectiveAttributes) {
     throw new Error(`Failed to fetch GitHub code (${response.status}): ${attributes.url}`);
   }
 
-  const code = (await response.text()).replace(/\n$/, '');
+  const fetchedCode = (await response.text()).replace(/\n$/, '');
+  const { code, startingLineNumber } = selectLines(fetchedCode, attributes.lines);
   const backtickRuns: string[] = code.match(/`+/g) || [];
   const longestBacktickRun = backtickRuns
     .reduce((longest, run) => Math.max(longest, run.length), 2);
@@ -83,12 +102,16 @@ async function renderDirective(attributes: DirectiveAttributes) {
   const language = attributes.language || inferLanguage(filePath);
   const title = (attributes.title || decodeURIComponent(path.posix.basename(filePath)))
     .replace(/[,\]]/g, '_');
-  const showLineNumbers = attributes.showLineNumbers === 'true'
-    ? ',showLineNumbers=true'
-    : '';
+  const properties = [
+    `title=${title}`,
+    attributes.showLineNumbers === 'true' ? 'showLineNumbers=true' : null,
+    attributes.showLineNumbers === 'true' && startingLineNumber > 1
+      ? `startingLineNumber=${startingLineNumber}`
+      : null,
+  ].filter(Boolean).join(',');
 
   return [
-    `${fence}${language}[title=${title}${showLineNumbers}]`,
+    `${fence}${language}[${properties}]`,
     code,
     fence,
     '',
