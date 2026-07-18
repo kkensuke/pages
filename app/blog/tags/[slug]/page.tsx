@@ -1,34 +1,34 @@
 import Link from 'next/link';
-import { Bookmark, Pencil } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { PostMetadata } from '@/lib/blog/types';
 import PostPreview from "@/components/blog/PostPreview";
-import getPostMetadata from "@/lib/blog/getPostMetadata";
 import getAllTags from '@/lib/blog/getAllTags';
 import { POSTS_PER_PAGE } from '@/lib/blog/getPaginatedPosts';
 import Pagination from '@/components/blog/Pagination';
 import TagSection from '@/components/blog/TagSection';
+import LanguageToggle from '@/components/blog/LanguageToggle';
+import { getBlogLanguage, getLocalizedPosts } from '@/lib/blog/localization';
+import type { BlogLanguage } from '@/lib/blog/localization';
 
 
-const allTags = getAllTags();
+const allTagSlugs = getAllTags();
 
-const getTagPosts = (tag: string): PostMetadata[] => {
-  const posts: PostMetadata[] = getPostMetadata();
+const getTagPosts = (tag: string, language: BlogLanguage): PostMetadata[] => {
+  const posts: PostMetadata[] = getLocalizedPosts(language);
   return posts.filter((post) => post.tags?.includes(tag));
-};
-
-type TagPageProps = {
-  params: {
-    slug: string;
-  };
 };
 
 const TagPage = ({ params, searchParams }: {
   params: { slug: string };
-  searchParams: { page?: string };
+  searchParams: { page?: string; lang?: string };
 }) => {
   const { slug } = params;
   const page = Number(searchParams.page) || 1;
-  const allTagPosts = getTagPosts(slug);
+  const language = getBlogLanguage(searchParams.lang);
+  const allTags = getAllTags(language);
+  const allTagPosts = getTagPosts(slug, language);
+  const basePath = `/blog/tags/${slug}`;
+  const blogHref = language === 'en' ? '/blog?lang=en' : '/blog';
   
   const totalPages = Math.ceil(allTagPosts.length / POSTS_PER_PAGE);
   const currentPage = Math.max(1, Math.min(page, totalPages));
@@ -37,7 +37,7 @@ const TagPage = ({ params, searchParams }: {
     currentPage * POSTS_PER_PAGE
   );
   const tagPostPreviews = posts.map((post) => (
-    <PostPreview key={post.slug} {...post} />
+    <PostPreview key={post.slug} {...post} language={language} />
   ));
 
   return (
@@ -45,16 +45,20 @@ const TagPage = ({ params, searchParams }: {
       <div className="mb-8 flex items-center gap-3">
         <Pencil className="text-slate-600" size={32} />
         <h1 className="bg-clip-text text-4xl font-bold text-slate-700">
-          <Link href="/blog"> Blog </Link>
+          <Link href={blogHref}> Blog </Link>
         </h1>
         <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-sm font-medium text-slate-500">
-          {allTagPosts.length} {allTagPosts.length === 1 ? 'post' : 'posts'}
+          {language === 'ja'
+            ? `${allTagPosts.length} 記事`
+            : `${allTagPosts.length} ${allTagPosts.length === 1 ? 'post' : 'posts'}`}
         </span>
         <div className="h-px flex-1 bg-slate-200"></div>
       </div>
 
-      <div className="mb-10">
-        <TagSection tags={allTags} activeTag={slug} />
+      <LanguageToggle language={language} basePath={basePath} />
+
+      <div className="mb-10 mt-6">
+        <TagSection tags={allTags} activeTag={slug} language={language} />
       </div>
 
       <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -65,7 +69,8 @@ const TagPage = ({ params, searchParams }: {
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        basePath={`/blog/tags/${slug}`}
+        basePath={basePath}
+        language={language}
       />
     </div>
   );
@@ -74,7 +79,7 @@ const TagPage = ({ params, searchParams }: {
 export default TagPage;
 
 export async function generateStaticParams() {
-  return allTags.map((tag) => ({
+  return allTagSlugs.map((tag) => ({
     slug: tag,
   }));
 }

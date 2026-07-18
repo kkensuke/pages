@@ -1,21 +1,31 @@
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import type { BlogLanguage } from '@/lib/blog/localization';
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
   basePath?: string; // e.g. "/blog" or "/blog/tags/python"
+  language?: BlogLanguage;
 }
 
 export default function Pagination({
   currentPage,
   totalPages,
   basePath = '/blog',
+  language = 'ja',
 }: PaginationProps) {
   if (totalPages <= 1) return null;
 
-  const getHref = (page: number) =>
-    page === 1 ? basePath : `${basePath}?page=${page}`;
+  const getHref = (page: number) => {
+    const params = new URLSearchParams();
+
+    if (language === 'en') params.set('lang', 'en');
+    if (page > 1) params.set('page', String(page));
+
+    const query = params.toString();
+    return query ? `${basePath}?${query}` : basePath;
+  };
 
   // Calculate the page number to display (current ±2)
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1).filter(

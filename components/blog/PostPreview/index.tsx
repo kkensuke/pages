@@ -3,8 +3,14 @@ import Link from "next/link";
 import { Calendar, Tag, ArrowRight } from 'lucide-react';
 import { PostMetadata } from "@/lib/blog/types";
 import { LIMITS } from '@/config/constants';
+import type { BlogLanguage } from '@/lib/blog/localization';
 
-const PostPreview = (props: PostMetadata) => {
+type PostPreviewProps = PostMetadata & {
+  language?: BlogLanguage;
+};
+
+const PostPreview = (props: PostPreviewProps) => {
+  const language = props.language || 'ja';
   const moreThan = props.subtitle.length > LIMITS.POST_EXCERPT_LENGTH;
   const subtitle = props.subtitle.slice(0, LIMITS.POST_EXCERPT_LENGTH) + 
   (moreThan ? "..." : "");
@@ -43,7 +49,7 @@ const PostPreview = (props: PostMetadata) => {
 
           {/* Read more indicator */}
           <div className="flex items-center gap-2 text-sm font-medium text-sky-600">
-            Read more 
+            {language === 'ja' ? '続きを読む' : 'Read more'}
             <ArrowRight size={16} />
           </div>
         </div>
@@ -57,14 +63,16 @@ const PostPreview = (props: PostMetadata) => {
             props.tags.map((tag: string) => (
               <Link
                 key={tag}
-                href={`/blog/tags/${tag}`}
+                href={`/blog/tags/${tag}${language === 'en' ? '?lang=en' : ''}`}
                 className="rounded-full bg-white px-2 text-sm text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100 hover:text-slate-900"
               >
                 {tag}
               </Link>
             ))
           ) : (
-            <span className="text-sm text-slate-400">No tags</span>
+            <span className="text-sm text-slate-400">
+              {language === 'ja' ? 'タグなし' : 'No tags'}
+            </span>
           )}
         </div>
       </div>
