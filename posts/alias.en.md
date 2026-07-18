@@ -16,7 +16,7 @@ Use an alias for a fixed command replacement and a function when the shortcut ne
 | | Alias | Function |
 | --- | --- | --- |
 | Best for | A fixed command or fixed options | Arguments or multiple commands |
-| Example use | Replace `h` with `cd ~` | Create a directory and enter it |
+| Example use | Replace `cd ~` with `h` | Create a directory and enter it |
 | Definition | `alias h='cd ~'` | `mkcd() { mkdir -p "$1" && cd "$1"; }` |
 
 ```bash
@@ -54,12 +54,12 @@ For a larger configuration, keep aliases in purpose-specific files such as `$ZDO
 [[ -f "$ZDOTDIR/aliases/git.zsh" ]] && source "$ZDOTDIR/aliases/git.zsh"
 ```
 
-See [Organizing Zsh Configuration](./zsh.en.md) for a complete example using `$ZDOTDIR` and a modular `.zshrc`.
+See [Organizing Zsh Configuration](./zsh.en) for a complete example using `$ZDOTDIR` and a modular `.zshrc`.
 
 
 ## Dependencies and Compatibility
 
-Most examples use standard macOS or Unix commands, but some require additional software:
+Most examples use standard macOS or Unix commands, but some commands in this article may require additional software.
 
 | Command or feature | Requirement |
 | --- | --- |
@@ -118,7 +118,7 @@ alias path='echo -e ${PATH//:/\\n}'
     - `-S` sorts by file size.
 - `ds`: `du -d 1` shows the size of entries one level below the current directory.
     - `2>/dev/null` hides error messages.
-    - `sort -h` sorts human-readable sizes through a [pipe](./linux.en.md#pipes).
+    - `sort -h` sorts human-readable sizes through a [pipe](./linux.en#pipes).
 - `p` prints the working directory, and `path` prints one `$PATH` entry per line.
 
 :::tip
@@ -218,7 +218,8 @@ alias rf='rm -rf'
 ```
 
 - The `cd` alias lists directory contents after every successful move.
-- The `ls` and `pwd` aliases replace standard output formats.
+- The `ls` alias uses GNU `ls` with color and directory grouping.
+- The `pwd` alias prints the current directory with spaces escaped and the home directory replaced by `~`. For example, `/Users/<USERNAME>/My Drive` becomes `~/My\ Drive` in MacOS.
 - The `cp`, `mv`, and `rm` aliases add confirmation and verbose output.
 - Replacing `pip` can interfere with the executable selected by a Python virtual environment; `python -m pip` is more explicit.
 
@@ -275,7 +276,7 @@ For example, `dwl ~/Desktop` changes the screenshot destination to the Desktop.
 
 
 ### Sleep Settings
-
+If you want to prevent your Mac from sleeping, use the following aliases:
 ```bash
 alias sleepon='sudo pmset -a disablesleep 0'
 alias sleepoff='sudo pmset -a disablesleep 1'
@@ -421,4 +422,4 @@ For example, run `gignore macos python visualstudiocode > .gitignore`.
 
 ## Next Steps
 
-For the recommended file layout, `$ZDOTDIR`, modular configuration files, and Zsh prompt customization, see [Organizing Zsh Configuration](./zsh.en.md). For the commands used inside these shortcuts, see the [Command Line Guide](./linux.en.md).
+For the recommended file layout, `$ZDOTDIR`, modular configuration files, and Zsh prompt customization, see [Organizing Zsh Configuration](./zsh.en). For the commands used inside these shortcuts, see the [Command Line Guide](./linux.en).
