@@ -14,6 +14,7 @@ const TagSection = ({ tags, activeTag, language = 'ja' }: TagSectionProps) => {
 
   // URLエンコードされている文字（日本語など）を元の文字に戻し、比較用に小文字にする
   const decodedActiveTag = activeTag ? decodeURIComponent(activeTag).toLowerCase() : undefined;
+  const languageQuery = language === 'en' ? '?lang=en' : '';
 
   return (
     <div className="flex flex-wrap justify-center gap-2">
@@ -24,7 +25,7 @@ const TagSection = ({ tags, activeTag, language = 'ja' }: TagSectionProps) => {
         return (
           <Link
             key={tag}
-            href={`/blog/tags/${tag}${language === 'en' ? '?lang=en' : ''}`}
+            href={isActive ? `/blog${languageQuery}` : `/blog/tags/${tag}${languageQuery}`}
             // 共通のスタイル
             className={`group flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium transition-all hover:shadow-md ${
               // アクティブなら水色、そうでないならグレー（どちらか片方だけ付与する）
