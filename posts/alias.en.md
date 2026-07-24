@@ -23,7 +23,7 @@ Use an alias for a fixed command or fixed options. Additional arguments can stil
 alias h='cd ~'
 
 mkcd() {
-    mkdir -p "$1" && builtin cd "$1"
+    mkdir -p "$1" && cd "$1"
 }
 ```
 
@@ -78,7 +78,7 @@ Copy only the shortcuts that match your tools and workflow. Test each addition i
 ### Change Directories
 
 ```bash
-cs() { builtin cd "$@" && command ls -A }
+cs() { cd "$@" && command ls -A }
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -90,11 +90,11 @@ alias /='cd /'
 
 # Change to the location shown in the frontmost Finder window.
 cdf() {
-    builtin cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
+    cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
 }
 ```
 
-The `cs` function changes directory and then runs `ls -A`. `builtin cd` ensures that it always calls Zsh's built-in command. The other aliases provide short names for common destinations.
+The `cs` function changes directory and then runs `ls -A`. The other aliases provide short names for common destinations.
 
 
 ### List Files
