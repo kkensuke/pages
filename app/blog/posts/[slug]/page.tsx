@@ -13,6 +13,7 @@ import 'katex/dist/katex.min.css';
 import React from "react";
 import path from "path";
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 import { FEATURES } from '@/config/constants';
 import Comment from "@/components/blog/Comment/Comment";
@@ -34,10 +35,13 @@ import getPostLinks from '@/lib/blog/getPostLinks';
 import PostNavigation from '@/components/blog/PostNavigation';
 
 const getPostContent = (slug: string) => {
+  const metadata = getPostMetadata().find((post) => post.slug === slug);
+  if (!metadata) notFound();
+
   const file = path.join(process.cwd(), "posts", `${slug}.md`);
   const content = fs.readFileSync(file, "utf8");
   const matterResult = matter(content);
-  return matterResult;
+  return { ...matterResult, data: metadata };
 };
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {

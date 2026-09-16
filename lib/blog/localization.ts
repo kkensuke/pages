@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import getPostMetadata from './getPostMetadata';
 import { PostMetadata } from './types';
 
@@ -15,9 +13,9 @@ export const getAlternatePostSlug = (slug: string): string | null => {
   const alternateSlug = getPostLanguage(slug) === 'en'
     ? slug.slice(0, -3)
     : `${slug}.en`;
-  const file = path.join(process.cwd(), 'posts', `${alternateSlug}.md`);
-
-  return fs.existsSync(file) ? alternateSlug : null;
+  return getPostMetadata().some((post) => post.slug === alternateSlug)
+    ? alternateSlug
+    : null;
 };
 
 export const getLocalizedPosts = (language: BlogLanguage): PostMetadata[] => {
