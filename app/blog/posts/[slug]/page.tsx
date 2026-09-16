@@ -1,9 +1,6 @@
-import fs from "fs";
-import matter from "gray-matter";
 import rehypeSlug from 'rehype-slug'; // rehype plugin to add id attributes to headings so that they can be linked to
 import Markdown from 'react-markdown';
 import { Components } from 'react-markdown';
-import remarkBreaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
 import remarkDirective from 'remark-directive';
 import remarkDirectiveRehype from 'remark-directive-rehype';
@@ -11,14 +8,13 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import React from "react";
-import path from "path";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { FEATURES } from '@/config/constants';
 import Comment from "@/components/blog/Comment/Comment";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
-import getPostMetadata from "@/lib/blog/getPostMetadata";
+import getPostMetadata, { getPostBySlug } from "@/lib/blog/getPostMetadata";
 import embedGitHubCode from "@/lib/blog/embedGitHubCode";
 import TagSection from '@/components/blog/TagSection';
 import TOC from "@/components/blog/TableOfContents/index";
@@ -35,13 +31,13 @@ import getPostLinks from '@/lib/blog/getPostLinks';
 import PostNavigation from '@/components/blog/PostNavigation';
 
 const getPostContent = (slug: string) => {
-  const metadata = getPostMetadata().find((post) => post.slug === slug);
-  if (!metadata) notFound();
+  const post = getPostBySlug(slug);
+  if (!post) notFound();
 
-  const file = path.join(process.cwd(), "posts", `${slug}.md`);
-  const content = fs.readFileSync(file, "utf8");
-  const matterResult = matter(content);
-  return { ...matterResult, data: metadata };
+  return {
+    content: post.content,
+    data: post.metadata,
+  };
 };
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
@@ -187,7 +183,6 @@ const PostContent = async (props: any) => {
               children={content}
               remarkPlugins={[
                 remarkGfm,
-                // remarkBreaks,
                 remarkDirective,
                 remarkDirectiveRehype,
                 remarkTextDirectives,
