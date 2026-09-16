@@ -3,6 +3,52 @@ import path from "path";
 import matter from "gray-matter";
 import { PostMetadata } from "./types";
 
+type PublishedPost = {
+  content: string;
+  metadata: PostMetadata;
+};
+
+const parsePublishedPost = (fileName: string, fileContents: string): PublishedPost | null => {
+  if (!fileContents.trim()) return null;
+
+  const { content, data } = matter(fileContents);
+  const title = typeof data.title === "string" ? data.title.trim() : "";
+  const date = data.date instanceof Date
+    ? data.date
+    : typeof data.date === "string" && data.date.trim()
+      ? new Date(data.date)
+      : null;
+
+  if (!title || !date || Number.isNaN(date.getTime())) {
+    console.warn(`Skipping ${fileName}: posts require a title and a valid date.`);
+    return null;
+  }
+
+  return {
+    content,
+    metadata: {
+      title,
+      // YAML parses unquoted dates as Date objects; consumers expect a string.
+      date: data.date instanceof Date ? date.toISOString() : data.date.trim(),
+      subtitle: typeof data.subtitle === "string" ? data.subtitle : "",
+      previewImage: typeof data.previewImage === "string" ? data.previewImage : undefined,
+      tags: Array.isArray(data.tags)
+        ? data.tags.filter((tag: unknown): tag is string => typeof tag === "string")
+        : [],
+      slug: fileName.slice(0, -3),
+    },
+  };
+};
+
+export const getPostBySlug = (slug: string): PublishedPost | null => {
+  const fileName = `${slug}.md`;
+  const file = path.join(process.cwd(), "posts", fileName);
+
+  if (!fs.existsSync(file)) return null;
+
+  return parsePublishedPost(fileName, fs.readFileSync(file, "utf8"));
+};
+
 const getPostMetadata = (): PostMetadata[] => {
   const folder = path.join(process.cwd(), "posts");
   
@@ -16,33 +62,12 @@ const getPostMetadata = (): PostMetadata[] => {
 
   // Only publish posts with usable metadata. Empty files can be draft placeholders.
   const posts: PostMetadata[] = markdownPosts.flatMap((fileName) => {
-    const fileContents = fs.readFileSync(path.join(folder, fileName), "utf8");
-    if (!fileContents.trim()) return [];
+    const post = parsePublishedPost(
+      fileName,
+      fs.readFileSync(path.join(folder, fileName), "utf8")
+    );
 
-    const { data } = matter(fileContents);
-    const title = typeof data.title === "string" ? data.title.trim() : "";
-    const date = data.date instanceof Date
-      ? data.date
-      : typeof data.date === "string" && data.date.trim()
-        ? new Date(data.date)
-        : null;
-
-    if (!title || !date || Number.isNaN(date.getTime())) {
-      console.warn(`Skipping ${fileName}: posts require a title and a valid date.`);
-      return [];
-    }
-
-    return [{
-      title,
-      // YAML parses unquoted dates as Date objects; consumers expect a string.
-      date: data.date instanceof Date ? date.toISOString() : data.date.trim(),
-      subtitle: typeof data.subtitle === "string" ? data.subtitle : "",
-      previewImage: typeof data.previewImage === "string" ? data.previewImage : undefined,
-      tags: Array.isArray(data.tags)
-        ? data.tags.filter((tag: unknown): tag is string => typeof tag === "string")
-        : [],
-      slug: fileName.slice(0, -3),
-    }];
+    return post ? [post.metadata] : [];
   });
   
   // Sort post metadata by date in descending order
