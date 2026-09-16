@@ -126,6 +126,8 @@ The project also contains an authenticated owner area with:
 
 ## 🚀 Quick Start
 
+Use Node.js 24.x (also specified in `package.json` for Vercel deployments).
+
 Clone the repository:
 
 ```bash
@@ -232,6 +234,12 @@ Your article starts here.
 ```
 
 Posts are automatically discovered from the `posts/` directory and ordered by date.
+
+A post needs a non-empty string `title` and a valid `date` before it is published.
+Empty files and posts with missing or invalid required metadata are excluded from
+listings, navigation, language links, and the sitemap; their article URLs return
+404. Non-empty files with invalid required metadata produce a warning naming the
+file. Unquoted YAML dates are supported and converted to strings before rendering.
 
 ## 💻 Code Blocks
 
