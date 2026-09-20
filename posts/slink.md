@@ -384,4 +384,10 @@ slink unregister ~/slink-demo/hello-link.txt
 
 こちらはリンクをそのまま残し、`list`・`check`・`fix` の対象から外します。
 
-詳しい使い方や更新情報は、日本語 README で確認できます。
+---
+
+さらに詳しい使い方は、github の README で確認してください。
+
+:::linkcard
+https://github.com/kkensuke/slink
+:::

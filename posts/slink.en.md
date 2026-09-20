@@ -384,4 +384,11 @@ slink unregister ~/slink-demo/hello-link.txt
 
 This leaves the symlink in place and removes it from the symlinks included in `list`, `check`, and `fix`.
 
-For detailed usage and updates, see the [English README](https://github.com/kkensuke/slink/blob/main/README.md).
+
+---
+
+For more detailed usage, please check the README on GitHub.
+
+:::linkcard
+https://github.com/kkensuke/slink
+:::
