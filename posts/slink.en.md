@@ -1,7 +1,7 @@
 ---
 title: "slink"
 date: "2026-09-16"
-subtitle: "A macOS CLI for easily creating and managing symbolic links"
+subtitle: "A macOS & Linux CLI for easily creating and managing symbolic links"
 tags: [MacOS, CLI, Productivity]
 ---
 
@@ -16,7 +16,7 @@ As the number of symlinks grows, you may want to keep track of:
 * Whether their targets still exist
 * How to restore symlinks you have deleted
 
-`slink` is a **macOS CLI that records each symlink's location and target in a registry file when you create it**.
+`slink` is a **CLI tool for macOS and Linux that safely creates and manages symbolic links based on a TOML file**.
 
 You can list your symlinks, check their status, and restore them from the command line. You can also register existing symlinks. It works for symlinks to files and directories beyond just dotfiles.
 
