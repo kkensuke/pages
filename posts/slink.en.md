@@ -14,7 +14,7 @@ As the number of symlinks grows, you may want to keep track of:
 * Where you created them
 * What each one points to
 * Whether their targets still exist
-* How to restore symlinks you have deleted
+* How to restore deleted or broken symlinks
 
 `slink` is a **CLI tool for macOS and Linux that safely creates and manages symbolic links based on a TOML file**.
 
