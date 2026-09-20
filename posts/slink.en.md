@@ -7,7 +7,7 @@ tags: [MacOS, CLI, Productivity]
 
 ## 1. Introduction
 
-Symbolic links, or symlinks, are useful for organizing configuration files. They provide access to a file or directory from another location, allowing you to keep your actual configuration files together in one place.
+Symbolic links are very convenient because they allow you to increase the "entrances from other locations" to a file or directory while keeping the actual data in one place.
 
 As the number of symlinks grows, you may want to keep track of:
 
