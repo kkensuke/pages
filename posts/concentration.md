@@ -1317,9 +1317,3 @@ Bernstein はさらに分散を利用することで、小偏差領域ではよ�
 * W. Hoeffding, *Probability Inequalities for Sums of Bounded Random Variables*, Journal of the American Statistical Association, 58(301), pp. 13–30, 1963. DOI: 10.1080/01621459.1963.10500830
 * C. McDiarmid, *On the Method of Bounded Differences*, Surveys in Combinatorics, 1989, London Mathematical Society Lecture Note Series 141, pp. 148–188. DOI: 10.1017/CBO9781107359949.008
 * S. Boucheron, G. Lugosi, P. Massart, *Concentration Inequalities: A Nonasymptotic Theory of Independence*, Oxford University Press, 2013.
-  :::
-
-Hoeffding の原論文は「独立な有界確率変数の和」の tail bound を扱う 1963 年の JASA 論文で、McDiarmid の bounded differences の原典は 1989 年の *Surveys in Combinatorics* です。([Taylor & Francis Online][1]) また、本文で採用した Hoeffding・Bernstein の定数は標準的な形と一致し、Chernoff 法を「指数変換した Markov + パラメータ最適化」とする整理も標準的です。([CS Princeton][2])
-
-[1]: https://www.tandfonline.com/doi/abs/10.1080/01621459.1963.10500830?utm_source=chatgpt.com "Probability Inequalities for Sums of Bounded Random Variables: Journal of the American Statistical Association: Vol 58, No 301"
-[2]: https://www.cs.princeton.edu/~arora/TheoryDL.pdf?utm_source=chatgpt.com "S A N J E E V A R O R A"
