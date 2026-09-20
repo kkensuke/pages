@@ -11,18 +11,14 @@ Symbolic links are very convenient because they allow you to increase the "entra
 
 As the number of symlinks grows, you may want to keep track of:
 
-- Where you created them
-- What each one points to
-- Whether their targets still exist
-- How to restore symlinks you have deleted
+* Where you created them
+* What each one points to
+* Whether their targets still exist
+* How to restore symlinks you have deleted
 
 `slink` is a **macOS CLI that records each symlink's location and target in a registry file when you create it**.
 
 You can list your symlinks, check their status, and restore them from the command line. You can also register existing symlinks. It works for symlinks to files and directories beyond just dotfiles.
-
-:::linkcard
-https://github.com/kkensuke/slink
-:::
 
 ## 2. Installation
 
@@ -161,7 +157,30 @@ target = "/Users/you/slink-demo/hello.txt"
 | `link`   | Where the symlink is placed |
 | `target` | What the symlink points to  |
 
-A `[[link]]` block is added for each registration. Paths are stored as absolute paths, even if you use relative paths in a command.
+A `[[link]]` block is added for each registration.
+
+By default, slink stores the target of a newly created symlink as an absolute path. If you use `-r` / `--relative`, however, the `target` can instead be stored as a path relative to the symlink's location.
+
+The registry also supports `${HOME}` for paths based on your home directory:
+
+```toml[title=links.toml]
+[[link]]
+link   = "${HOME}/slink-demo/hello-link.txt"
+target = "${HOME}/slink-demo/hello.txt"
+```
+
+Only `${HOME}` and values beginning with `${HOME}/` are interpreted as HOME expressions. `~`, `$HOME`, other variables, and `${HOME}` appearing later in a path remain literal path text.
+
+If you also want absolute paths under HOME that slink creates or updates to be written using `${HOME}`, add the following setting to the registry:
+
+```toml[title=links.toml]
+[format]
+home = "expression"
+```
+
+If this setting is omitted, slink uses concrete absolute paths as before.
+
+With `home = "expression"`, the preference applies only to entries that slink creates or updates. Existing untouched entries are not automatically rewritten. Relative targets also remain relative rather than being converted into `${HOME}` expressions.
 
 You can handle everyday operations with slink commands, or open the registry file to view and edit the relationships between symlinks and their targets directly.
 
@@ -188,18 +207,19 @@ Arguments in square brackets, such as `[link ...]`, are optional. `...` indicate
 
 ## 6. Option Reference
 
-| Short | Long                | Description                                                                                                 |
-| ----- | ------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `-c`  | `--config`          | Display the registry file's location                                                                        |
-| `-f`  | `--force`           | When creating symlinks or running `fix`, replace existing symlinks that point to different targets          |
-| `-p`  | `--parents`         | When creating symlinks or running `fix`, create any missing parent directories for the symlinks             |
-| `-n`  | `--dry-run`         | Preview changes without writing when creating symlinks or running `fix`, `unregister`, `remove`, or `adopt` |
-| `-R`  | `--recursive`       | Include subdirectories when running `scan`                                                                  |
-| `-o`  | `--format <format>` | Set the output format for `list`, `check`, and `scan`. Supports `human` and `tsv`; defaults to `human`      |
-| `-h`  | `--help`            | Display help                                                                                                |
-| `-V`  | `--version`         | Display the version                                                                                         |
+| Short | Long                | Description                                                                                                                     |
+| ----- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `-c`  | `--config`          | Display the registry file's location                                                                                            |
+| `-f`  | `--force`           | When creating symlinks or running `fix`, replace conflicting symlinks or enforce the requested/registered target representation |
+| `-r`  | `--relative`        | When creating a symlink, store and create its target as a path relative to the symlink's location                               |
+| `-p`  | `--parents`         | When creating symlinks or running `fix`, create any missing parent directories for the symlinks                                 |
+| `-n`  | `--dry-run`         | Preview changes without writing when creating symlinks or running `fix`, `unregister`, `remove`, or `adopt`                     |
+| `-R`  | `--recursive`       | Include subdirectories when running `scan`                                                                                      |
+| `-o`  | `--format <format>` | Set the output format for `list`, `check`, and `scan`. Supports `human` and `tsv`; defaults to `human`                          |
+| `-h`  | `--help`            | Display help                                                                                                                    |
+| `-V`  | `--version`         | Display the version                                                                                                             |
 
-Short options can be combined, as in `-np`.
+Short options can be combined, as in `-np` or `-rf`.
 
 Use `--config`, `--help`, and `--version` on their own. `--config` displays the location of the current registry file; it does not specify an alternative configuration file.
 
@@ -231,7 +251,46 @@ slink -np ~/dotfiles/nvim ~/.config/nvim
 
 After reviewing the planned changes, run the command again without `-n`.
 
-### 7.2. Restore a Deleted Symlink
+### 7.2. Create a Symlink with a Relative Target
+
+By default, slink uses an absolute target when creating a symlink. Add `-r` / `--relative` to store and create an equivalent target relative to the symlink's location.
+
+For example, suppose you have:
+
+```text
+~/slink-demo/
+├── hello.txt
+└── links/
+```
+
+Move to `~/slink-demo` and run:
+
+```bash
+cd ~/slink-demo
+slink -r hello.txt links/hello-link.txt
+```
+
+Both `hello.txt` and `links/hello-link.txt` are still interpreted relative to the current working directory.
+
+`--relative` changes only the representation used for the target stored in the symlink and registry.
+
+The resulting symlink is:
+
+```text
+links/hello-link.txt -> ../hello.txt
+```
+
+The registry also stores the relative target:
+
+```toml
+[[link]]
+link   = "/Users/you/slink-demo/links/hello-link.txt"
+target = "../hello.txt"
+```
+
+If you register an existing symlink with `adopt`, slink can also preserve its relative target representation.
+
+### 7.3. Restore a Deleted Symlink
 
 You can recreate registered symlinks with `fix`.
 
@@ -271,7 +330,7 @@ After reviewing the preview, apply the changes:
 slink fix
 ```
 
-### 7.3. Find and Register Existing Symlinks
+### 7.4. Find and Register Existing Symlinks
 
 You can also bring symlinks previously created with tools such as `ln -s` under slink's management.
 
@@ -297,13 +356,15 @@ slink adopt ~/.config/nvim
 
 This records its location and current target without changing the symlink itself.
 
+If the existing symlink uses a relative target, slink keeps that relative representation when possible.
+
 Once registered, you can view and check it alongside your other symlinks with `list` and `check`.
 
 ```bash
 slink check ~/.config/nvim
 ```
 
-### 7.4. Delete or Unregister a Symlink
+### 7.5. Delete or Unregister a Symlink
 
 When you no longer need the sample symlink, choose one of the following operations.
 
