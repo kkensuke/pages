@@ -20,6 +20,27 @@ As the number of symlinks grows, you may want to keep track of:
 
 You can list your symlinks, check their status, and restore them from the command line. You can also register existing symlinks. It works for symlinks to files and directories beyond just dotfiles.
 
+:::linkcard
+https://github.com/kkensuke/slink
+:::
+
+### Difference from `ln -s`
+
+`slink` does not just create symbolic links; it also helps prevent mistakes during creation and manages them afterward.
+
+| Aspect | `slink` | `ln -s` |
+| --- | --- | --- |
+| Relative path input | Interprets both target and link based on the current directory | Basically saves the target string directly into the link |
+| Relative links | Automatically calculates the correct relative path with `-r` | Available with `-r` on GNU/Linux; not available on standard macOS `ln` |
+| Parent directories | Creates necessary parent directories with `-p` | Requires a separate `mkdir -p` |
+| Existing files/directories | Stops as a conflict instead of accidentally overwriting | Depending on options and destination, may delete or create in unintended locations |
+| Direct self-reference | Detects and refuses creation | Can be created |
+| Non-existent target | Creates the link but warns and detects it with `check` | Creates a dangling symlink as-is |
+| Dry-run | Preview changes with `-n` | No equivalent standard feature |
+| Post-creation management | Automatically registers and manages via `list` / `check` / `fix` / `remove` | No state management |
+
+In short, while `ln -s` is "a command to create links," `slink` is **a command to safely create links and continuously manage their state**.
+
 ## 2. Installation
 
 Install slink with Homebrew:
