@@ -16,7 +16,9 @@ As the number of symlinks grows, you may want to keep track of:
 * Whether their targets still exist
 * How to restore deleted or broken symlinks
 
-`slink` is a **CLI for macOS and Linux that allows for the safe and intuitive creation of symbolic links while simultaneously recording the link's location and referral destination in a management TOML file**.
+To easily solve these problems, I created `slink`.
+
+`slink` is a **CLI for macOS and Linux that allows you to create symbolic links intuitively and safely, while also managing the locations and destinations of the created symbolic links using a TOML file**.
 
 You can list your symlinks, check their status, and restore them from the command line. You can also register existing symlinks. It works for symlinks to files and directories beyond just dotfiles.
 
