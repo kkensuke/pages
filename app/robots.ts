@@ -7,15 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: [
-          '/owner',
-          '/owner/*',
-          '/api/',
-          '/login',
-          // Uncomment if you enable products feature
-          // '/checkout',
-          // '/success',
-        ],
+        disallow: ['/api/'],
       },
     ],
     sitemap: `${SITE_CONFIG.url}/sitemap.xml`,
