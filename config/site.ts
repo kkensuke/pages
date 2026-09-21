@@ -16,7 +16,6 @@ export const SITE_CONFIG = {
   navigation: [
     { title: 'Home', path: '/' },
     { title: 'Blog', path: '/blog' },
-    // { title: 'Products', path: '/products' },
     // { title: 'Publications', path: '/publications' },
     { title: 'Photos', path: '/photos' },
   ],
