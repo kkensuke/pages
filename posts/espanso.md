@@ -518,7 +518,7 @@ print("Hello from python")
       Happy Birthday!
 ```
 
-![screenshot.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/0d085e75-b23a-70af-604d-834d64d961d5.png)
+![Image](/images/espanso/espanso4.jpeg)
 
 上のフォームは以下のように表現することもできます。
 ```yml
@@ -567,7 +567,7 @@ matches:
           - sentence 4
 ```
 
-![screenshot.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/adbd6d0e-377d-4072-8148-6904f2580930.png)
+![Image](/images/espanso/espanso5.jpeg)
 
 
 
@@ -597,7 +597,7 @@ matches:
               values: "{{hours}}"
 ```
 
-![SCR-20240618-qyki.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/932694e0-8a4f-5c6d-8f57-d7bb38eca3de.png)
+![Image](/images/espanso/espanso6.jpeg)
 
 
 ### テキストのケーススタイル変換
