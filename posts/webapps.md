@@ -11,39 +11,39 @@ tags: [App]
 
 10 分間だけ使える一時的なメールアドレスを取得できます。普段のメールアドレスを使いたくないサービスへの登録に便利です。利用時間を延長することもできます。同様のサービスはほかにも多数あります。
 
-![画像](/images/10-minute-mail.jpeg)
+![](/images/webapps/10-minute-mail.jpeg)
 
 
 ## [PDF Compressor](https://www.ilovepdf.com/compress_pdf)
 
 容量の大きな PDF ファイルを圧縮できます。同様のサービスは多数ありますが、このサービスは使いやすくおすすめです。
 
-![画像](/images/pdf.jpeg)
+![](/images/webapps/pdf.jpeg)
 
 
 ## [PDF Resizer](https://pdfresizer.com/crop)
 
 PDF ファイルをさまざまな方法で編集できます。特に便利な機能の 1 つがトリミングです。
 
-![画像](/images/pdfresizer.jpeg)
+![](/images/webapps/pdfresizer.jpeg)
 
 
 ## [Internet Speed Test](https://fast.com/)
 
 インターネットの通信速度を確認できます。
 
-![画像](/images/fast.jpeg)
+![](/images/webapps/fast.jpeg)
 
 
 ## [LettuceMeet](https://lettucemeet.com/)
 
 友人やメンバーとのミーティング日程を調整できます。
 
-![画像](/images/lettucemeet.jpeg)
+![](/images/webapps/lettucemeet.jpeg)
 
 
 ## [Online Timer](https://vclock.com/timer/)
 
 シンプルな UI のオンラインタイマーです。
 
-![画像](/images/online-timer.jpeg)
+![](/images/webapps/online-timer.jpeg)

@@ -7,25 +7,25 @@ const photos = [
     id: 1,
     title: "Berkeley",
     category: "",
-    imagePath: "/images/berkeley.jpeg"
+    imagePath: "/images/photos/berkeley.jpeg"
   },
   {
     id: 2,
     title: "Enoshima",
     category: "",
-    imagePath: "/images/enoshima.jpeg"
+    imagePath: "/images/photos/enoshima.jpeg"
   },
   {
     id: 3,
     title: "Kagoshima",
     category: "",
-    imagePath: "/images/kagoshima.jpeg"
+    imagePath: "/images/photos/kagoshima.jpeg"
   },
   {
     id: 4,
     title: "Tokyo",
     category: "",
-    imagePath: "/images/tokyo.jpeg"
+    imagePath: "/images/photos/tokyo.jpeg"
   }
 ];
 

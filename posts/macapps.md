@@ -17,7 +17,7 @@ https://freemacsoft.net/appcleaner/
 
 コンピューターからアプリを削除するとき、`AppCleaner` はそのアプリに関連するファイルを探し、まとめて削除できるようにしてくれます。
 
-![画像](/images/appcleaner.jpeg)
+![](/images/webapps/appcleaner.jpeg)
 
 
 ## Bitwarden
@@ -55,7 +55,7 @@ https://www.coconut-flavour.com/coconutbattery/
 
 `coconutBattery` を使うと、Mac、iPad、iPhone のバッテリー情報を確認できます。
 
-![画像](/images/coconutBattery.jpeg "width=300px")
+![](/images/webapps/coconutBattery.jpeg "width=300px")
 
 
 ## draw.io
@@ -66,7 +66,7 @@ https://app.diagrams.net/
 
 `draw.io` は、フローチャートやネットワーク図などを作成できる無料のオープンソース作図ソフトウェアです。UI がシンプルで使いやすく、ブラウザまたはデスクトップアプリから利用できます。図の中に $\LaTeX$ の数式を配置することもできます。
 
-![画像](/images/drawio.jpeg "width=500px")
+![](/images/webapps/drawio.jpeg "width=500px")
 
 
 ## Hand Mirror
@@ -99,7 +99,7 @@ https://mathpix.com/
 
 `Mathpix Snipping Tool` は、画像を LaTeX へ変換する無料アプリです。`cmd + ctrl + M` でスクリーンショットを撮ると、画像内の数式を LaTeX へ変換できます。メニューバーから LaTeX 数式の画像を作成することもできます。
 
-![画像](/images/mathpix.jpeg "width=400px")
+![](/images/webapps/mathpix.jpeg "width=400px")
 
 
 ## MonitorControl
@@ -110,7 +110,7 @@ https://github.com/MonitorControl/MonitorControl#readme
 
 `MonitorControl` は、**外部モニター**の明るさを調整するための無料でオープンソースのアプリです。モニター本体のボタンを使わず、ショートカットキーで明るさを調整できます。
 
-![画像](/images/monitorcontrol.jpeg "width=300px")
+![](/images/webapps/monitorcontrol.jpeg "width=300px")
 
 
 ## Rectangle
@@ -121,7 +121,7 @@ https://rectangleapp.com/
 
 `Rectangle` は、アプリケーションウィンドウのサイズや位置を調整する無料アプリです。メニューバーのアイコン、ショートカットキー、または画面端へのドラッグで操作できます。
 
-![画像](/images/rectangle.jpeg "width=300px")
+![](/images/webapps/rectangle.jpeg "width=300px")
 
 
 ## Stay

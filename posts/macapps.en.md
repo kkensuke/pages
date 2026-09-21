@@ -14,7 +14,7 @@ tags: [MacOS, App]
 https://freemacsoft.net/appcleaner/
 :::
 When removing an app from your computer, `AppCleaner` helps you to find all files related to the app so that you can remove all of them at once.
-![Image](/images/appcleaner.jpeg)
+![Image](/images/webapps/appcleaner.jpeg)
 
 
 ## Bitwarden
@@ -43,7 +43,7 @@ https://coteditor.com/
 https://www.coconut-flavour.com/coconutbattery/
 :::
 You can check the device battery information of Mac, iPad, and iPhone with `coconutBattery`.
-![Image](/images/coconutBattery.jpeg "width=300px")
+![Image](/images/webapps/coconutBattery.jpeg "width=300px")
 
 
 ## draw.io
@@ -51,7 +51,7 @@ You can check the device battery information of Mac, iPad, and iPhone with `coco
 https://app.diagrams.net/
 :::
 `draw.io` is a free and open source diagram software for making flowchart, network diagrams, and so on. The UI is very simple and easy to use. You can use it from a browser or desktop app. You can put mathematical equations in the diagram with $LaTeX$.
-![Image](/images/drawio.jpeg "width=500px")
+![Image](/images/webapps/drawio.jpeg "width=500px")
 
 
 ## Hand Mirror
@@ -77,7 +77,7 @@ https://mathpix.com/
 :::
 `Mathpix Snipping Tool` is a free app for converting images to LaTeX. You can convert images to LaTeX by taking a screenshot: `cmd + ctrl + M`.
 You can also make a latex equation image from a menu bar.
-![Image](/images/mathpix.jpeg "width=400px")
+![Image](/images/webapps/mathpix.jpeg "width=400px")
 
 
 ## MonitorControl
@@ -85,7 +85,7 @@ You can also make a latex equation image from a menu bar.
 https://github.com/MonitorControl/MonitorControl#readme
 :::
 `MonitorControl` is a free and open-source app for adjusting the brightness of your **external monitors**. You don't need to use the monitor's buttons anymore! You can adjust the brightness with shortcut keys.
-![Image](/images/monitorcontrol.jpeg "width=300px")
+![Image](/images/webapps/monitorcontrol.jpeg "width=300px")
 
 
 ## Rectangle
@@ -93,7 +93,7 @@ https://github.com/MonitorControl/MonitorControl#readme
 https://rectangleapp.com/
 :::
 `Rectangle` is a free app for resizing application windows. You can use `Rectangle` from a menu bar icon, with shortcut keys, or by dragging the window to the edge of the screen.
-![Image](/images/rectangle.jpeg "width=300px")
+![Image](/images/webapps/rectangle.jpeg "width=300px")
 
 
 ## Stay
@@ -108,7 +108,7 @@ Along with Rectangle, I would like to introduce an app called `Stay`. This app a
 https://shottr.cc/
 :::
 - `Shottr` is a free app for taking screenshots. You can take a screenshot of a whole screen: `cmd + shift + 1`, or a selected area: `cmd + shift + 2`,
-an active window: `cmd + shift + 8`, or a whole page by scrolling: `cmd + shift + 9`. 
+an active window: `cmd + shift + 8`, or a whole page by scrolling: `cmd + shift + 9`.
 - You can edit the screenshot immediately after taking it. You can blur sensitive information, erase unwanted parts, add arrows, highlight texts, add text boxes, and add rectangles.
 - The best feature of `Shottr` is that you can use **multi-language OCR** to convert the screenshot to text: `cmd + option + ctrl + o`.
 

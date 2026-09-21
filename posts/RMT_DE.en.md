@@ -12,8 +12,8 @@ Recently, machine learning models, including deep learning, have undergone drama
 According to the common sense of the bias-variance tradeoff based on conventional machine learning theories of generalization (statistical learning theories such as Rademacher complexity and VC dimension), it was believed that in the "over-parameterized regime" where the number of parameters exceeds the number of data points, models would overfit, leading to a significant deterioration in predictive accuracy (generalization performance) on unseen data.
 However, since the late 2010s, a phenomenon contrary to conventional predictions has been observed in many models: in the over-parameterized regime, generalization performance, after initially deteriorating, begins to improve again. This is the **Double Descent** phenomenon.
 
-![Image](/images/double_descent_fit.jpeg "caption='Double descent phenomenon in a polynomial regression model'")
-![Image](/images/double_descent_concept.png "width=450px caption='Conceptual diagram of the double descent phenomenon'")
+![Image](/images/RMT_DE/double_descent_fit.jpeg "caption='Double descent phenomenon in a polynomial regression model'")
+![Image](/images/RMT_DE/double_descent_concept.png "width=450px caption='Conceptual diagram of the double descent phenomenon'")
 
 This mysterious phenomenon has been theoretically unraveled and is now in the spotlight as a new theoretical foundation for modern high-dimensional statistics and machine learning. This is a field of mathematics and statistics known as **Random Matrix Theory (RMT)**.
 
@@ -59,7 +59,7 @@ plt.title("Eigenvalues of GOE (Wigner Semicircle)")
 plt.show()
 ```
 
-![Image](/images/wigner_semicircle.png "width=450px caption='Simulation of Wigner Semicircle Law'")
+![Image](/images/RMT_DE/wigner_semicircle.png "width=450px caption='Simulation of Wigner Semicircle Law'")
 :::
 
 ### Why Could RMT Solve the Mysteries of Machine Learning?
@@ -142,7 +142,7 @@ where $\gamma_{\pm} = \sigma_x^2(1 \pm \sqrt{\gamma})^2$
 
 As can be seen from this result, when the number of samples $N_{\mathrm{s}}$ and the number of features $p$ are of similar magnitude, the eigenvalues of the sample covariance matrix $\hat{\Sigma}$ do not concentrate at a single point $\sigma_x^2$. Instead, due to sampling fluctuations, the eigenvalues spread out into a bulk centered around $\sigma_x^2$ with a width of $[\gamma_-, \gamma_+]$. However, if $p$ is sufficiently smaller than $N_{\mathrm{s}}$, the eigenvalues will be narrowly distributed around $\sigma_x^2$, making it consistent with classical statistical theory.
 
-![Image](/images/MP_dist.jpeg "width=450px")
+![Image](/images/RMT_DE/MP_dist.jpeg "width=450px")
 
 What is noteworthy here is how the distribution changes depending on the **dimensional ratio $\gamma := p/N_{\mathrm{s}}$ (the ratio of the number of parameters to the number of samples)**.
 - **$\gamma < 1$ (Under-parameterized):** Since $p < N_{\mathrm{s}}$, the bulk of the eigenvalues forms a neat mountain away from zero.
@@ -176,7 +176,7 @@ plt.show()
 # Even in a finite experiment, both converge to almost the same distribution (they are completely identical in the limit)
 ```
 
-![Image](/images/marchenko_pastur_universality.png "width=450px caption='Simulation showing the universality of the Marchenko-Pastur law'")
+![Image](/images/RMT_DE/marchenko_pastur_universality.png "width=450px caption='Simulation showing the universality of the Marchenko-Pastur law'")
 :::
 
 
@@ -337,7 +337,7 @@ $$
 Here, $\eta_\kappa := \frac{1}{N_{\mathrm{s}}} \mathrm{Tr}\left[\Sigma^2(\Sigma + \kappa_\lambda I_p)^{-2}\right]$ is the "normalized effective degrees of freedom."
 :::
 
-![Image](/images/test_risk.png "width=450px caption='How the formula in Theorem 3 completely explains the double descent phenomenon'")
+![Image](/images/RMT_DE/test_risk.png "width=450px caption='How the formula in Theorem 3 completely explains the double descent phenomenon'")
 
 
 This formula is precisely what completely explains mathematically why the **"Double Descent"** phenomenon occurs.

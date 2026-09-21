@@ -12,8 +12,8 @@ tags: [Math, ML]
 従来の機械学習の汎化に関する理論（Rademacher complexity や VC dimension などの統計的学習理論）に基づくバイアス-バリアンス・トレードオフの常識では、パラメータ数がデータ数を上回る「過剰パラメーター領域」において、モデルは過学習を起こして未知のデータへの予測精度（汎化性能）が著しく悪化すると思われていました。
 しかし 2010 年代後半以降、過剰パラメーター領域において、一度悪化した汎化性能が再び向上するという、従来の予測に反する現象が多くのモデルで確認されるようになりました。これが **二重降下現象（Double Descent）** です。
 
-![Image](/images/double_descent_fit.jpeg "caption='多項式回帰モデルの二重降下現象'")
-![Image](/images/double_descent_concept.png "width=450px caption='二重降下現象の概念図'")
+![Image](/images/RMT_DE/double_descent_fit.jpeg "caption='多項式回帰モデルの二重降下現象'")
+![Image](/images/RMT_DE/double_descent_concept.png "width=450px caption='二重降下現象の概念図'")
 
 この不思議な現象を理論的に解き明かし、現代の高次元統計学や機械学習における新しい理論的基盤として脚光を浴びているのが、**「ランダム行列理論（Random Matrix Theory: RMT）」** という数学・統計学の一分野です。
 
@@ -59,7 +59,7 @@ plt.title("Eigenvalues of GOE (Wigner Semicircle)")
 plt.show()
 ```
 
-![Image](/images/wigner_semicircle.png "width=450px caption='Wigner半円則のシミュレーション'")
+![Image](/images/RMT_DE/wigner_semicircle.png "width=450px caption='Wigner半円則のシミュレーション'")
 :::
 
 ### なぜ RMT が機械学習の謎を解けたのか？
@@ -141,7 +141,7 @@ $$
 :::
 
 この結果から分かるように、サンプル数 $N_{\mathrm{s}}$ と特徴量数 $p$ が同程度の大きさである場合、サンプル共分散行列 $\hat{\Sigma}$ の固有値は、単一の点 $\sigma_x^2$ に集中するのではなく、サンプリングの揺らぎによって、固有値が $\sigma_x^2$ を中心とした幅 $[\gamma_-, \gamma_+]$ のバルクに広がってしまうのです。しかし、$p$ を $N_{\mathrm{s}}$ より十分小さくすれば、固有値は $\sigma_x^2$ の周りに狭く分布することになり、従来の統計学の理論と整合することになります。
-![Image](/images/MP_dist.jpeg "width=450px")
+![Image](/images/RMT_DE/MP_dist.jpeg "width=450px")
 
 ここで注目すべきは、**次元比率 $\gamma := p/N_{\mathrm{s}}$（パラメータ数とサンプル数の比）** による分布の変化です。
 - **$\gamma < 1$ (Under-parameterized):** $p < N_{\mathrm{s}}$ であり、固有値のバルクはゼロから離れた場所に綺麗な山を作ります。
@@ -175,7 +175,7 @@ plt.show()
 # 有限の実験でも共にほぼ同じ分布に収束することがわかる（極限においては完全に同一の分布）
 ```
 
-![Image](/images/marchenko_pastur_universality.png "width=450px caption='Marchenko-Pastur則の普遍性のシミュレーション'")
+![Image](/images/RMT_DE/marchenko_pastur_universality.png "width=450px caption='Marchenko-Pastur則の普遍性のシミュレーション'")
 :::
 
 
@@ -336,7 +336,7 @@ $$
 ここで $\eta_\kappa := \frac{1}{N_{\mathrm{s}}} \mathrm{Tr}\left[\Sigma^2(\Sigma + \kappa_\lambda I_p)^{-2}\right]$ は「正規化された有効自由度（normalized effective degrees of freedom）」である。
 :::
 
-![Image](/images/test_risk.png "width=450px caption='Theorem 3 の数式が二重降下現象を完全に説明する様子'")
+![Image](/images/RMT_DE/test_risk.png "width=450px caption='Theorem 3 の数式が二重降下現象を完全に説明する様子'")
 
 
 この数式こそが、**「二重降下現象（Double Descent）」** がなぜ起こるのかを数学的に完全に説明します。

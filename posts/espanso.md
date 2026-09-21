@@ -14,11 +14,11 @@ tags: [Productivity]
 - さらに、Shell script を呼び出すことができるので、ただのスニペットアプリとしてだけでなく、アプリやファイルを開いたり、API を呼び出すことができるなど、非常に拡張性が高い。
     - 例えば、クリップボードにコピーしたテキストを LLM の API で即時翻訳させることができ、作業中のアプリから離れる必要もなくなる。
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/1beaf074-0f49-9d46-a9c1-df9602a1d95a.png)
+![Image](/images/espanso/espanso1.jpeg)
 
-![ezgif-1-5219cff875.gif](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/c93e4c1d-18ef-9f17-0db9-9f4e5eff6e08.gif)
+![GIF](/images/espanso/espanso2.gif)
 
-![ezgif-1-6d58091dfc.gif](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/833f40ee-47d5-74e9-5bfd-df46d212664e.gif)
+![GIF](/images/espanso/espanso3.gif)
 
 
 ## インストール

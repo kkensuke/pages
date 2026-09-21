@@ -14,11 +14,11 @@ tags: [Productivity]
 - Furthermore, since it can call shell scripts, it's not just a snippet app - it has very high extensibility, allowing you to open apps and files, call APIs, and more.
     - For example, you can instantly translate text copied to the clipboard using an LLM API without having to leave your current application.
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/1beaf074-0f49-9d46-a9c1-df9602a1d95a.png)
+![Image](/images/espanso/espanso1.jpeg)
 
-![ezgif-1-5219cff875.gif](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/c93e4c1d-18ef-9f17-0db9-9f4e5eff6e08.gif)
+![GIF](/images/espanso/espanso2.gif)
 
-![ezgif-1-6d58091dfc.gif](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/414636/833f40ee-47d5-74e9-5bfd-df46d212664e.gif)
+![GIF](/images/espanso/espanso3.gif)
 
 
 ## Installation
@@ -60,7 +60,7 @@ Snippet configuration is written in the `match/base.yml` file.
 
 Basically, you write with the following syntax:
 ```yml
-matches: 
+matches:
   - trigger: ";hello"
     replace: "world"
 
@@ -407,9 +407,9 @@ A trigger to convert a site copied to the clipboard via API to Markdown. (Not al
             - Webpage to Markdown Conversion by https://urltomarkdown.herokuapp.com/
             - Source URL: {{clipboard}}
             - Conversion Timestamp: {{now}}
-            
+
             ===================================================
-            
+
             {{output}}
     vars:
       - name: output
@@ -531,14 +531,14 @@ matches:
   - trigger: ";reply"
     form: |
         Hi, [[name]]
-        
+
         Thank you for your email and for bringing this to our attention.
         I am sorry that you're disappointed with our product.
-        
+
         [[choices]]
 
         Looking forward to hearing from you
-        
+
         All the best，
         ABC Support Team
     form_fields:
