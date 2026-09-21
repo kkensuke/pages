@@ -168,7 +168,6 @@ export default function HomePage() {
       {/*
       <div className="mt-16 grid gap-4 md:grid-cols-3">
         {[
-          { title: "Products", href: "/products" },
           { title: "Publications", href: "/publications" },
           { title: "Photos", href: "/photos" }
         ].map((item) => (

@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { AiOutlineHome } from "react-icons/ai";
 import { Pencil } from 'lucide-react';
-import { BsCart3 } from "react-icons/bs";
 import { BookOpen } from 'lucide-react';
 import { IoCameraOutline } from "react-icons/io5";
 import { SiGithub, SiGmail } from 'react-icons/si';
@@ -32,7 +31,6 @@ const Footer = () => {
     explore: [
       { label: 'Home', icon: AiOutlineHome, href: '/' },
       { label: 'Blog', icon: Pencil, href: '/blog' },
-      // { label: 'Products', icon: BsCart3, href: '/products' },
       // { label: 'Publications', icon: BookOpen, href: '/publications' },
       { label: 'Photos', icon: IoCameraOutline, href: '/photos' }
     ],

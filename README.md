@@ -106,23 +106,8 @@ The blog listing, tags, pagination, and post navigation are language-aware.
 
 * Utterances-powered GitHub comments
 * Buy Me a Coffee widget
-* Optional Stripe checkout and subscription flow
 * Direct link from each article to its source Markdown on GitHub
 
-### 🛠 Owner tools
-
-The project also contains an authenticated owner area with:
-
-* Owner login
-* Dashboard
-* Post and tag statistics
-* Markdown post editor
-* Image manager
-* Image insertion into Markdown
-
-> **Note**
->
-> The current post editor and image manager use the project filesystem as storage. They are most suitable for local or self-hosted workflows. A persistent storage layer should be added before using them as a production CMS on a serverless platform.
 
 ## 🚀 Quick Start
 
@@ -141,11 +126,6 @@ Install dependencies:
 pnpm install
 ```
 
-Create your environment file:
-
-```bash
-cp .env.example .env.local
-```
 
 Start the development server:
 
@@ -159,20 +139,6 @@ Open:
 http://localhost:3000
 ```
 
-## 🔐 Environment Variables
-
-Core blog functionality does not require every optional integration to be configured.
-
-| Variable                             | Purpose                              |
-| ------------------------------------ | ------------------------------------ |
-| `NEXT_PUBLIC_APP_URL`                | Base application URL                 |
-| `OWNER_USERNAME`                     | Owner dashboard username             |
-| `OWNER_PASSWORD`                     | Owner dashboard password             |
-| `JWT_SECRET_KEY`                     | Secret used for owner authentication |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key               |
-| `STRIPE_SECRET_KEY`                  | Stripe server-side secret key        |
-
-Never commit `.env.local` or production secrets to the repository.
 
 ## ⚙️ Configuration
 
@@ -263,10 +229,6 @@ This makes the blog particularly suitable for research notes, algorithms, and ma
 .
 ├── app/
 │   ├── blog/             # Blog index, posts, tags and localization
-│   ├── owner/            # Owner dashboard and post editor
-│   ├── api/v1/           # Auth, posts, upload and commerce APIs
-│   ├── (auth)/           # Authentication routes
-│   ├── (shop)/           # Products and checkout routes
 │   ├── photos/           # Photo pages
 │   ├── projects/         # Project pages
 │   ├── sitemap.ts        # Generated sitemap
@@ -274,13 +236,11 @@ This makes the blog particularly suitable for research notes, algorithms, and ma
 ├── components/
 │   ├── blog/             # Blog-specific UI and Markdown components
 │   ├── common/           # Shared components
-│   └── ui/               # Reusable UI components
 ├── config/
 │   ├── site.ts           # Site, blog and theme configuration
 │   └── constants.ts      # Feature flags, routes and API constants
 ├── lib/
-│   ├── blog/             # Markdown and blog utilities
-│   └── shop/             # Store configuration
+│   └── blog/             # Markdown and blog utilities
 ├── posts/                # Markdown articles
 ├── public/               # Static assets
 └── styles/               # Global styles
@@ -301,7 +261,6 @@ This makes the blog particularly suitable for research notes, algorithms, and ma
 | Code                | react-syntax-highlighter      |
 | Comments            | Utterances                    |
 | Analytics           | Vercel Analytics              |
-| Payments            | Stripe                        |
 | Deployment          | Vercel                        |
 
 ## 🌐 Deployment
@@ -314,8 +273,6 @@ A standard deployment can be created with Vercel:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkkensuke%2Fpages)
 
-Optional features such as owner authentication and Stripe require the corresponding environment variables.
-
 ## 🙌 Background
 
-This repository started from [`pixegami/nextjs-blog-tutorial`](https://github.com/pixegami/nextjs-blog-tutorial) and has since been substantially expanded with rich Markdown rendering, bilingual publishing, SEO features, custom directives, GitHub code imports, comments, analytics, owner tools, payments, and additional personal-site functionality.
+This repository started from [`pixegami/nextjs-blog-tutorial`](https://github.com/pixegami/nextjs-blog-tutorial) and has since been substantially expanded with rich Markdown rendering, bilingual publishing, SEO features, custom directives, GitHub code imports, comments, analytics, and additional personal-site functionality.
