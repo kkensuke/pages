@@ -20,7 +20,7 @@ import TagSection from '@/components/blog/TagSection';
 import TOC from "@/components/blog/TableOfContents/index";
 import Pre from "@/components/blog/CodeBlock";
 import CustomImage from "@/components/blog/Image";
-import AdmonitionComponents from "@/components/blog/Admonition/admonitionColor1";
+import AdmonitionComponents from "@/components/blog/Admonition/admonitionColor3";
 // import AdmonitionComponents from "@/components/blog/Admonition/admonitionColor2"; // Alternative Admonition style
 // import AdmonitionComponents from "@/components/blog/Admonition/admonitionColor3"; // Ink Blue Admonition style
 import { remarkTextDirectives, TextDirectiveComponents } from '@/components/blog/Admonition/directive';
