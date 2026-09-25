@@ -17,6 +17,10 @@ YouTube の解説動画や講義動画を見ていると、次のようなこと
 
 `yttext` は、YouTube の **元言語の字幕を取得して再利用しやすいファイルへ変換する Python アプリケーション**です。
 
+:::linkcard
+https://github.com/kkensuke/yttext
+:::
+
 Gemini API キーを用意すると、取得した字幕から **Gemini による Markdown 要約**も生成できます。字幕の取得には API キーは必要ありません。
 
 利用方法は大きく分けて 2 つあります。

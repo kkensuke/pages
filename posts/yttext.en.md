@@ -17,6 +17,10 @@ When watching YouTube tutorials, lectures, or technical videos, you may want to 
 
 `yttext` is a Python application that **extracts captions in the video's original language and converts them into reusable files**.
 
+:::linkcard
+https://github.com/kkensuke/yttext
+:::
+
 With a Gemini API key, it can also generate **Markdown summaries using Gemini** from the extracted captions. No API key is required to extract captions.
 
 There are two main ways to use it:
