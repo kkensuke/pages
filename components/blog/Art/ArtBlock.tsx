@@ -223,8 +223,8 @@ const ArtBlock: React.FC<ArtBlockProps> = ({
         borderRadius: '0.75rem',
         overflow: 'hidden',
         margin: '1.5rem 0',
-        border: `1px solid ${p[1]}`,
-        boxShadow: `0 4px 24px 0 ${p[0]}22`,
+        border: '1px solid #26354a',
+        boxShadow: `0 4px 24px 0 ${p[0]}18`,
       }}
     >
       {renderArt()}
