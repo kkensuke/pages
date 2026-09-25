@@ -4,14 +4,14 @@ import React from 'react';
 
 // ── Color palettes ──────────────────────────────────────────────────────────
 const PALETTES: Record<string, [string, string, string, string]> = {
-  blue:   ['#3B82F6', '#93C5FD', '#EFF6FF', '#1E3A8A'],
-  purple: ['#8B5CF6', '#C4B5FD', '#F5F3FF', '#4C1D95'],
-  green:  ['#10B981', '#6EE7B7', '#ECFDF5', '#064E3B'],
-  amber:  ['#F59E0B', '#FCD34D', '#FFFBEB', '#78350F'],
-  rose:   ['#F43F5E', '#FDA4AF', '#FFF1F2', '#881337'],
-  teal:   ['#14B8A6', '#5EEAD4', '#F0FDFA', '#134E4A'],
-  slate:  ['#64748B', '#CBD5E1', '#F8FAFC', '#1E293B'],
-  indigo: ['#6366F1', '#A5B4FC', '#EEF2FF', '#312E81'],
+  blue:   ['#0EA5E9', '#38BDF8', '#0B1522', '#075985'],
+  purple: ['#A855F7', '#C084FC', '#171022', '#7E22CE'],
+  green:  ['#22C55E', '#6EE7B7', '#0C1915', '#15803D'],
+  amber:  ['#F59E0B', '#FBBF24', '#1C160B', '#B45309'],
+  rose:   ['#F43F5E', '#FB7185', '#1D0F16', '#BE123C'],
+  teal:   ['#14B8A6', '#5EEAD4', '#0B191C', '#0F766E'],
+  slate:  ['#64748B', '#94A3B8', '#111820', '#475569'],
+  indigo: ['#6366F1', '#818CF8', '#101326', '#4338CA'],
 };
 
 type PaletteName = keyof typeof PALETTES;
@@ -20,28 +20,28 @@ type PaletteName = keyof typeof PALETTES;
 const WaveArt = ({ p }: { p: string[] }) => (
   <svg viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg"
     style={{ width: '100%', height: '100%', display: 'block' }}>
-    <rect width="800" height="160" fill={p[1]} opacity="0.2" />
+    <rect width="800" height="160" fill={p[2]} />
 
     {/* back wave */}
     <path
       d="M0,100 C100,60 200,130 320,90 C440,50 530,120 660,85 C730,68 770,95 800,80 L800,160 L0,160 Z"
-      fill={p[1]} opacity="0.55" />
+      fill={p[1]} opacity="0.34" />
 
     {/* mid wave */}
     <path
       d="M0,120 C130,70 250,150 420,105 C590,60 700,130 800,100 L800,160 L0,160 Z"
-      fill={p[1]} opacity="0.4" />
+      fill={p[0]} opacity="0.22" />
 
     {/* front wave */}
     <path
       d="M0,135 C80,110 180,155 340,130 C500,105 640,150 800,125 L800,160 L0,160 Z"
-      fill={p[3]} opacity="0.1" />
+      fill={p[3]} opacity="0.38" />
 
     {/* fine line highlights */}
     <path d="M0,90 Q200,45 400,110 T800,75"
-      stroke={p[0]} strokeWidth="1.5" fill="none" opacity="0.5" />
+      stroke={p[0]} strokeWidth="1.5" fill="none" opacity="0.65" />
     <path d="M0,60 Q250,95 500,55 T800,70"
-      stroke={p[1]} strokeWidth="1" fill="none" opacity="0.4" />
+      stroke={p[1]} strokeWidth="1" fill="none" opacity="0.35" />
   </svg>
 );
 
@@ -62,7 +62,7 @@ const GridArt = ({ p }: { p: string[] }) => {
       {/* grid lines */}
       {Array.from({ length: cols + 1 }, (_, i) => (
         <line key={`v${i}`} x1={i * cw} y1="0" x2={i * cw} y2="160"
-          stroke={p[1]} strokeWidth="0.8" />
+          stroke={p[1]} strokeWidth="0.8" opacity="0.24" />
       ))}
       {Array.from({ length: rows + 1 }, (_, j) => (
         <line key={`h${j}`} x1="0" y1={j * rh} x2="800" y2={j * rh}
@@ -78,7 +78,7 @@ const GridArt = ({ p }: { p: string[] }) => {
               cx={c * cw} cy={r * rh}
               r={hot ? 5 : 2}
               fill={hot ? p[0] : p[1]}
-              opacity={hot ? 0.9 : 0.6} />
+              opacity={hot ? 0.82 : 0.36} />
           );
         })
       )}
@@ -109,9 +109,9 @@ const MandalaArt = ({ p }: { p: string[] }) => {
 
   const Center = ({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) => (
     <g transform={`translate(${x},${y}) scale(${scale})`}>
-      {ring(12, 52, 22, 8, p[1], 0.55)}
-      {ring(8,  32, 14, 6, p[0], 0.65)}
-      {ring(6,  18, 10, 4, p[3], 0.7)}
+      {ring(12, 52, 22, 8, p[1], 0.38)}
+      {ring(8,  32, 14, 6, p[0], 0.55)}
+      {ring(6,  18, 10, 4, p[3], 0.8)}
       <circle cx="0" cy="0" r="10" fill={p[0]} opacity="0.9" />
       <circle cx="0" cy="0" r="5"  fill={p[2]} />
     </g>
@@ -138,19 +138,19 @@ const FlowArt = ({ p }: { p: string[] }) => (
 
     {/* thick ribbon strokes */}
     <path d="M-50,120 C150,40  350,160 550,80  C700,20  780,100 850,60"
-      stroke={p[1]} strokeWidth="50" fill="none" opacity="0.35" strokeLinecap="round" />
+      stroke={p[1]} strokeWidth="50" fill="none" opacity="0.20" strokeLinecap="round" />
     <path d="M-50,80  C100,160 300,30  520,120 C680,190 790,70  850,110"
-      stroke={p[0]} strokeWidth="35" fill="none" opacity="0.3" strokeLinecap="round" />
+      stroke={p[0]} strokeWidth="35" fill="none" opacity="0.25" strokeLinecap="round" />
     <path d="M-50,40  C200,120 400,10  600,100 C730,160 800,60  850,90"
-      stroke={p[1]} strokeWidth="22" fill="none" opacity="0.8" strokeLinecap="round" />
+      stroke={p[1]} strokeWidth="22" fill="none" opacity="0.55" strokeLinecap="round" />
 
     {/* fine line accents */}
     <path d="M0,100 Q200,30 400,130 T800,80"
-      stroke={p[3]} strokeWidth="2" fill="none" opacity="0.6" />
+      stroke={p[3]} strokeWidth="2" fill="none" opacity="0.75" />
     <path d="M0,55  Q200,130 400,40 T800,100"
-      stroke={p[0]} strokeWidth="1.5" fill="none" opacity="0.5" />
+      stroke={p[0]} strokeWidth="1.5" fill="none" opacity="0.65" />
     <path d="M0,130 Q300,70 600,140 T800,110"
-      stroke={p[1]} strokeWidth="1" fill="none" opacity="0.4" />
+      stroke={p[1]} strokeWidth="1" fill="none" opacity="0.35" />
   </svg>
 );
 
@@ -169,7 +169,7 @@ const MosaicArt = ({ p }: { p: string[] }) => {
   };
 
   const pickOpacity = (c: number, r: number) =>
-    0.45 + 0.55 * Math.abs(Math.sin(c * 0.6 + r * 1.1));
+    0.42 + 0.45 * Math.abs(Math.sin(c * 0.6 + r * 1.1));
 
   return (
     <svg viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg"
