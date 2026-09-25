@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { 
+import {
   vscDarkPlus,      // GitHub-like dark theme
   dracula,          // Popular dark theme
   atomDark,         // Atom editor dark theme
@@ -17,12 +17,12 @@ import { Components } from 'react-markdown';
 
 const Pre: Components['pre'] = ({ children, ...props }) => {
   const [isCopied, setIsCopied] = useState(false);
-  
+
   if (!children || typeof children !== 'object' || !('type' in children)) {
     return <code {...props}>{children}</code>;
   }
 
-  const { className = '', children: codeString ='' } = 'props' in children ? children.props : {};  
+  const { className = '', children: codeString ='' } = 'props' in children ? children.props : {};
   const match = /language-(\w+)?(?:\[(.*)\])?/.exec(className || '');
   const language = match ? match[1] : 'plaintext';
   const propertiesString = match && match[2] ? match[2] : '';
@@ -44,7 +44,7 @@ const Pre: Components['pre'] = ({ children, ...props }) => {
 
   return (
     <div className="my-4 space-y-2">
-      <div className="group overflow-hidden rounded-lg border border-slate-200 bg-slate-900">
+      <div className="group overflow-hidden rounded-lg border border-slate-700 bg-slate-900">
         <div className="relative">
           <div>
             {title && (
