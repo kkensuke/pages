@@ -2,7 +2,7 @@
 title: "Web Apps"
 date: "2022-10-18"
 subtitle: "Useful Web Apps"
-previewImage: "/images/10-minute-mail.jpeg"
+previewImage: "/images/webapps/10-minute-mail.jpeg"
 tags: [App]
 ---
 
