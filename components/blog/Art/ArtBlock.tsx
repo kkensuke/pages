@@ -66,7 +66,7 @@ const GridArt = ({ p }: { p: string[] }) => {
       ))}
       {Array.from({ length: rows + 1 }, (_, j) => (
         <line key={`h${j}`} x1="0" y1={j * rh} x2="800" y2={j * rh}
-          stroke={p[1]} strokeWidth="0.8" />
+          stroke={p[1]} strokeWidth="0.8" opacity="0.24" />
       ))}
 
       {/* intersection dots */}
