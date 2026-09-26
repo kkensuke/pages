@@ -420,7 +420,8 @@ A trigger to convert a site copied to the clipboard via API to Markdown. (Not al
 ```
 
 
-The next trigger is the essence of Espanso. Simply copy text to the clipboard and type `;jet`, and the English translation by Google Gemini will be inserted at the cursor position. Please use it after defining `GEMINI_API_KEY` in `global_vars`. You can define it in the same file, but be careful not to make it public when managing on GitHub. Get `GEMINI_API_KEY` from [here](https://aistudio.google.com/api-keys)
+
+The next trigger is the essence of Espanso. Simply copy text to the clipboard and type `;ejt`, and the Japanese translation by Google Gemini will be inserted at the cursor position. Please use it after defining `GEMINI_API_KEY` in `global_vars`. You can define it in the same file, but be careful not to make it public when managing on GitHub. Get `GEMINI_API_KEY` from [here](https://aistudio.google.com/api-keys)
 ```yml
 global_vars:
   - name: GEMINI_API_KEY
@@ -428,31 +429,50 @@ global_vars:
     params:
       echo: "EmitDqIhb7Rzu5GheVtiwL452...."
 
+  - name: gemini_model
+    type: echo
+    params:
+      echo: "gemini-flash-lite-latest"
+
+  - name: gemini_api_call_template
+    type: echo
+    params:
+      echo: |
+        set -o pipefail
+        jq -n --arg text "$ESPANSO_INSTRUCTION" \
+          '{contents: [{parts: [{text: $text}]}]}' \
+        | curl --silent --show-error --fail-with-body --max-time 30 \
+            "https://generativelanguage.googleapis.com/v1beta/models/{{gemini_model}}:generateContent" \
+            -H "x-goog-api-key: {{GEMINI_API_KEY}}" \
+            -H "Content-Type: application/json" \
+            --data-binary @- \
+        | jq -er '
+            if .error then
+              error(.error.message)
+            else
+              [.candidates[0].content.parts[]?
+               | .text?
+               | select(type == "string")] as $texts
+              | if ($texts | length) == 0
+                then error("Gemini returned no text")
+                else $texts | join("")
+                end
+            end
+          '
+
 matches:
-  - trigger: ";jet"
+# ——— Translate Clipboard → Japanese ———
+  - trigger: ";ejt"
     replace: "{{translation}}"
     vars:
-      - name: "clip"
-        type: "clipboard"
-      - name: gemini_model
+      - name: instruction
         type: echo
         params:
-          echo: "gemini-2.5-flash"
+          echo: "Translate the following to Japanese. Provide ONLY the translated text, no explanations or markdown; {{clipboard}}"
       - name: translation
         type: shell
         params:
-          cmd: >
-            curl -s \
-              "https://generativelanguage.googleapis.com/v1beta/models/{{gemini_model}}:generateContent" \
-              -H "x-goog-api-key: {{GEMINI_API_KEY}}" \
-              -H 'Content-Type: application/json' \
-              -X POST \
-              -d '{
-                    "contents": [{
-                      "parts": [{"text": "Translate the following to English. Provide ONLY the translated text, no explanations or markdown: {{clip}}"}]
-                    }]
-                  }' \
-            | jq -r '.candidates[0].content.parts[0].text | split("\n")[0]'
+          cmd: "{{gemini_api_call_template}}"
 ```
 
 :::note
@@ -460,11 +480,7 @@ The jq command is required: `brew install jq`. It's used to parse JSON responses
 :::
 
 :::warning
-If the above trigger returns an error, check [Google's documentation](https://ai.google.dev/gemini-api/docs/models) to see if the model `gemini-2.5-flash` is currently available. If there's no problem with the model name, check [the REST section of this page](https://ai.google.dev/gemini-api/docs/quickstart#rest) to see if the API calling method has been updated.
-:::
-
-:::tip
-At the time of writing, the faster-responding model `gemini-2.5-flash-lite` is also available.
+If the above trigger returns an error, check [Google's documentation](https://ai.google.dev/gemini-api/docs/models) to see if the model `gemini-flash-lite-latest` is currently available. If there's no problem with the model name, check [the REST section of this page](https://ai.google.dev/gemini-api/docs/quickstart#rest) to see if the API calling method has been updated.
 :::
 
 :::tip
@@ -659,3 +675,6 @@ https://ee.qqv.com.au/usage/cookbook/
 :::
 
 Also, in Espanso Hub, you can easily add packages created by other users.
+:::linkcard
+https://hub.espanso.org/search
+:::

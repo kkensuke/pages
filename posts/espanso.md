@@ -444,31 +444,50 @@ global_vars:
     params:
       echo: "EmitDqIhb7Rzu5GheVtiwL452...."
 
+  - name: gemini_model
+    type: echo
+    params:
+      echo: "gemini-flash-lite-latest"
+
+  - name: gemini_api_call_template
+    type: echo
+    params:
+      echo: |
+        set -o pipefail
+        jq -n --arg text "$ESPANSO_INSTRUCTION" \
+          '{contents: [{parts: [{text: $text}]}]}' \
+        | curl --silent --show-error --fail-with-body --max-time 30 \
+            "https://generativelanguage.googleapis.com/v1beta/models/{{gemini_model}}:generateContent" \
+            -H "x-goog-api-key: {{GEMINI_API_KEY}}" \
+            -H "Content-Type: application/json" \
+            --data-binary @- \
+        | jq -er '
+            if .error then
+              error(.error.message)
+            else
+              [.candidates[0].content.parts[]?
+               | .text?
+               | select(type == "string")] as $texts
+              | if ($texts | length) == 0
+                then error("Gemini returned no text")
+                else $texts | join("")
+                end
+            end
+          '
+
 matches:
+# ——— Translate Clipboard → English ———
   - trigger: ";jet"
     replace: "{{translation}}"
     vars:
-      - name: "clip"
-        type: "clipboard"
-      - name: gemini_model
+      - name: instruction
         type: echo
         params:
-          echo: "gemini-2.5-flash"
+          echo: "Translate the following to English. Provide ONLY the translated text, no explanations or markdown; {{clipboard}}"
       - name: translation
         type: shell
         params:
-          cmd: >
-            curl -s \
-              "https://generativelanguage.googleapis.com/v1beta/models/{{gemini_model}}:generateContent" \
-              -H "x-goog-api-key: {{GEMINI_API_KEY}}" \
-              -H 'Content-Type: application/json' \
-              -X POST \
-              -d '{
-                    "contents": [{
-                      "parts": [{"text": "Translate the following to English. Provide ONLY the translated text, no explanations or markdown: {{clip}}"}]
-                    }]
-                  }' \
-            | jq -r '.candidates[0].content.parts[0].text | split("\n")[0]'
+          cmd: "{{gemini_api_call_template}}"
 ```
 
 :::note
@@ -476,11 +495,7 @@ matches:
 :::
 
 :::warning
-上のトリガーでエラーを返す場合は、上記のモデル `gemini-2.5-flash` が現在も使用可能か [Google のドキュメント](https://ai.google.dev/gemini-api/docs/models)で確認してください。モデル名に問題のない場合は、API の呼び出し方が更新されていないか[このページの REST と書かれた部分](https://ai.google.dev/gemini-api/docs/quickstart#rest)をチェックしてください。
-:::
-
-:::tip
-編集時点ではより応答の早いモデル `gemini-2.5-flash-lite` も使用可能です。
+上のトリガーでエラーを返す場合は、上記のモデル `gemini-flash-lite-latest` が現在も使用可能か [Google のドキュメント](https://ai.google.dev/gemini-api/docs/models)で確認してください。モデル名に問題のない場合は、API の呼び出し方が更新されていないか[このページの REST と書かれた部分](https://ai.google.dev/gemini-api/docs/quickstart#rest)をチェックしてください。
 :::
 
 :::tip
@@ -676,4 +691,6 @@ https://ee.qqv.com.au/usage/cookbook/
 :::
 
 また、Espanso Hub では他のユーザーが作成したパッケージを簡単に追加できます。
-
+:::linkcard
+https://hub.espanso.org/search
+:::
