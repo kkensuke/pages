@@ -4,8 +4,8 @@
 
 export const SITE_CONFIG = {
   name: 'kkensuke',
-  title: 'kkensuke - Blog',
-  description: 'Building the future with code and creativity. Blog about programming, web development, and technology.',
+  title: 'kkensuke — Research & notes',
+  description: 'Research in quantum computing and machine learning. Notes on mathematics, code, and everyday learning.',
   url: 'https://kkensuke.vercel.app',
   ogImage: 'https://kkensuke.vercel.app/og-image.jpeg',
   links: {

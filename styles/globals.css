@@ -6,7 +6,7 @@
 .prose code:not(pre code) {
   background-color: #172033;
   border: 0.5px solid #334155;
-  color: #9afcfc;
+  color: hsl(var(--primary));
   font-weight: 500;
 }
 
@@ -148,6 +148,19 @@ li::marker {
   .language-link { display: inline-flex; align-items: center; min-height: 44px; padding: .45rem .7rem; border-radius: .3rem; font-size: .8rem; color: hsl(var(--muted-foreground)); }
   .language-link[aria-current='page'] { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
   .language-link:hover { color: hsl(var(--primary)); }
+  .reading-column { max-width: 44rem; margin-inline: auto; }
+  .article-header { margin-block: 1.25rem 2rem; }
+  .article-title { font-size: clamp(1.75rem, 4vw, 2.3rem); font-weight: 500; line-height: 1.55; letter-spacing: -.03em; overflow-wrap: anywhere; }
+  .article-contents { margin-block: 2rem; border: 1px solid hsl(var(--border)); border-radius: .4rem; background: hsl(var(--card)); }
+  .toc { padding: 0 1rem 1rem; }
+  .toc-list { list-style: none; margin: 0; padding: 0; }
+  .toc-list .toc-list { padding-left: 1rem; }
+  .toc-link { display: block; min-height: 44px; padding: .5rem 0; font-size: .875rem; line-height: 1.6; overflow-wrap: anywhere; }
+  .article-content { max-width: none; font-size: 1.05rem; line-height: 1.95; }
+  .article-content :where(h2, h3, h4) { line-height: 1.55; scroll-margin-top: 2rem; }
+  .article-content :where(h2) { margin-top: 3rem; }
+  .article-content :where(table) { display: block; max-width: 100%; overflow-x: auto; }
+  .article-content .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding-block: .25rem; }
   .skip-link { position: absolute; top: .5rem; left: .5rem; z-index: 60; padding: .7rem 1rem; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); transform: translateY(-200%); }
   .skip-link:focus { transform: translateY(0); }
   @media (max-width: 540px) {
@@ -307,14 +320,14 @@ li::marker {
 
 /* Table of contents uses component-level CSS, so keep its fixed colors readable. */
 .toc-link {
-  color: #94a3b8 !important;
+  color: hsl(var(--muted-foreground)) !important;
 }
 .toc-link:hover {
-  color: #cbd5e1 !important;
+  color: hsl(var(--foreground)) !important;
 }
 .is-active-link {
-  color: #60a5fa !important;
+  color: hsl(var(--primary)) !important;
 }
 .is-active-link + .toc-list .toc-link {
-  color: #cbd5e1 !important;
+  color: hsl(var(--muted-foreground)) !important;
 }

@@ -32,9 +32,10 @@ const CustomImage: React.FC<CustomImageProps> = ({ alt, src, title }) => {
     display: 'block',
     margin: align === 'left' ? `2rem auto ${imgStyleMarginBottom} 0` : align === 'right' ? `2rem 0 ${imgStyleMarginBottom} auto` : `2rem auto ${imgStyleMarginBottom} auto`,
     borderRadius: radius,
-    border: '1px solid #ddd',
+    border: '1px solid hsl(var(--border))',
   };
   const captionStyle: CSSProperties = {
+    maxWidth: '100%',
     width: width === 'auto' ? '400px' : width,
     margin: align === 'left' ? '5px auto 2rem 0' : align === 'right' ? '5px 0 2rem auto' : '5px auto 2rem auto',
     // border: '1px solid #ddd',
