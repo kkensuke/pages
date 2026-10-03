@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import { ArrowUpRight } from 'lucide-react';
 
 export const metadata: Metadata = { title: 'Photos', description: 'A few places and moments, photographed by Kensuke.' };
 
@@ -21,7 +20,7 @@ export default function PhotosPage() {
             <a href={photo.imagePath} target="_blank" rel="noopener noreferrer" className="photo-link" aria-label={`View full-size photo: ${photo.title}`}>
               <Image src={photo.imagePath} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 540px) calc(100vw - 40px), (max-width: 880px) calc(50vw - 36px), 404px" priority={index === 0} className="photo-image" />
             </a>
-            <figcaption className="mt-3 flex items-center justify-between gap-4 text-sm"><span>{photo.title}</span><a href={photo.imagePath} target="_blank" rel="noopener noreferrer" className="text-link">Full size <ArrowUpRight size={14} aria-hidden="true" /></a></figcaption>
+            <figcaption>{photo.title}</figcaption>
           </figure>
         ))}
       </div>
