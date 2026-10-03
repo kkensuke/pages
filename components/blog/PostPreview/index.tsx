@@ -24,9 +24,7 @@ export default function PostPreview({ language = 'ja', headingLevel = 2, ...post
           <Heading>{post.title}</Heading>
           {post.subtitle && post.subtitle !== post.title && <p className="mt-2 text-sm leading-7 text-muted-foreground">{excerpt}</p>}
         </div>
-        <span className="post-preview-media" aria-hidden="true">
-          {post.previewImage ? <img src={post.previewImage} alt="" loading="lazy" className="post-thumbnail" /> : <ArrowRight size={17} className="text-primary" />}
-        </span>
+        <ArrowRight size={17} className="shrink-0 text-primary" aria-hidden="true" />
       </Link>
     </article>
   );

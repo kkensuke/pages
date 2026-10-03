@@ -23,12 +23,12 @@ export default function BlogIndex({ tag, searchParams }: BlogIndexProps) {
     <div className="site-container page-section" lang={language}>
       <header className="page-heading blog-heading flex flex-wrap items-center justify-between gap-5">
         <h1 className="page-title"><Link href={blogHref}>Blog</Link></h1>
-        <LanguageToggle language={language} basePath={basePath} query={query} />
+        <SearchForm key={`${basePath}:${language}:${query}`} basePath={basePath} language={language} query={query} />
       </header>
       <TagSection tags={getAllTags(language)} activeTag={tag} language={language} query={query} showAll />
       <div className="mb-1 mt-4 flex flex-wrap items-center justify-between gap-2 border-b border-border pb-2 text-xs text-muted-foreground">
         <p>{isJapanese ? `${totalPosts} 件の記事` : `${totalPosts} ${totalPosts === 1 ? 'article' : 'articles'}`}<span className="block">{isJapanese ? '新しい順' : 'Newest first'}</span></p>
-        <SearchForm key={`${basePath}:${language}:${query}`} basePath={basePath} language={language} query={query} />
+        <LanguageToggle language={language} basePath={basePath} query={query} />
       </div>
       {posts.length ? (
         <div className="post-list">{posts.map(post => <PostPreview key={post.slug} {...post} language={language} />)}</div>

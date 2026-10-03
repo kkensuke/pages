@@ -134,6 +134,7 @@ li::marker {
   .section-heading h2 { font-size: 1.4rem; font-weight: 500; letter-spacing: -.025em; }
   .post-list > * + *, .research-list > * + * { border-top: 1px solid hsl(var(--border)); }
   .blog-heading { margin-bottom: 1.25rem; }
+  .blog-heading .blog-search { flex: 1; min-width: 8rem; }
   .blog-search { display: flex; align-items: center; gap: .5rem; width: 17rem; max-width: 100%; border-bottom: 1px solid hsl(var(--border)); }
   .blog-search:focus-within { border-color: hsl(var(--primary)); }
   .blog-search-input { min-width: 0; min-height: 44px; flex: 1; padding: 0; border: 0; background: transparent; color: hsl(var(--foreground)); font-size: 1rem; outline: none; }
@@ -149,10 +150,7 @@ li::marker {
   .post-link:focus-visible { outline: none; }
   .post-link:focus-visible::after { outline: 2px solid hsl(var(--primary)); outline-offset: -2px; }
   .post-tag { position: relative; z-index: 2; }
-  .post-preview-media { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 4rem; height: 4rem; }
-  .post-thumbnail { width: 100%; height: 100%; object-fit: cover; border-radius: .3rem; }
   .post-link :is(h2, h3) { font-size: 1.2rem; font-weight: 500; line-height: 1.65; overflow-wrap: anywhere; }
-  .post-link:hover :is(h2, h3) { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 4px; }
   .research-link { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; padding-block: 1.5rem; }
   .research-link h3 { font-size: 1.15rem; line-height: 1.6; }
   .research-link:hover h3 { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 4px; }
