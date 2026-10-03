@@ -26,7 +26,7 @@ export default async function PhotosPage() {
     }));
   return (
     <div className="site-container page-section">
-      <header className="page-heading"><h1 className="page-title">Photos</h1><p className="page-description">A few places and moments along the way.</p></header>
+      <header className="page-heading"><h1 className="page-title">Photos</h1></header>
       <div className="photo-gallery">
         {photos.map((photo, index) => (
           <figure key={photo.imagePath}>
