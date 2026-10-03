@@ -1,37 +1,19 @@
-'use client';
+import type { Metadata } from 'next';
 
-import React, { useState } from 'react';
+export const metadata: Metadata = { title: 'Privacy & Terms' };
 
 export default function PolicyPage() {
-  const [activeTab, setActiveTab] = useState('privacy');
   const lastUpdated = "October 31, 2024";
 
   return (
-    <div className="mx-auto max-w-screen-md px-4 py-8">
-      <h1 className="mb-8 text-center text-3xl font-bold">Legal Information</h1>
-      
-      {/* Simple Tab Buttons */}
-      <div className="mb-8 flex border-b">
-        <button
-          className={`px-4 py-2 ${activeTab === 'privacy' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'}`}
-          onClick={() => setActiveTab('privacy')}
-        >
-          Privacy Policy
-        </button>
-        <button
-          className={`px-4 py-2 ${activeTab === 'terms' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'}`}
-          onClick={() => setActiveTab('terms')}
-        >
-          Terms of Service
-        </button>
-      </div>
-
-      {/* Privacy Policy Content */}
-      {activeTab === 'privacy' && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="mb-2 text-2xl font-semibold">Privacy Policy</h2>
-            <p className="mb-6 text-sm text-gray-600">Last Updated: {lastUpdated}</p>
+    <div className="site-container page-section">
+      <header className="page-heading">
+        <h1 className="page-title">Privacy &amp; Terms</h1>
+        <p className="page-description text-sm">Last updated: {lastUpdated}</p>
+      </header>
+      <div className="prose max-w-none">
+          <section aria-labelledby="privacy-title">
+            <h2 id="privacy-title">Privacy Policy</h2>
 
             <section className="mb-8">
               <h3 className="mb-4 text-xl font-semibold">1. Introduction</h3>
@@ -69,20 +51,9 @@ export default function PolicyPage() {
               </ul>
             </section>
 
-            <section className="mb-8">
-              <h3 className="mb-4 text-xl font-semibold">4. Contact Information</h3>
-              <p></p>
-            </section>
-          </div>
-        </div>
-      )}
-
-      {/* Terms of Service Content */}
-      {activeTab === 'terms' && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="mb-2 text-2xl font-semibold">Terms of Service</h2>
-            <p className="mb-6 text-sm text-gray-600">Last Updated: {lastUpdated}</p>
+          </section>
+          <section className="mt-12 border-t border-border pt-6" aria-labelledby="terms-title">
+            <h2 id="terms-title">Terms of Service</h2>
 
             <section className="mb-8">
               <h3 className="mb-4 text-xl font-semibold">1. Agreement to Terms</h3>
@@ -109,18 +80,8 @@ export default function PolicyPage() {
               </ul>
             </section>
 
-            <section className="mb-8">
-              <h3 className="mb-4 text-xl font-semibold">4. Contact Information</h3>
-              <p></p>
-            </section>
-          </div>
-        </div>
-      )}
-
-      <footer className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
-        <p>For any questions regarding our Privacy Policy or Terms of Service, please contact:</p>
-        <p className="mt-2">kkensuke</p>
-      </footer>
+          </section>
+      </div>
     </div>
   );
 }
