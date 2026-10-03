@@ -159,10 +159,9 @@ li::marker {
   .research-link:hover h3 { color: hsl(var(--primary)); }
   .photo-gallery { column-count: 2; column-gap: 1.5rem; }
   .photo-gallery figure { position: relative; break-inside: avoid; margin-bottom: 1.5rem; }
-  .photo-gallery figcaption { position: absolute; inset: auto 0 0; padding: 2rem 1rem .75rem; border-radius: 0 0 .4rem .4rem; background: linear-gradient(transparent, rgb(0 0 0 / .7)); color: #fff; font-size: .875rem; pointer-events: none; }
+  .photo-gallery figcaption { position: absolute; inset: auto 1rem .75rem; color: #fff; font-size: .875rem; text-shadow: 0 1px 3px #000; pointer-events: none; }
   .photo-link { display: block; border-radius: .4rem; overflow: hidden; }
   .photo-image { width: 100%; height: auto; }
-  .photo-link:hover { opacity: .94; }
   .tag-link { display: inline-flex; align-items: center; min-height: 44px; padding: .45rem .75rem; border-radius: .3rem; font-size: .8rem; color: hsl(var(--muted-foreground)); }
   .tag-link:hover { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
   .tag-link[aria-current='page'] { background: hsl(var(--accent)); color: hsl(var(--primary)); }

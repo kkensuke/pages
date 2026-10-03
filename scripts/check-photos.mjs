@@ -32,7 +32,11 @@ try {
   assert.match(figures[0], /width="1478" height="1108"/, 'Read landscape dimensions');
   assert.match(figures[1], /<figcaption>B_tokyo<\/figcaption>/);
   assert.match(figures[1], /width="3024" height="4032"/, 'Account for EXIF rotation');
-  for (const figure of figures) assert.match(figure, /target="_blank" rel="noopener noreferrer"/);
+  for (const figure of figures) {
+    assert.match(figure, /target="_blank" rel="noopener noreferrer"/);
+    assert.equal(figure.match(/<img\b[^>]*src="([^"]+)"/)?.[1], figure.match(/<a\b[^>]*href="([^"]+)"/)?.[1], 'Display the same original file as the full-size link');
+    assert.doesNotMatch(figure, /\/_next\/image|\bsrcset=/i, 'Do not use re-encoded image variants');
+  }
   assert.doesNotMatch(html, />Full size\b/);
   await writeFile(path.join(directory, 'c_added.png'), Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl8N2sAAAAASUVORK5CYII=', 'base64'));
   const withAddedPhoto = await render();

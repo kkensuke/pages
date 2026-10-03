@@ -31,7 +31,7 @@ export default async function PhotosPage() {
         {photos.map((photo, index) => (
           <figure key={photo.imagePath}>
             <a href={photo.imagePath} target="_blank" rel="noopener noreferrer" className="photo-link" aria-label={`View full-size photo: ${photo.title}`}>
-              <Image src={photo.imagePath} alt={`View photographed in ${photo.title}`} width={photo.width} height={photo.height} sizes="(max-width: 540px) calc(100vw - 40px), (max-width: 880px) calc(50vw - 36px), 404px" priority={index === 0} className="photo-image" />
+              <Image src={photo.imagePath} alt={`View photographed in ${photo.title}`} width={photo.width} height={photo.height} unoptimized priority={index === 0} className="photo-image" />
             </a>
             <figcaption>{photo.title}</figcaption>
           </figure>
