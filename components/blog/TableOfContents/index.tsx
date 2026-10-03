@@ -26,15 +26,15 @@ const TOC = () => {
 
   return (
     <div>
-      <div className="rounded-xl border border-slate-700 bg-[#0f0f0f] shadow-sm">
-        <div className="flex items-center gap-2 border-b border-slate-700 p-4">
-          <ListOrdered className="text-slate-500" size={20} aria-hidden="true" />
-          <h2 className="font-semibold text-slate-300">
+      <div className="rounded-lg border border-border bg-card">
+        <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+          <ListOrdered className="text-muted-foreground" size={16} aria-hidden="true" />
+          <h2 className="text-xs font-medium text-muted-foreground">
             Table of Contents
           </h2>
         </div>
 
-        <nav className="toc p-4" aria-label="Table of contents" />
+        <nav className="toc p-3" aria-label="Table of contents" />
       </div>
 
       <style jsx global>{`
@@ -42,7 +42,7 @@ const TOC = () => {
           list-style: none;
           padding: 0;
           margin: 0;
-          font-size: 0.95rem;
+          font-size: 0.8125rem;
         }
 
         .toc-list .toc-list {
@@ -51,50 +51,50 @@ const TOC = () => {
         }
 
         .toc-list-item {
-          margin-bottom: 0.5rem;
-          line-height: 1.4;
+          margin-bottom: 0.25rem;
+          line-height: 1.6;
         }
 
         .toc-link {
-          color: #94a3b8;
+          color: hsl(var(--muted-foreground));
           text-decoration: none;
-          transition: color 0.2s ease, transform 0.2s ease;
-          display: inline-block;
+          transition: color 0.2s ease;
+          display: block;
           position: relative;
-          padding-left: 0.25rem;
+          padding-left: 0.5rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .toc-link:hover {
-          color: #cbd5e1;
+          color: hsl(var(--foreground));
         }
 
         .is-active-link {
-          color: #7dd3fc;
+          color: hsl(var(--primary));
           font-weight: 500;
         }
 
         .is-active-link::before {
           content: '';
           position: absolute;
-          left: -0.25rem;
-          top: 0.2rem;
-          bottom: 0.2rem;
+          left: 0;
+          top: 0.35rem;
+          bottom: 0.35rem;
           width: 2px;
-          background: #38bdf8;
+          background: hsl(var(--primary));
           border-radius: 1px;
         }
 
         .is-active-link + .toc-list .toc-link {
-          color: #94a3b8;
+          color: hsl(var(--muted-foreground));
         }
 
         .toc-list {
           transition: height 0.3s ease;
         }
 
-        .is-active-li > .toc-link {
-          transform: translateX(2px);
-        }
       `}</style>
     </div>
   );
