@@ -19,6 +19,8 @@ assert.doesNotMatch(home, /[ぁ-んァ-ン一-龯]/);
 assert.match(home, /href="mailto:/);
 assert.equal(count(blog), pageSize);
 assert.equal(count(second), pageSize);
+const postLinks = html => [...html.matchAll(/href="(\/blog\/posts\/[^\"]+)"/g)].map(match => match[1]);
+assert.ok(postLinks(blog).every(href => !postLinks(second).includes(href)), 'Adjacent pages must contain different articles');
 assert.equal(count(math), 2);
 assert.doesNotMatch(math, /aria-label="ページ切り替え"/);
 assert.equal(count(search), 1);
