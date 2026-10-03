@@ -28,7 +28,7 @@ export default function BlogIndex({ tag, searchParams }: BlogIndexProps) {
           <LanguageToggle language={language} basePath={basePath} query={query} />
         </div>
       </header>
-      <TagSection tags={getAllTags(language)} activeTag={tag} language={language} query={query} showAll />
+      <TagSection tags={getAllTags(language)} activeTag={tag} language={language} query={query} />
       <p className="mt-4 border-b border-border pb-2 text-xs text-muted-foreground">{isJapanese ? `${totalPosts} 件の記事` : `${totalPosts} ${totalPosts === 1 ? 'article' : 'articles'}`}</p>
       {posts.length ? (
         <div className="post-list">{posts.map(post => <PostPreview key={post.slug} {...post} language={language} />)}</div>

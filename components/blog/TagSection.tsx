@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import type { BlogLanguage } from '@/lib/blog/localization';
 
-type TagSectionProps = { tags: string[]; activeTag?: string; language?: BlogLanguage; query?: string; showAll?: boolean };
+type TagSectionProps = { tags: string[]; activeTag?: string; language?: BlogLanguage; query?: string };
 
-export default function TagSection({ tags, activeTag, language = 'ja', query = '', showAll = false }: TagSectionProps) {
-  if (!tags?.length && !showAll) return null;
+export default function TagSection({ tags, activeTag, language = 'ja', query = '' }: TagSectionProps) {
+  if (!tags?.length) return null;
   const params = new URLSearchParams();
   if (language === 'en') params.set('lang', 'en');
   if (query) params.set('q', query);
@@ -12,7 +12,6 @@ export default function TagSection({ tags, activeTag, language = 'ja', query = '
 
   return (
     <nav className="flex flex-wrap gap-1" aria-label={language === 'ja' ? '記事のタグ' : 'Post tags'}>
-      {showAll && <Link href={'/blog' + suffix} className="tag-link" aria-current={!activeTag ? 'page' : undefined}>{language === 'ja' ? 'すべて' : 'All'}</Link>}
       {tags.map(tag => {
         const isActive = tag.toLowerCase() === activeTag?.toLowerCase();
         return <Link key={tag} href={`${isActive ? '/blog' : `/blog/tags/${encodeURIComponent(tag)}`}${suffix}`} className="tag-link" aria-current={isActive ? 'page' : undefined}>{tag}</Link>;

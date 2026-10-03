@@ -15,10 +15,10 @@ export default function HomePage() {
         <h1 id="home-title" className="home-name">Kensuke.</h1>
         <p className="home-description">Researching quantum computing and machine learning.</p>
         <p className="mt-4 text-muted-foreground">I explore how quantum models learn. Here I share research, code, and notes along the way.</p>
+        <p className="mt-4 text-sm leading-7 text-muted-foreground">Quantum kernel methods · Generalization · Variational quantum algorithms</p>
         <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2">
           <Link href="/blog?lang=en" className="primary-link">Read the blog <ArrowRight size={17} aria-hidden="true" /></Link>
         </div>
-        <p className="mt-8 text-sm leading-7 text-muted-foreground">Quantum kernel methods · Generalization · Variational quantum algorithms</p>
       </section>
       <section id="research" className="home-section" aria-labelledby="research-title">
         <div className="section-heading"><h2 id="research-title">Research & notes</h2><span className="eyebrow">Selected work</span></div>
@@ -30,7 +30,6 @@ export default function HomePage() {
             </a>
           ))}
         </div>
-        <p className="mt-6 text-sm text-muted-foreground">Working with Python, C++, and TypeScript.</p>
       </section>
     </div>
   );
