@@ -36,7 +36,7 @@ const Pre: Components['pre'] = ({ children, ...props }) => {
 
   return (
     <div className="my-4 space-y-2">
-      <div className="group overflow-hidden rounded-lg border border-slate-700 bg-slate-900">
+      <div className="group overflow-hidden rounded-lg border border-slate-700" style={{ background: coldarkDark['pre[class*="language-"]'].background }}>
         <div className="relative">
           <div>
             {title && (

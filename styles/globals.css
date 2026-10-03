@@ -146,7 +146,7 @@ li::marker {
   .icon-button { display: inline-flex; flex-shrink: 0; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: .3rem; color: hsl(var(--muted-foreground)); }
   .icon-button:hover { color: hsl(var(--primary)); background: hsl(var(--secondary)); }
   .icon-button:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
-  .post-preview { position: relative; padding-block: 1.5rem; }
+  .post-preview { position: relative; padding: 1.5rem .75rem; }
   .post-preview:hover { background: hsl(var(--surface-hover)); }
   .post-link { display: flex; min-height: 5rem; align-items: center; justify-content: space-between; gap: 1rem; }
   .post-link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
