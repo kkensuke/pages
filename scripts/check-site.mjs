@@ -13,7 +13,8 @@ const [home, blog, second, math, search, english, empty, photos, article] = awai
   '/', '/blog', '/blog?page=2', '/blog/tags/Math', '/blog?q=%EF%BC%B3%EF%BC%AC%EF%BC%A9%EF%BC%AE%EF%BC%AB',
   '/blog?lang=en&q=slink', '/blog?q=there-is-no-such-post', '/photos', '/blog/posts/slink.en',
 ].map(read));
-assert.equal(count(home), 3);
+assert.equal(count(home), 0);
+assert.doesNotMatch(home, /<br\b|Recent writing|Explore my research/);
 assert.match(home, /Research &amp; notes/);
 assert.doesNotMatch(home, /[ぁ-んァ-ン一-龯]/);
 assert.match(home, /href="mailto:/);
@@ -23,6 +24,8 @@ const postLinks = html => [...html.matchAll(/href="(\/blog\/posts\/[^\"]+)"/g)].
 assert.ok(postLinks(blog).every(href => !postLinks(second).includes(href)), 'Adjacent pages must contain different articles');
 assert.equal(count(math), 2);
 assert.doesNotMatch(math, /aria-label="ページ切り替え"/);
+assert.match(math, /href="\/blog"[^>]*aria-current="page"[^>]*>Math<\/a>/, 'Selected tag must link back to the unfiltered listing');
+for (const path of ['/', '/blog', '/photos']) assert.ok(home.slice(home.indexOf('<footer')).includes(`href="${path}"`), `Footer must link to ${path}`);
 assert.equal(count(search), 1);
 assert.match(search, /href="\/blog\/posts\/slink"/);
 assert.equal(count(english), 1);

@@ -12,9 +12,10 @@ export default function TagSection({ tags, activeTag, language = 'ja', query = '
   return (
     <nav className="flex flex-wrap gap-1" aria-label={language === 'ja' ? '記事のタグ' : 'Post tags'}>
       {showAll && <Link href={'/blog' + suffix} className="tag-link" aria-current={!activeTag ? 'page' : undefined}>{language === 'ja' ? 'すべて' : 'All'}</Link>}
-      {tags.map(tag => (
-        <Link key={tag} href={`/blog/tags/${encodeURIComponent(tag)}${suffix}`} className="tag-link" aria-current={tag === activeTag ? 'page' : undefined}>{tag}</Link>
-      ))}
+      {tags.map(tag => {
+        const isActive = tag.toLowerCase() === activeTag?.toLowerCase();
+        return <Link key={tag} href={`${isActive ? '/blog' : `/blog/tags/${encodeURIComponent(tag)}`}${suffix}`} className="tag-link" aria-current={isActive ? 'page' : undefined}>{tag}</Link>;
+      })}
     </nav>
   );
 }

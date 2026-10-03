@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
-import PostPreview from '@/components/blog/PostPreview';
-import { getLocalizedPosts } from '@/lib/blog/localization';
 
 const research = [
   { title: 'Double Descent in Quantum Kernel Ridge Regression', kind: 'Paper · arXiv', href: 'https://arxiv.org/abs/2604.17202' },
@@ -10,27 +8,17 @@ const research = [
 ];
 
 export default function HomePage() {
-  const recentPosts = getLocalizedPosts('en').slice(0, 3);
-
   return (
     <div className="site-container page-section">
       <section className="home-intro" aria-labelledby="home-title">
         <p className="eyebrow">PhD student · Tokyo, Japan</p>
         <h1 id="home-title" className="home-name">Kensuke.</h1>
-        <p className="home-description">Researching quantum computing<br className="hidden sm:block" /> and machine learning.</p>
-        <p className="mt-4 max-w-xl text-muted-foreground">I explore how quantum models learn. Here I share research, code, and notes along the way.</p>
+        <p className="home-description">Researching quantum computing and machine learning.</p>
+        <p className="mt-4 text-muted-foreground">I explore how quantum models learn. Here I share research, code, and notes along the way.</p>
         <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2">
           <Link href="/blog?lang=en" className="primary-link">Read the blog <ArrowRight size={17} aria-hidden="true" /></Link>
-          <a href="#research" className="text-link">Explore my research <span aria-hidden="true">↓</span></a>
         </div>
         <p className="mt-8 text-sm leading-7 text-muted-foreground">Quantum kernel methods · Generalization · Variational quantum algorithms</p>
-      </section>
-      <section className="home-section" aria-labelledby="recent-title">
-        <div className="section-heading">
-          <h2 id="recent-title">Recent writing</h2>
-          <Link href="/blog?lang=en" className="text-link">All articles <ArrowRight size={15} aria-hidden="true" /></Link>
-        </div>
-        <div className="post-list">{recentPosts.map(post => <PostPreview key={post.slug} {...post} language="en" headingLevel={3} />)}</div>
       </section>
       <section id="research" className="home-section" aria-labelledby="research-title">
         <div className="section-heading"><h2 id="research-title">Research & notes</h2><span className="eyebrow">Selected work</span></div>
