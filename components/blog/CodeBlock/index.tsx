@@ -2,15 +2,7 @@
 
 import React, { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import {
-  vscDarkPlus,      // GitHub-like dark theme
-  dracula,          // Popular dark theme
-  atomDark,         // Atom editor dark theme
-  oneDark,          // One Dark theme
-  synthwave84,      // Retro/cyberpunk theme
-  materialDark,     // Material design dark
-  coldarkDark,      // Modern dark theme
-} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { coldarkDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Copy, Check } from 'lucide-react';
 import { Components } from 'react-markdown';
@@ -44,20 +36,19 @@ const Pre: Components['pre'] = ({ children, ...props }) => {
 
   return (
     <div className="my-4 space-y-2">
-      <div className="group overflow-hidden rounded-lg border border-slate-700 bg-slate-900">
+      <div className="group overflow-hidden rounded-lg border border-slate-700" style={{ background: coldarkDark['pre[class*="language-"]'].background }}>
         <div className="relative">
           <div>
             {title && (
-              <div className="bg-slate-800 px-2 py-1 font-mono text-xs text-slate-300">
+              <div className="bg-slate-800 px-2 py-1 text-xs text-slate-300" style={{ fontFamily: 'var(--font-mono)' }}>
                 {title}
               </div>
             )}
           </div>
-          {/* <div className="absolute right-4 top-4 z-10 opacity-0 transition-opacity group-hover:opacity-100"> */}
-          <div className={`absolute right-4 ${title ? 'top-8' : 'top-2.5'} z-10 opacity-0 transition-opacity group-hover:opacity-100`}>
+          <div className={`absolute right-4 ${title ? 'top-8' : 'top-2.5'} z-10 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100`}>
             <CopyToClipboard text={String(codeString)} onCopy={handleCopy}>
-              <button className="rounded-md bg-slate-700/50 p-2 text-slate-400 backdrop-blur-sm transition-colors hover:bg-slate-700 hover:text-slate-200">
-                {isCopied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
+              <button type="button" aria-label={isCopied ? 'Copied' : 'Copy code'} className="rounded-md bg-slate-700/50 p-2 text-slate-400 backdrop-blur-sm transition-colors hover:bg-slate-700 hover:text-slate-200">
+                {isCopied ? <Check size={16} className="text-green-500" aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
               </button>
             </CopyToClipboard>
           </div>
@@ -70,10 +61,11 @@ const Pre: Components['pre'] = ({ children, ...props }) => {
               margin: '0 1rem 0 0',
               borderRadius: 0,
               fontSize: '14px',
+              fontFamily: 'var(--font-mono)',
               padding: showLineNumbers ? '1rem 1rem 1rem 0.3rem' : '1rem',
             }}
             codeTagProps={{
-              style: { fontFamily: 'ui-monospace, monospace' }
+              style: { fontFamily: 'var(--font-mono)' }
             }}
           >
             {String(codeString).replace(/\n$/, '')}

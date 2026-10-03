@@ -10,6 +10,7 @@ import 'katex/dist/katex.min.css';
 import React from "react";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Github } from 'lucide-react';
 
 import { FEATURES } from '@/config/constants';
 import Comment from "@/components/blog/Comment/Comment";
@@ -21,8 +22,6 @@ import TOC from "@/components/blog/TableOfContents/index";
 import Pre from "@/components/blog/CodeBlock";
 import CustomImage from "@/components/blog/Image";
 import AdmonitionComponents from "@/components/blog/Admonition/admonitionColor3";
-// import AdmonitionComponents from "@/components/blog/Admonition/admonitionColor2"; // Alternative Admonition style
-// import AdmonitionComponents from "@/components/blog/Admonition/admonitionColor3"; // Ink Blue Admonition style
 import { remarkTextDirectives, TextDirectiveComponents } from '@/components/blog/Admonition/directive';
 
 import { Metadata } from 'next';
@@ -120,86 +119,29 @@ const PostContent = async (props: any) => {
     ...TextDirectiveComponents,
   };
 
-  const titleSection = (
-    <>
-      <p className="mt-2 text-right text-slate-600">{post.data.date}</p>
-      <h1 className="text-2xl text-slate-600">{post.data.title}</h1>
-      <p className="mt-2 text-slate-600">{post.data.subtitle}</p>
-      <div className="mt-3 flex justify-center gap-4 text-sm">
-        <a
-          className="text-slate-500 underline transition-colors hover:text-slate-300"
-          href={markdownUrl}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Markdown on GitHub
-        </a>
-        {alternateSlug && (
-          <Link
-            className="font-medium text-sky-400 transition-colors hover:text-sky-300 hover:underline"
-            href={`/blog/posts/${alternateSlug}`}
-          >
-            {language === 'en' ? '日本語で読む' : 'Read in English'}
-          </Link>
-        )}
-      </div>
-      {/* if post.data.tags exist, return list of tags below */}
-      {post.data.tags && (
-        <div className="mt-4">
-          <TagSection tags={post.data.tags} language={language} />
-        </div>
-      )}
-    </>
-  )
+  const date = new Date(post.data.date).toISOString().slice(0, 10);
 
   return (
-    <div className="mb-20 flex flex-col lg:flex-row lg:items-start">
-
-      <div className="lg:order-1 lg:w-96 lg:min-w-[10px] lg:shrink">
-      </div>
-
-      <div className="mx-auto my-12 max-w-screen-sm text-center lg:order-2 lg:hidden">
-        {titleSection}
-      </div>
-
-      <div className="mb-2 lg:sticky lg:top-10 lg:order-3 lg:ml-8 lg:mr-0 lg:w-80 lg:shrink-0">
-          <div className="mx-auto max-w-[400px] lg:mt-10">
-            <TOC />
+    <>
+      <header className="reading-column article-header">
+        <div className="flex flex-wrap items-center justify-between gap-x-4">
+          <div className="flex items-center gap-2">
+            <time dateTime={date} className="text-sm tabular-nums text-muted-foreground">{date.replace(/-/g, '.')}</time>
+            <a className="icon-button" href={markdownUrl} rel="noopener noreferrer" target="_blank" aria-label={language === 'en' ? 'Read Markdown on GitHub' : 'GitHubでMarkdownを読む'} title={language === 'en' ? 'Read Markdown on GitHub' : 'GitHubでMarkdownを読む'}><Github size={18} aria-hidden="true" /></a>
           </div>
-      </div>
-
-      <div className="lg:order-2 lg:mx-auto lg:shrink-0">
-        <div className="mx-auto my-12 hidden max-w-screen-sm text-center lg:block"> {/* hidden lg:block  <-> lg:hidden */}
-          {titleSection}
+          {alternateSlug && <Link className="text-link ml-auto" href={`/blog/posts/${alternateSlug}`}>{language === 'en' ? 'Read in Japanese' : 'Read in English'}</Link>}
         </div>
-
-        <ErrorBoundary fallback={
-          <div className="prose mx-auto p-6 text-center">
-            <h3>Failed to render post content</h3>
-            <p>We encountered an error while rendering this post's content.</p>
-          </div>
-        }>
-          <article className="post prose mx-auto">
-            <Markdown
-              children={content}
-              remarkPlugins={[
-                remarkGfm,
-                remarkDirective,
-                remarkDirectiveRehype,
-                remarkTextDirectives,
-                remarkMath
-              ]}
-              rehypePlugins={[
-                rehypeSlug,
-                rehypeKatex
-              ]}
-              components={components}
-            />
-          </article>
-        </ErrorBoundary>
-      </div>
-
-    </div>
+        <h1 className="article-title">{post.data.title}</h1>
+        {post.data.subtitle && post.data.subtitle !== post.data.title && <p className="mt-2 text-base leading-7 text-muted-foreground">{post.data.subtitle}</p>}
+        {post.data.tags && <div className="mt-2"><TagSection tags={post.data.tags} language={language} /></div>}
+      </header>
+      <aside className="article-toc"><TOC key={slug} /></aside>
+      <ErrorBoundary fallback={<div className="reading-column py-8"><h2>Failed to render post content</h2><p>Please try reloading this article.</p></div>}>
+        <article className="reading-column post prose article-content">
+          <Markdown children={content} remarkPlugins={[remarkGfm, remarkDirective, remarkDirectiveRehype, remarkTextDirectives, remarkMath]} rehypePlugins={[rehypeSlug, rehypeKatex]} components={components} />
+        </article>
+      </ErrorBoundary>
+    </>
   );
 };
 
@@ -209,15 +151,11 @@ export default async function PostPage(props: any) {
   const postLinks = getPostLinks(props.params.slug);
 
   return (
-    <>
+    <div className="article-layout page-section" lang={language}>
       {postContent}
-
       <PostNavigation {...postLinks} language={language} />
-
-      <div className="mb-28">
-        {FEATURES.ENABLE_COMMENTS && <Comment />}
-      </div>
-    </>
+      {FEATURES.ENABLE_COMMENTS && <section className="reading-column mt-12 border-t border-border pt-8" aria-labelledby="comments-title"><h2 id="comments-title" className="mb-6 text-xl">{language === 'en' ? 'Comments' : 'コメント'}</h2><Comment /></section>}
+    </div>
   );
 }
 
