@@ -135,7 +135,7 @@ const PostContent = async (props: any) => {
         {post.data.subtitle && post.data.subtitle !== post.data.title && <p className="mt-2 text-base leading-7 text-muted-foreground">{post.data.subtitle}</p>}
         {post.data.tags && <div className="mt-2"><TagSection tags={post.data.tags} language={language} /></div>}
       </header>
-      <TOC key={slug} language={language} />
+      <aside className="article-toc"><TOC key={slug} /></aside>
       <ErrorBoundary fallback={<div className="reading-column py-8"><h2>Failed to render post content</h2><p>Please try reloading this article.</p></div>}>
         <article className="reading-column post prose article-content">
           <Markdown children={content} remarkPlugins={[remarkGfm, remarkDirective, remarkDirectiveRehype, remarkTextDirectives, remarkMath]} rehypePlugins={[rehypeSlug, rehypeKatex]} components={components} />

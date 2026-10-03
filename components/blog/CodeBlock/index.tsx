@@ -36,19 +36,19 @@ const Pre: Components['pre'] = ({ children, ...props }) => {
 
   return (
     <div className="my-4 space-y-2">
-      <div className="overflow-hidden rounded-md border border-border bg-card">
+      <div className="group overflow-hidden rounded-lg border border-slate-700 bg-slate-900">
         <div className="relative">
           <div>
             {title && (
-              <div className="bg-secondary px-4 py-2 pr-16 font-mono text-xs text-muted-foreground">
+              <div className="bg-slate-800 px-2 py-1 text-xs text-slate-300" style={{ fontFamily: 'var(--font-mono)' }}>
                 {title}
               </div>
             )}
           </div>
-          <div className="absolute right-2 top-2 z-10">
+          <div className={`absolute right-4 ${title ? 'top-8' : 'top-2.5'} z-10 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100`}>
             <CopyToClipboard text={String(codeString)} onCopy={handleCopy}>
-              <button type="button" aria-label={isCopied ? 'Copied' : 'Copy code'} className="flex h-11 w-11 items-center justify-center rounded-md bg-secondary text-primary hover:bg-accent">
-                {isCopied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+              <button type="button" aria-label={isCopied ? 'Copied' : 'Copy code'} className="rounded-md bg-slate-700/50 p-2 text-slate-400 backdrop-blur-sm transition-colors hover:bg-slate-700 hover:text-slate-200">
+                {isCopied ? <Check size={16} className="text-green-500" aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
               </button>
             </CopyToClipboard>
           </div>
@@ -58,13 +58,14 @@ const Pre: Components['pre'] = ({ children, ...props }) => {
             showLineNumbers={showLineNumbers}
             startingLineNumber={startingLineNumber}
             customStyle={{
-              margin: 0,
+              margin: '0 1rem 0 0',
               borderRadius: 0,
               fontSize: '14px',
-              padding: showLineNumbers ? '1rem 4rem 1rem 0.3rem' : '1rem 4rem 1rem 1rem',
+              fontFamily: 'var(--font-mono)',
+              padding: showLineNumbers ? '1rem 1rem 1rem 0.3rem' : '1rem',
             }}
             codeTagProps={{
-              style: { fontFamily: 'ui-monospace, monospace' }
+              style: { fontFamily: 'var(--font-mono)' }
             }}
           >
             {String(codeString).replace(/\n$/, '')}

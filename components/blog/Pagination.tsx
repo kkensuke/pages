@@ -14,7 +14,7 @@ export default function Pagination({ currentPage, totalPages, basePath = '/blog'
     if (page > 1) params.set('page', String(page));
     return basePath + (params.toString() ? '?' + params.toString() : '');
   };
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1).filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1);
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1).filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 4);
   const linkClass = 'flex h-11 min-w-[44px] items-center justify-center rounded-md px-3 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground';
   const previousLabel = language === 'ja' ? '前のページ' : 'Previous page';
   const nextLabel = language === 'ja' ? '次のページ' : 'Next page';

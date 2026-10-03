@@ -4,6 +4,7 @@ import type { BlogLanguage } from '@/lib/blog/localization';
 type TagSectionProps = { tags: string[]; activeTag?: string; language?: BlogLanguage; query?: string; showAll?: boolean };
 
 export default function TagSection({ tags, activeTag, language = 'ja', query = '', showAll = false }: TagSectionProps) {
+  if (!tags?.length && !showAll) return null;
   const params = new URLSearchParams();
   if (language === 'en') params.set('lang', 'en');
   if (query) params.set('q', query);

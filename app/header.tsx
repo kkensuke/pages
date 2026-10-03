@@ -21,7 +21,7 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <a href={SITE_CONFIG.links.github} target="_blank" rel="noopener noreferrer" className="header-github text-link">
+        <a href={SITE_CONFIG.links.github} className="header-github text-link">
           <Github size={17} aria-hidden="true" /> GitHub <ArrowUpRight size={14} aria-hidden="true" />
         </a>
       </div>

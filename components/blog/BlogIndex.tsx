@@ -22,7 +22,7 @@ export default function BlogIndex({ tag, searchParams }: BlogIndexProps) {
   return (
     <div className="site-container page-section" lang={language}>
       <header className="page-heading blog-heading flex flex-wrap items-center justify-between gap-5">
-        <h1 className="page-title">Blog</h1>
+        <h1 className="page-title"><Link href={blogHref}>Blog</Link></h1>
         <LanguageToggle language={language} basePath={basePath} query={query} />
       </header>
       <TagSection tags={getAllTags(language)} activeTag={tag} language={language} query={query} showAll />
