@@ -8,7 +8,7 @@ const photos = [
   { title: 'Berkeley', imagePath: '/images/photos/berkeley.jpeg', alt: 'View photographed in Berkeley', width: 1478, height: 1108 },
   { title: 'Enoshima', imagePath: '/images/photos/enoshima.jpeg', alt: 'View photographed in Enoshima', width: 4032, height: 3024 },
   { title: 'Kagoshima', imagePath: '/images/photos/kagoshima.jpeg', alt: 'View photographed in Kagoshima', width: 4032, height: 3024 },
-  { title: 'Tokyo', imagePath: '/images/photos/tokyo.jpeg', alt: 'View photographed in Tokyo', width: 4032, height: 3024 },
+  { title: 'Tokyo', imagePath: '/images/photos/tokyo.jpeg', alt: 'View photographed in Tokyo', width: 3024, height: 4032 },
 ];
 
 export default function PhotosPage() {
@@ -19,7 +19,7 @@ export default function PhotosPage() {
         {photos.map((photo, index) => (
           <figure key={photo.imagePath}>
             <a href={photo.imagePath} target="_blank" rel="noopener noreferrer" className="photo-link" aria-label={`View full-size photo: ${photo.title}`}>
-              <Image src={photo.imagePath} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 880px) 100vw, 832px" priority={index === 0} className="photo-image" />
+              <Image src={photo.imagePath} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 540px) calc(100vw - 40px), (max-width: 880px) calc(50vw - 36px), 404px" priority={index === 0} className="photo-image" />
             </a>
             <figcaption className="mt-3 flex items-center justify-between gap-4 text-sm"><span>{photo.title}</span><a href={photo.imagePath} target="_blank" rel="noopener noreferrer" className="text-link">Full size <ArrowUpRight size={14} aria-hidden="true" /></a></figcaption>
           </figure>
