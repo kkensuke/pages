@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const DEFAULT_FAVICON_SIZE = 64;
 
@@ -8,14 +6,7 @@ interface LinkCardProps {
   children: React.ReactNode;
 }
 
-const LinkCard = ({ children }: LinkCardProps) => {
-  const [metaData, setMetaData] = useState({
-    title: '',
-    description: '',
-    imageUrl: '',
-    domain: '',
-  });
-
+const LinkCard = async ({ children }: LinkCardProps) => {
   const extractUrl = (children: React.ReactNode): string => {
     if (React.isValidElement(children)) {
       return children.props.children?.toString() || '';
@@ -25,40 +16,33 @@ const LinkCard = ({ children }: LinkCardProps) => {
 
   const url = extractUrl(children).trim();
 
-  useEffect(() => {
-    if (url && url.match(/^https?:\/\/.+/)) {
-      fetch(`https://api.microlink.io/?url=${url}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status === 'success') {
-            setMetaData({
-              title: data.data.title || '',
-              description: data.data.description || '',
-              imageUrl: data.data.image?.url || '',
-              domain: getDomain(url),
-            });
-          }
-        })
-        .catch((error) => console.error('Metadata fetch error:', error));
-    }
-  }, [url]);
-
-  const getDomain = (url: string) => {
-    try {
-      let domain = url.replace(/^https?:\/\//, '');
-      domain = domain.split('/')[0];
-      return domain.split(':')[0];
-    } catch {
-      return url;
-    }
-  };
-
-  if (!url || !url.match(/^https?:\/\/.+/)) {
+  let parsedUrl: URL | undefined;
+  try { parsedUrl = new URL(url); } catch {}
+  if (!parsedUrl || !['http:', 'https:'].includes(parsedUrl.protocol)) {
     return (
       <div className="rounded-lg border border-red-300 bg-red-50 p-4 text-red-700 shadow-sm">
         Invalid URL format. Please provide a valid HTTP/HTTPS URL.
       </div>
     );
+  }
+
+  const metaData = { title: '', description: '', imageUrl: '', domain: parsedUrl.hostname };
+  try {
+    const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`, {
+      next: { revalidate: 86400 },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (response.ok) {
+      const result = await response.json();
+      if (result.status === 'success' && result.data) {
+        const data = result.data;
+        metaData.title = typeof data.title === 'string' ? data.title : '';
+        metaData.description = typeof data.description === 'string' ? data.description : '';
+        metaData.imageUrl = typeof data.image?.url === 'string' ? data.image.url : '';
+      }
+    }
+  } catch (error) {
+    console.warn(`Link preview unavailable: ${url}`, error instanceof Error ? error.message : error);
   }
 
   return (

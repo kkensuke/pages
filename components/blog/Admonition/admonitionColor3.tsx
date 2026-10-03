@@ -175,6 +175,7 @@ const LinkAdmonition = ({ children }: { children: React.ReactNode }) => {
     return '';
   };
 
+  // @ts-expect-error Async Server Components require TypeScript 5.1; this project uses 4.9.
   return <LinkCard>{getTextContent(children)}</LinkCard>;
 };
 
