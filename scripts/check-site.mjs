@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 
-// Run against `pnpm dev` or `pnpm start`: node scripts/check-site.mjs [origin] [postsPerPage]
+// Run after `pnpm build`, against `pnpm start`: node scripts/check-site.mjs [origin] [postsPerPage]
 const origin = process.argv[2] || 'http://localhost:3000';
 const pageSize = Number(process.argv[3] || 10);
 async function read(path) {
@@ -20,13 +21,24 @@ assert.doesNotMatch(home, /[ぁ-んァ-ン一-龯]/);
 assert.match(home, /href="mailto:/);
 assert.equal(count(blog), pageSize);
 assert.doesNotMatch(blog.slice(blog.indexOf('<body')), /Notes on mathematics, code, and everyday learning|数学、コード、日々の学び/);
+const blogHeading = blog.match(/<header\b[^>]*class="page-heading blog-heading[^>]*>[\s\S]*?<\/header>/)?.[0] || '';
+assert.match(blogHeading, /role="search"/);
+assert.match(blogHeading, /href="\/blog"/);
+assert.doesNotMatch(blogHeading, /aria-label="Blog language"/);
+for (const preview of blog.matchAll(/<article class="post-preview">[\s\S]*?<\/article>/g)) {
+  assert.doesNotMatch(preview[0], /<img\b/);
+  assert.match(preview[0], /lucide-arrow-right/);
+}
 assert.equal(count(second), pageSize);
 const postLinks = html => [...html.matchAll(/href="(\/blog\/posts\/[^\"]+)"/g)].map(match => match[1]);
 assert.ok(postLinks(blog).every(href => !postLinks(second).includes(href)), 'Adjacent pages must contain different articles');
-assert.equal(count(math), 2);
-assert.doesNotMatch(math, /aria-label="ページ切り替え"/);
+assert.equal(count(math), Math.min(pageSize, 2));
+if (pageSize >= 2) assert.doesNotMatch(math, /aria-label="ページ切り替え"/);
 assert.match(math.match(/<a\b[^>]*aria-current="page"[^>]*>Math<\/a>/)?.[0] || '', /href="\/blog"/, 'Selected tag must link back to the unfiltered listing');
 for (const path of ['/', '/blog', '/photos']) assert.ok(home.slice(home.indexOf('<footer')).includes(`href="${path}"`), `Footer must link to ${path}`);
+const footer = home.slice(home.indexOf('<footer'));
+assert.ok(footer.indexOf('href="/policy"') < footer.indexOf('<nav'), 'Privacy link must sit with the copyright');
+assert.ok(footer.indexOf('GitHub') < footer.indexOf('Contact'), 'GitHub must precede Contact');
 assert.equal(count(search), 1);
 assert.match(search, /href="\/blog\/posts\/slink"/);
 assert.equal(count(english), 1);
@@ -49,4 +61,21 @@ assert.match(adjacent, /Older article/);
 assert.doesNotMatch(adjacent, /Newer article/, 'The newest article must only offer an older article');
 const middleNavigation = middleArticle.match(/<nav\b[^>]*aria-label="Article navigation"[\s\S]*?<\/nav>/)?.[0] || '';
 assert.deepEqual(postLinks(middleNavigation), ['/blog/posts/slink.en', '/blog/posts/brew_CLI.en'], 'Navigation must put the newer article before the older article');
-console.log('PASS: Home, footer links, pagination, tag reset, search, language, photos, and article navigation.');
+const manifest = JSON.parse(await readFile(new URL('../.next/prerender-manifest.json', import.meta.url), 'utf8'));
+const articles = Object.keys(manifest.routes).filter(path => path.startsWith('/blog/posts/'));
+let codeBlocks = 0;
+for (const path of articles) {
+  const html = await read(path);
+  assert.equal((html.match(/<h1\b/g) || []).length, 1, `${path}: one article title`);
+  assert.ok(html.includes('reading-column post prose article-content'), `${path}: Markdown rendered`);
+  assert.ok(html.includes('aria-label="Table of contents"'), `${path}: original contents rendered`);
+  for (const [, attributes, content] of html.matchAll(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/g)) {
+    const preFont = attributes.match(/font-family:([^;\"]+)/)?.[1];
+    const codeFont = content.match(/<code\b[^>]*font-family:([^;\"]+)/)?.[1];
+    assert.ok(preFont, `${path}: explicit code font`);
+    assert.equal(preFont, codeFont, `${path}: pre and code must use the same font`);
+    codeBlocks++;
+  }
+}
+assert.ok(codeBlocks > 0);
+console.log(`PASS: Home, footer, pagination, tags, search, photos, navigation, ${articles.length} articles, and ${codeBlocks} code blocks.`);
