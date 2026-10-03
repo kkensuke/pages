@@ -18,7 +18,7 @@ export default async function PhotosPage() {
       const { width, height, orientation } = imageSize(await readFile(path.join(directory, name)));
       const rotated = orientation !== undefined && orientation >= 5 && orientation <= 8;
       return {
-        title: path.parse(name).name.replace(/^./u, letter => letter.toUpperCase()),
+        title: path.parse(name).name.replace(/-\d+$/, '').replace(/^./u, letter => letter.toUpperCase()),
         imagePath: `/photos/${encodeURIComponent(name)}`,
         width: rotated ? height : width,
         height: rotated ? width : height,
