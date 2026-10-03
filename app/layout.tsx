@@ -57,14 +57,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html>
+    <html lang="en">
       <head />
-      <body>
+      <body className="flex min-h-screen flex-col">
         <ErrorBoundary>
+          <a href="#main-content" className="skip-link">Skip to content</a>
           <Header />
-          <div className="min-h-[93vh] px-2">
+          <main id="main-content" className="flex-1">
             {children}
-          </div>
+          </main>
           <Footer />
           {FEATURES.ENABLE_ANALYTICS && <Analytics />}
           <script
@@ -74,7 +75,7 @@ export default function RootLayout({ children }: Props) {
             data-id="kkensuke"
             data-description="Support me on Buy me a coffee!"
             data-message=""
-            data-color="#40DCA5"
+            data-color="#7daff3"
             data-position="Right"
             data-x_margin="18"
             data-y_margin="18"

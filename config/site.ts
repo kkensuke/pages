@@ -11,7 +11,7 @@ export const SITE_CONFIG = {
   links: {
     twitter: 'https://x.com',
     github: 'https://github.com/kkensuke/pages',
-    email: 'example.12345@gmail.com',
+    email: 'kensuke@icepp.s.u-tokyo.ac.jp',
   },
   navigation: [
     { title: 'Home', path: '/' },
