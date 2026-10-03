@@ -37,6 +37,7 @@ li::marker {
 
 .prose :where(a):not(:where([class~="not-prose"] *)) {
   font-weight: 400;
+  text-decoration: none;
 }
 
 .prose :where(p):not(:where([class~="not-prose"] *)) {
@@ -113,7 +114,6 @@ li::marker {
   .page-description { margin-top: .8rem; color: hsl(var(--muted-foreground)); }
   .eyebrow { font-size: .75rem; letter-spacing: .1em; color: hsl(var(--muted-foreground)); text-transform: uppercase; }
   .text-link { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; color: hsl(var(--primary)); font-size: .875rem; }
-  .text-link:hover { text-decoration: underline; text-underline-offset: 4px; }
   .primary-link { display: inline-flex; align-items: center; gap: 1rem; min-height: 44px; padding: .65rem 1.1rem; border-radius: .35rem; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); font-size: .875rem; font-weight: 500; }
   .primary-link:hover { background: #accdfb; }
   .site-header { border-bottom: 1px solid hsl(var(--border)); }
@@ -156,7 +156,7 @@ li::marker {
   .post-link :is(h2, h3) { font-size: 1.2rem; font-weight: 500; line-height: 1.65; overflow-wrap: anywhere; }
   .research-link { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; padding-block: 1.5rem; }
   .research-link h3 { font-size: 1.15rem; line-height: 1.6; }
-  .research-link:hover h3 { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 4px; }
+  .research-link:hover h3 { color: hsl(var(--primary)); }
   .photo-gallery { display: grid; gap: 2.5rem; }
   .photo-link { display: block; border-radius: .4rem; overflow: hidden; }
   .photo-image { width: 100%; height: auto; }
