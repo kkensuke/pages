@@ -133,8 +133,11 @@ li::marker {
   .section-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; margin-bottom: .5rem; }
   .section-heading h2 { font-size: 1.4rem; font-weight: 500; letter-spacing: -.025em; }
   .post-list > * + *, .research-list > * + * { border-top: 1px solid hsl(var(--border)); }
+  .blog-index { max-width: 44.2rem; }
   .blog-heading { margin-bottom: 1.25rem; }
-  .blog-heading .blog-search { flex: 1; min-width: 8rem; }
+  .blog-controls { display: flex; flex: 1; align-items: center; justify-content: space-between; gap: 1rem; min-width: 0; max-width: 30rem; }
+  .blog-controls .blog-search { flex: 1; min-width: 0; max-width: 17rem; }
+  .blog-controls > nav { flex-shrink: 0; }
   .blog-search { display: flex; align-items: center; gap: .5rem; width: 17rem; max-width: 100%; border-bottom: 1px solid hsl(var(--border)); }
   .blog-search:focus-within { border-color: hsl(var(--primary)); }
   .blog-search-input { min-width: 0; min-height: 44px; flex: 1; padding: 0; border: 0; background: transparent; color: hsl(var(--foreground)); font-size: 1rem; outline: none; }
@@ -194,7 +197,8 @@ li::marker {
     .header-inner { grid-template-columns: 1fr auto; gap: .25rem 1rem; }
     .site-navigation { grid-column: 1 / -1; grid-row: 2; }
     .header-github { grid-column: 2; grid-row: 1; }
-    .blog-search { width: 12rem; }
+    .blog-controls { flex-basis: 100%; gap: .5rem; max-width: none; }
+    .blog-controls .blog-search > svg { display: none; }
     .adjacent-posts, .related-posts { grid-template-columns: 1fr; }
     .post-panel-older { grid-column: auto; }
   }

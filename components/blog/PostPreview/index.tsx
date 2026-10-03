@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { LIMITS } from '@/config/constants';
 import type { PostMetadata } from '@/lib/blog/types';
 import type { BlogLanguage } from '@/lib/blog/localization';
@@ -24,7 +23,6 @@ export default function PostPreview({ language = 'ja', headingLevel = 2, ...post
           <Heading>{post.title}</Heading>
           {post.subtitle && post.subtitle !== post.title && <p className="mt-2 text-sm leading-7 text-muted-foreground">{excerpt}</p>}
         </div>
-        <ArrowRight size={17} className="shrink-0 text-primary" aria-hidden="true" />
       </Link>
     </article>
   );

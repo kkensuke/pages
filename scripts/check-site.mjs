@@ -24,10 +24,12 @@ assert.doesNotMatch(blog.slice(blog.indexOf('<body')), /Notes on mathematics, co
 const blogHeading = blog.match(/<header\b[^>]*class="page-heading blog-heading[^>]*>[\s\S]*?<\/header>/)?.[0] || '';
 assert.match(blogHeading, /role="search"/);
 assert.match(blogHeading, /href="\/blog"/);
-assert.doesNotMatch(blogHeading, /aria-label="Blog language"/);
+assert.match(blogHeading, /aria-label="Blog language"/);
+assert.ok(blogHeading.indexOf('role="search"') < blogHeading.indexOf('aria-label="Blog language"'), 'Search must precede language selection in the shared toolbar');
+assert.doesNotMatch(blog, /新しい順|Newest first/);
 for (const preview of blog.matchAll(/<article class="post-preview">[\s\S]*?<\/article>/g)) {
   assert.doesNotMatch(preview[0], /<img\b/);
-  assert.match(preview[0], /lucide-arrow-right/);
+  assert.doesNotMatch(preview[0], /lucide-arrow-right/);
 }
 assert.equal(count(second), pageSize);
 const postLinks = html => [...html.matchAll(/href="(\/blog\/posts\/[^\"]+)"/g)].map(match => match[1]);
