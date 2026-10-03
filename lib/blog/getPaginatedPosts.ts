@@ -1,7 +1,8 @@
 import { PostMetadata } from './types';
 import { BlogLanguage, getLocalizedPosts } from './localization';
+import { BLOG_CONFIG } from '@/config/site';
 
-export const POSTS_PER_PAGE = 20;
+export const POSTS_PER_PAGE = BLOG_CONFIG.postsPerPage;
 
 export function getPaginatedPosts(page: number, language: BlogLanguage): {
   posts: PostMetadata[];
