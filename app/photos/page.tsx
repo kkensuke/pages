@@ -1,16 +1,29 @@
 import Image from 'next/image';
 import type { Metadata } from 'next';
+import { readdir, readFile } from 'node:fs/promises';
+import path from 'node:path';
 
 export const metadata: Metadata = { title: 'Photos', description: 'A few places and moments, photographed by Kensuke.' };
 
-const photos = [
-  { title: 'Berkeley', imagePath: '/images/photos/berkeley.jpeg', alt: 'View photographed in Berkeley', width: 1478, height: 1108 },
-  { title: 'Enoshima', imagePath: '/images/photos/enoshima.jpeg', alt: 'View photographed in Enoshima', width: 4032, height: 3024 },
-  { title: 'Kagoshima', imagePath: '/images/photos/kagoshima.jpeg', alt: 'View photographed in Kagoshima', width: 4032, height: 3024 },
-  { title: 'Tokyo', imagePath: '/images/photos/tokyo.jpeg', alt: 'View photographed in Tokyo', width: 3024, height: 4032 },
-];
+// ponytail: reuse Next.js 14's bundled image-size; use a direct dependency if a Next upgrade removes it.
+const imageSize: (data: Buffer) => { width: number; height: number; orientation?: number } = require('next/dist/compiled/image-size');
 
-export default function PhotosPage() {
+export default async function PhotosPage() {
+  const directory = path.join(process.cwd(), 'public', 'photos');
+  const entries = await readdir(directory, { withFileTypes: true });
+  const photos = await Promise.all(entries
+    .filter(entry => entry.isFile() && /\.(jpe?g|png|webp|gif)$/i.test(entry.name))
+    .sort((a, b) => a.name.localeCompare(b.name, 'en'))
+    .map(async ({ name }) => {
+      const { width, height, orientation } = imageSize(await readFile(path.join(directory, name)));
+      const rotated = orientation !== undefined && orientation >= 5 && orientation <= 8;
+      return {
+        title: path.parse(name).name.replace(/^./u, letter => letter.toUpperCase()),
+        imagePath: `/photos/${encodeURIComponent(name)}`,
+        width: rotated ? height : width,
+        height: rotated ? width : height,
+      };
+    }));
   return (
     <div className="site-container page-section">
       <header className="page-heading"><h1 className="page-title">Photos</h1><p className="page-description">A few places and moments along the way.</p></header>
@@ -18,7 +31,7 @@ export default function PhotosPage() {
         {photos.map((photo, index) => (
           <figure key={photo.imagePath}>
             <a href={photo.imagePath} target="_blank" rel="noopener noreferrer" className="photo-link" aria-label={`View full-size photo: ${photo.title}`}>
-              <Image src={photo.imagePath} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 540px) calc(100vw - 40px), (max-width: 880px) calc(50vw - 36px), 404px" priority={index === 0} className="photo-image" />
+              <Image src={photo.imagePath} alt={`View photographed in ${photo.title}`} width={photo.width} height={photo.height} sizes="(max-width: 540px) calc(100vw - 40px), (max-width: 880px) calc(50vw - 36px), 404px" priority={index === 0} className="photo-image" />
             </a>
             <figcaption>{photo.title}</figcaption>
           </figure>

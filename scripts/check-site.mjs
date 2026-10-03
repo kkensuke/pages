@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 
 // Run after `pnpm build`, against `pnpm start`: node scripts/check-site.mjs [origin] [postsPerPage]
 const origin = process.argv[2] || 'http://localhost:3000';
@@ -50,7 +50,9 @@ assert.equal(count(taggedSearch), 1);
 assert.match(taggedSearch.match(/<a\b[^>]*aria-current="page"[^>]*>CLI<\/a>/)?.[0] || '', /href="\/blog\?lang=en&amp;q=slink"/, 'Tag reset must preserve language and search');
 assert.equal(count(empty), 0);
 assert.match(empty, /記事が見つかりませんでした/);
-assert.equal((photos.match(/<figcaption/g) || []).length, 4);
+const photoFiles = (await readdir(new URL('../public/photos/', import.meta.url), { withFileTypes: true }))
+  .filter(entry => entry.isFile() && /\.(jpe?g|png|webp|gif)$/i.test(entry.name));
+assert.equal((photos.match(/<figcaption/g) || []).length, photoFiles.length);
 assert.equal((article.match(/class="article-title"/g) || []).length, 1);
 assert.match(article, /aria-label="Copy code"/);
 assert.match(article, /aria-label="Read Markdown on GitHub"/);
