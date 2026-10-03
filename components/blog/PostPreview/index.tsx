@@ -16,16 +16,17 @@ export default function PostPreview({ language = 'ja', headingLevel = 2, ...post
       <div className="mb-2 flex flex-wrap items-center gap-x-3 text-xs text-muted-foreground">
         <time dateTime={date} className="tabular-nums">{date.replace(/-/g, '.')}</time>
         {(post.tags || []).map(tag => (
-          <Link key={tag} href={`/blog/tags/${encodeURIComponent(tag)}${language === 'en' ? '?lang=en' : ''}`} className="inline-flex min-h-[44px] min-w-[44px] items-center hover:text-primary">{tag}</Link>
+          <Link key={tag} href={`/blog/tags/${encodeURIComponent(tag)}${language === 'en' ? '?lang=en' : ''}`} className="post-tag inline-flex min-h-[44px] min-w-[44px] items-center hover:text-primary">{tag}</Link>
         ))}
       </div>
       <Link href={`/blog/posts/${post.slug}`} className="post-link">
         <div className="min-w-0">
           <Heading>{post.title}</Heading>
           {post.subtitle && post.subtitle !== post.title && <p className="mt-2 text-sm leading-7 text-muted-foreground">{excerpt}</p>}
-          {post.previewImage && <img src={post.previewImage} alt="" loading="lazy" className="mt-4 max-h-48 max-w-full rounded-md object-contain object-left" />}
         </div>
-        <ArrowRight size={17} className="mt-2 shrink-0 text-primary" aria-hidden="true" />
+        <span className="post-preview-media" aria-hidden="true">
+          {post.previewImage ? <img src={post.previewImage} alt="" loading="lazy" className="post-thumbnail" /> : <ArrowRight size={17} className="text-primary" />}
+        </span>
       </Link>
     </article>
   );

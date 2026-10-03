@@ -131,8 +131,25 @@ li::marker {
   .section-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; margin-bottom: .5rem; }
   .section-heading h2 { font-size: 1.4rem; font-weight: 500; letter-spacing: -.025em; }
   .post-list > * + *, .research-list > * + * { border-top: 1px solid hsl(var(--border)); }
-  .post-preview { padding-block: 1.5rem; }
-  .post-link { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .blog-heading { margin-bottom: 1.25rem; }
+  .blog-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; max-width: 100%; }
+  .blog-search { display: flex; align-items: center; gap: .5rem; width: 17rem; max-width: 100%; border-bottom: 1px solid hsl(var(--border)); }
+  .blog-search:focus-within { border-color: hsl(var(--primary)); }
+  .blog-search-input { min-width: 0; min-height: 44px; flex: 1; padding: 0; border: 0; background: transparent; color: hsl(var(--foreground)); font-size: 1rem; outline: none; }
+  .blog-search-input::placeholder { color: hsl(var(--muted-foreground)); }
+  .blog-search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+  .icon-button { display: inline-flex; flex-shrink: 0; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: .3rem; color: hsl(var(--muted-foreground)); }
+  .icon-button:hover { color: hsl(var(--primary)); background: hsl(var(--secondary)); }
+  .icon-button:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+  .post-preview { position: relative; padding-block: 1.5rem; }
+  .post-preview:hover { background: hsl(var(--surface-hover)); }
+  .post-link { display: flex; min-height: 5rem; align-items: center; justify-content: space-between; gap: 1rem; }
+  .post-link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+  .post-link:focus-visible { outline: none; }
+  .post-link:focus-visible::after { outline: 2px solid hsl(var(--primary)); outline-offset: -2px; }
+  .post-tag { position: relative; z-index: 2; }
+  .post-preview-media { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 4rem; height: 4rem; }
+  .post-thumbnail { width: 100%; height: 100%; object-fit: cover; border-radius: .3rem; }
   .post-link :is(h2, h3) { font-size: 1.2rem; font-weight: 500; line-height: 1.65; overflow-wrap: anywhere; }
   .post-link:hover :is(h2, h3) { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 4px; }
   .research-link { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; padding-block: 1.5rem; }
