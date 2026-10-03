@@ -10,6 +10,7 @@ import 'katex/dist/katex.min.css';
 import React from "react";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Github } from 'lucide-react';
 
 import { FEATURES } from '@/config/constants';
 import Comment from "@/components/blog/Comment/Comment";
@@ -122,20 +123,21 @@ const PostContent = async (props: any) => {
 
   return (
     <>
-      <Link href={language === 'en' ? '/blog?lang=en' : '/blog'} className="text-link">← {language === 'en' ? 'All articles' : '記事一覧'}</Link>
-      <header className="article-header">
-        <time dateTime={date} className="text-sm tabular-nums text-muted-foreground">{date.replace(/-/g, '.')}</time>
-        <h1 className="article-title mt-3">{post.data.title}</h1>
-        {post.data.subtitle && post.data.subtitle !== post.data.title && <p className="mt-4 text-base leading-8 text-muted-foreground">{post.data.subtitle}</p>}
-        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-1">
-          {alternateSlug && <Link className="text-link" href={`/blog/posts/${alternateSlug}`}>{language === 'en' ? '日本語で読む' : 'Read in English'}</Link>}
-          <a className="text-link" href={markdownUrl} rel="noopener noreferrer" target="_blank">{language === 'en' ? 'Markdown on GitHub' : 'GitHubでMarkdownを読む'} <span aria-hidden="true">↗</span></a>
+      <header className="reading-column article-header">
+        <div className="flex flex-wrap items-center justify-between gap-x-4">
+          <div className="flex items-center gap-2">
+            <time dateTime={date} className="text-sm tabular-nums text-muted-foreground">{date.replace(/-/g, '.')}</time>
+            <a className="icon-button" href={markdownUrl} rel="noopener noreferrer" target="_blank" aria-label={language === 'en' ? 'Read Markdown on GitHub' : 'GitHubでMarkdownを読む'} title={language === 'en' ? 'Read Markdown on GitHub' : 'GitHubでMarkdownを読む'}><Github size={18} aria-hidden="true" /></a>
+          </div>
+          {alternateSlug && <Link className="text-link ml-auto" href={`/blog/posts/${alternateSlug}`}>{language === 'en' ? 'Read in Japanese' : 'Read in English'}</Link>}
         </div>
-        {post.data.tags && <div className="mt-3"><TagSection tags={post.data.tags} language={language} /></div>}
+        <h1 className="article-title">{post.data.title}</h1>
+        {post.data.subtitle && post.data.subtitle !== post.data.title && <p className="mt-2 text-base leading-7 text-muted-foreground">{post.data.subtitle}</p>}
+        {post.data.tags && <div className="mt-2"><TagSection tags={post.data.tags} language={language} /></div>}
       </header>
       <TOC key={slug} language={language} />
-      <ErrorBoundary fallback={<div className="py-8"><h2>Failed to render post content</h2><p>Please try reloading this article.</p></div>}>
-        <article className="post prose article-content">
+      <ErrorBoundary fallback={<div className="reading-column py-8"><h2>Failed to render post content</h2><p>Please try reloading this article.</p></div>}>
+        <article className="reading-column post prose article-content">
           <Markdown children={content} remarkPlugins={[remarkGfm, remarkDirective, remarkDirectiveRehype, remarkTextDirectives, remarkMath]} rehypePlugins={[rehypeSlug, rehypeKatex]} components={components} />
         </article>
       </ErrorBoundary>
@@ -149,11 +151,9 @@ export default async function PostPage(props: any) {
   const postLinks = getPostLinks(props.params.slug);
 
   return (
-    <div className="site-container page-section" lang={language}>
-      <div className="reading-column">
+    <div className="article-layout page-section" lang={language}>
       {postContent}
       <PostNavigation {...postLinks} language={language} />
-      </div>
       {FEATURES.ENABLE_COMMENTS && <section className="reading-column mt-12 border-t border-border pt-8" aria-labelledby="comments-title"><h2 id="comments-title" className="mb-6 text-xl">{language === 'en' ? 'Comments' : 'コメント'}</h2><Comment /></section>}
     </div>
   );

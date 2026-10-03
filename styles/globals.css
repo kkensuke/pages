@@ -166,26 +166,45 @@ li::marker {
   .language-link[aria-current='page'] { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
   .language-link:hover { color: hsl(var(--primary)); }
   .reading-column { max-width: 44rem; margin-inline: auto; }
-  .article-header { margin-block: 1.25rem 2rem; }
-  .article-title { font-size: clamp(1.75rem, 4vw, 2.3rem); font-weight: 500; line-height: 1.55; letter-spacing: -.03em; overflow-wrap: anywhere; }
-  .article-contents { margin-block: 2rem; border: 1px solid hsl(var(--border)); border-radius: .4rem; background: hsl(var(--card)); }
-  .toc { padding: 0 1rem 1rem; }
+  .article-layout { width: min(100% - 3rem, 44rem); margin-inline: auto; }
+  .article-header { margin-bottom: 1.25rem; }
+  .article-title { margin-block: .5rem; font-size: clamp(1.75rem, 4vw, 2.3rem); font-weight: 500; line-height: 1.55; letter-spacing: -.03em; overflow-wrap: anywhere; }
+  .article-toc { position: sticky; top: .5rem; z-index: 20; margin-block: 0 1.5rem; border: 1px solid hsl(var(--border)); border-radius: .4rem; background: hsl(var(--card)); }
+  .contents-summary { display: flex; align-items: center; gap: .75rem; min-height: 44px; padding: .5rem .75rem; cursor: pointer; font-size: .875rem; }
+  .contents-summary::-webkit-details-marker { display: none; }
+  .toc { position: relative; padding: 0 .75rem .75rem; max-height: min(50dvh, 20rem); overflow-y: auto; overscroll-behavior: contain; }
   .toc-list { list-style: none; margin: 0; padding: 0; }
   .toc-list .toc-list { padding-left: 1rem; }
-  .toc-link { display: block; min-height: 44px; padding: .5rem 0; font-size: .875rem; line-height: 1.6; overflow-wrap: anywhere; }
+  .toc-link { display: block; min-height: 44px; padding: .5rem .75rem; border-left: 2px solid transparent; font-size: .875rem; line-height: 1.6; overflow-wrap: anywhere; }
+  .toc-link.is-active-link { border-left-color: hsl(var(--primary)); background: hsl(var(--accent) / .3); font-weight: 500; }
   .article-content { max-width: none; font-size: 1.05rem; line-height: 1.95; }
-  .article-content :where(h2, h3, h4) { line-height: 1.55; scroll-margin-top: 2rem; }
+  .article-content :where(h2, h3, h4) { line-height: 1.55; scroll-margin-top: 5rem; }
   .article-content :where(h2) { margin-top: 3rem; }
   .article-content :where(table) { display: block; max-width: 100%; overflow-x: auto; }
   .article-content .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding-block: .25rem; }
+  .post-navigation { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid hsl(var(--border)); }
+  .adjacent-posts, .related-posts { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .post-panel { display: block; min-width: 0; padding: 1rem; border: 1px solid hsl(var(--border)); border-radius: .4rem; background: hsl(var(--card)); overflow-wrap: anywhere; }
+  .post-panel:hover { border-color: hsl(var(--primary)); background: hsl(var(--surface-hover)); }
+  .post-panel-older { grid-column: 2; text-align: right; }
+  .related-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid hsl(var(--border)); }
+  .related-posts { grid-template-columns: repeat(3, minmax(0, 1fr)); font-size: .875rem; }
   .skip-link { position: absolute; top: .5rem; left: .5rem; z-index: 60; padding: .7rem 1rem; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); transform: translateY(-200%); }
   .skip-link:focus { transform: translateY(0); }
+  @media (min-width: 1100px) {
+    .article-layout { display: grid; grid-template-columns: minmax(0, 1fr) 14rem; column-gap: 3rem; width: min(100% - 3rem, 64rem); }
+    .article-layout > * { grid-column: 1; width: 100%; min-width: 0; }
+    .article-layout > .article-toc { grid-column: 2; grid-row: 1 / span 4; align-self: start; top: 1.5rem; margin: 0; }
+    .article-toc .toc { max-height: calc(100dvh - 6rem); }
+  }
   @media (max-width: 540px) {
-    .site-container { width: calc(100% - 2.5rem); }
+    .site-container, .article-layout { width: calc(100% - 2.5rem); }
     .page-section { padding-block: 2.5rem 3.5rem; }
     .header-inner { grid-template-columns: 1fr auto; gap: .25rem 1rem; }
     .site-navigation { grid-column: 1 / -1; grid-row: 2; }
     .header-github { grid-column: 2; grid-row: 1; }
+    .adjacent-posts, .related-posts { grid-template-columns: 1fr; }
+    .post-panel-older { grid-column: auto; }
   }
 }
 

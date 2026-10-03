@@ -9,9 +9,9 @@ async function read(path) {
   return (await response.text()).replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
 }
 const count = html => (html.match(/class="post-preview"/g) || []).length;
-const [home, blog, second, math, search, english, taggedSearch, empty, photos, article] = await Promise.all([
+const [home, blog, second, math, search, english, taggedSearch, empty, photos, article, middleArticle] = await Promise.all([
   '/', '/blog', '/blog?page=2', '/blog/tags/Math', '/blog?q=%EF%BC%B3%EF%BC%AC%EF%BC%A9%EF%BC%AE%EF%BC%AB',
-  '/blog?lang=en&q=slink', '/blog/tags/CLI?lang=en&q=slink', '/blog?q=there-is-no-such-post', '/photos', '/blog/posts/slink.en',
+  '/blog?lang=en&q=slink', '/blog/tags/CLI?lang=en&q=slink', '/blog?q=there-is-no-such-post', '/photos', '/blog/posts/slink.en', '/blog/posts/yttext.en',
 ].map(read));
 assert.equal(count(home), 0);
 assert.doesNotMatch(home, /<br\b|Recent writing|Explore my research/);
@@ -37,6 +37,14 @@ assert.match(taggedSearch.match(/<a\b[^>]*aria-current="page"[^>]*>CLI<\/a>/)?.[
 assert.equal(count(empty), 0);
 assert.match(empty, /記事が見つかりませんでした/);
 assert.equal((photos.match(/<figcaption/g) || []).length, 4);
-assert.equal((article.match(/class="article-title /g) || []).length, 1);
+assert.equal((article.match(/class="article-title"/g) || []).length, 1);
 assert.match(article, /aria-label="Copy code"/);
-console.log('PASS: English Home, contact, pagination, tags, search, language, empty results, photos, and article rendering.');
+assert.match(article, /aria-label="Read Markdown on GitHub"/);
+assert.match(article, /Read in Japanese/);
+assert.match(article, /class="reading-column article-toc group"/);
+const adjacent = article.match(/<nav\b[^>]*aria-label="Article navigation"[\s\S]*?<\/nav>/)?.[0] || '';
+assert.match(adjacent, /Older article/);
+assert.doesNotMatch(adjacent, /Newer article/, 'The newest article must only offer an older article');
+const middleNavigation = middleArticle.match(/<nav\b[^>]*aria-label="Article navigation"[\s\S]*?<\/nav>/)?.[0] || '';
+assert.deepEqual(postLinks(middleNavigation), ['/blog/posts/slink.en', '/blog/posts/brew_CLI.en'], 'Navigation must put the newer article before the older article');
+console.log('PASS: Home, footer links, pagination, tag reset, search, language, photos, and article navigation.');
