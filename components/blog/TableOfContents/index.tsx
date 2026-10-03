@@ -1,11 +1,26 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import tocbot from 'tocbot';
-import { ListOrdered } from 'lucide-react';
+import { ChevronDown, ListOrdered } from 'lucide-react';
 
 const TOC = () => {
+  const disclosure = useRef<HTMLDetailsElement>(null);
+
   useEffect(() => {
+    const viewport = window.matchMedia('(min-width: 1280px)');
+    const syncDisclosure = () => {
+      if (!disclosure.current) return;
+      disclosure.current.open = viewport.matches;
+      const summary = disclosure.current.querySelector('summary');
+      if (summary) {
+        summary.tabIndex = viewport.matches ? -1 : 0;
+        summary.setAttribute('aria-disabled', String(viewport.matches));
+      }
+    };
+    syncDisclosure();
+    viewport.addEventListener('change', syncDisclosure);
+
     tocbot.init({
       tocSelector: '.toc',
       contentSelector: '.post',
@@ -21,23 +36,54 @@ const TOC = () => {
       headingsOffset: typeof window !== 'undefined' ? window.innerHeight / 2 : 300,
     });
 
-    return () => tocbot.destroy();
+    return () => {
+      viewport.removeEventListener('change', syncDisclosure);
+      tocbot.destroy();
+    };
   }, []);
 
   return (
     <div>
-      <div className="rounded-lg border border-border bg-card">
-        <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+      <details ref={disclosure} className="toc-disclosure rounded-lg border border-border bg-card">
+        <summary className="toc-summary flex min-h-[44px] items-center gap-2 px-4 py-3" onClick={event => {
+          if (event.currentTarget.getAttribute('aria-disabled') === 'true') event.preventDefault();
+        }}>
           <ListOrdered className="text-muted-foreground" size={16} aria-hidden="true" />
           <h2 className="text-xs font-medium text-muted-foreground">
             Table of Contents
           </h2>
-        </div>
+          <ChevronDown className="toc-toggle ml-auto text-muted-foreground" size={16} aria-hidden="true" />
+        </summary>
 
         <nav className="toc p-3" aria-label="Table of contents" />
-      </div>
+      </details>
 
       <style jsx global>{`
+        .toc-summary {
+          cursor: pointer;
+          list-style: none;
+        }
+
+        .toc-summary::-webkit-details-marker {
+          display: none;
+        }
+
+        .toc-disclosure[open] > .toc-summary {
+          border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .toc-disclosure[open] .toc-toggle {
+          transform: rotate(180deg);
+        }
+
+        .toc-summary[aria-disabled='true'] {
+          cursor: default;
+        }
+
+        .toc-summary[aria-disabled='true'] .toc-toggle {
+          display: none;
+        }
+
         .toc-list {
           list-style: none;
           padding: 0;
