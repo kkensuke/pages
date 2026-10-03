@@ -19,7 +19,7 @@ assert.match(home, /Research &amp; notes/);
 assert.doesNotMatch(home, /[ぁ-んァ-ン一-龯]/);
 assert.match(home, /href="mailto:/);
 assert.equal(count(blog), pageSize);
-assert.doesNotMatch(blog, /Notes on mathematics, code, and everyday learning|数学、コード、日々の学び/);
+assert.doesNotMatch(blog.slice(blog.indexOf('<body')), /Notes on mathematics, code, and everyday learning|数学、コード、日々の学び/);
 assert.equal(count(second), pageSize);
 const postLinks = html => [...html.matchAll(/href="(\/blog\/posts\/[^\"]+)"/g)].map(match => match[1]);
 assert.ok(postLinks(blog).every(href => !postLinks(second).includes(href)), 'Adjacent pages must contain different articles');

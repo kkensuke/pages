@@ -132,7 +132,6 @@ li::marker {
   .section-heading h2 { font-size: 1.4rem; font-weight: 500; letter-spacing: -.025em; }
   .post-list > * + *, .research-list > * + * { border-top: 1px solid hsl(var(--border)); }
   .blog-heading { margin-bottom: 1.25rem; }
-  .blog-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; max-width: 100%; }
   .blog-search { display: flex; align-items: center; gap: .5rem; width: 17rem; max-width: 100%; border-bottom: 1px solid hsl(var(--border)); }
   .blog-search:focus-within { border-color: hsl(var(--primary)); }
   .blog-search-input { min-width: 0; min-height: 44px; flex: 1; padding: 0; border: 0; background: transparent; color: hsl(var(--foreground)); font-size: 1rem; outline: none; }
@@ -177,7 +176,7 @@ li::marker {
   .toc-list .toc-list { padding-left: 1rem; }
   .toc-link { display: block; min-height: 44px; padding: .5rem .75rem; border-left: 2px solid transparent; font-size: .875rem; line-height: 1.6; overflow-wrap: anywhere; }
   .toc-link.is-active-link { border-left-color: hsl(var(--primary)); background: hsl(var(--accent) / .3); font-weight: 500; }
-  .article-content { max-width: none; font-size: 1.05rem; line-height: 1.95; }
+  .article-content { font-size: 1.05rem; line-height: 1.95; }
   .article-content :where(h2, h3, h4) { line-height: 1.55; scroll-margin-top: 5rem; }
   .article-content :where(h2) { margin-top: 3rem; }
   .article-content :where(table) { display: block; max-width: 100%; overflow-x: auto; }
@@ -203,6 +202,7 @@ li::marker {
     .header-inner { grid-template-columns: 1fr auto; gap: .25rem 1rem; }
     .site-navigation { grid-column: 1 / -1; grid-row: 2; }
     .header-github { grid-column: 2; grid-row: 1; }
+    .blog-search { width: 12rem; }
     .adjacent-posts, .related-posts { grid-template-columns: 1fr; }
     .post-panel-older { grid-column: auto; }
   }
