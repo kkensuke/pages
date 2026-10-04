@@ -3,6 +3,7 @@ title: "Useful Zsh Aliases and Functions"
 date: "2022-10-18"
 subtitle: "Practical shortcuts for files, macOS, Python, and Git"
 tags: [CLI]
+icon: terminal
 ---
 
 

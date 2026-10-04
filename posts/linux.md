@@ -3,6 +3,7 @@ title: "コマンドラインガイド"
 date: "2022-10-18"
 subtitle: "ファイル、パイプ、権限、プロセス、シェルスクリプトの実践ガイド"
 tags: [CLI]
+icon: terminal
 ---
 
 

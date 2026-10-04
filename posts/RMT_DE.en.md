@@ -3,6 +3,7 @@ title: "The Evolution of Random Matrix Theory: From Marchenko-Pastur to Extensio
 date: "2026-06-08"
 subtitle: "How the spectral analysis of sample covariance matrices became the theoretical foundation of modern machine learning"
 tags: [Math, ML]
+icon: grid-3x3
 ---
 
 

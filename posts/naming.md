@@ -3,6 +3,7 @@ title: "プログラミングの命名規則"
 date: "2024-7-5"
 subtitle: "クリーンで保守しやすいコードを書くための包括的ガイド"
 tags: [Code]
+icon: case-sensitive
 ---
 
 

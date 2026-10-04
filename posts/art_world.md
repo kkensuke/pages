@@ -2,8 +2,8 @@
 title: "世界の名画"
 date: "2026-05-8"
 subtitle: ""
-previewImage: https://upload.wikimedia.org/wikipedia/commons/f/fd/Le_bassin_aux_nymph%C3%A9as_-_Claude_Monet.jpg
 tags: [Art]
+icon: palette
 ---
 
 ## はじめに

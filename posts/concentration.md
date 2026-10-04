@@ -3,6 +3,7 @@ title: "集中不等式入門：Markov から McDiarmid まで"
 date: "2026-09-20"
 subtitle: "有限標本で「期待値からどれだけ外れるか」を定量化するための基本原理と使い分け"
 tags: [Math]
+icon: sigma
 ---
 
 ## 0. イントロ

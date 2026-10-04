@@ -3,6 +3,7 @@ title: "Zsh 設定を整理する"
 date: "2022-06-12"
 subtitle: "ZDOTDIR で設定をまとめ、.zshrc を分割し、プロンプトをカスタマイズする"
 tags: [CLI]
+icon: terminal
 ---
 
 

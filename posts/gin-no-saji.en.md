@@ -2,8 +2,8 @@
 title: "銀の匙 (Gin no Saji); The Silver Spoon"
 date: "2026-05-03"
 subtitle: "Kansuke Naka"
-previewImage: https://upload.wikimedia.org/wikipedia/commons/7/72/Tea_Spoon_MET_DP253823.jpg
 tags: [Book]
+icon: book-open
 ---
 
 

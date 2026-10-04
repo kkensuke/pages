@@ -3,6 +3,7 @@ title: "便利な Zsh のエイリアスと関数"
 date: "2022-10-18"
 subtitle: "ファイル操作、macOS、Python、Git で使える実用的なショートカット"
 tags: [CLI]
+icon: terminal
 ---
 
 

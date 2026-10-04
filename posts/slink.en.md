@@ -3,6 +3,7 @@ title: "slink"
 date: "2026-09-16"
 subtitle: "A macOS & Linux CLI for easily creating and managing symbolic links"
 tags: [MacOS, CLI, Productivity]
+icon: link
 ---
 
 ## 1. Introduction
