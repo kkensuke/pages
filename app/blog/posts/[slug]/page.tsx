@@ -50,12 +50,6 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     ? `${SITE_CONFIG.url}/blog/posts/${alternateSlug}`
     : null;
 
-  const imageUrl = post.data.previewImage
-    ? post.data.previewImage.startsWith('http')
-      ? post.data.previewImage
-      : `${SITE_CONFIG.url}${post.data.previewImage}`
-    : SITE_CONFIG.ogImage;
-
   return {
     title: post.data.title,
     description: post.data.subtitle || post.data.title,
@@ -71,7 +65,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       url: postUrl,
       images: [
         {
-          url: imageUrl,
+          url: SITE_CONFIG.ogImage,
           alt: post.data.title,
         },
       ],
