@@ -31,7 +31,6 @@ const parsePublishedPost = (fileName: string, fileContents: string): PublishedPo
       // YAML parses unquoted dates as Date objects; consumers expect a string.
       date: data.date instanceof Date ? date.toISOString() : data.date.trim(),
       subtitle: typeof data.subtitle === "string" ? data.subtitle : "",
-      previewImage: typeof data.previewImage === "string" ? data.previewImage : undefined,
       tags: Array.isArray(data.tags)
         ? data.tags.filter((tag: unknown): tag is string => typeof tag === "string")
         : [],
