@@ -10,9 +10,9 @@ async function read(path) {
   return (await response.text()).replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
 }
 const count = html => (html.match(/class="post-preview"/g) || []).length;
-const [home, blog, second, math, search, english, taggedSearch, empty, photos, article, middleArticle] = await Promise.all([
+const [home, blog, second, math, search, english, taggedSearch, empty, photos, article, middleArticle, japaneseArticle] = await Promise.all([
   '/', '/blog', '/blog?page=2', '/blog/tags/Math', '/blog?q=%EF%BC%B3%EF%BC%AC%EF%BC%A9%EF%BC%AE%EF%BC%AB',
-  '/blog?lang=en&q=slink', '/blog/tags/CLI?lang=en&q=slink', '/blog?q=there-is-no-such-post', '/photos', '/blog/posts/slink.en', '/blog/posts/yttext.en',
+  '/blog?lang=en&q=slink', '/blog/tags/CLI?lang=en&q=slink', '/blog?q=there-is-no-such-post', '/photos', '/blog/posts/slink.en', '/blog/posts/yttext.en', '/blog/posts/slink',
 ].map(read));
 assert.equal(count(home), 0);
 assert.doesNotMatch(home, /<br\b|Recent writing|Explore my research/);
@@ -25,7 +25,9 @@ const blogHeading = blog.match(/<header\b[^>]*class="page-heading blog-heading[^
 assert.match(blogHeading, /role="search"/);
 assert.match(blogHeading, /href="\/blog"/);
 assert.match(blogHeading, /aria-label="Blog language"/);
-assert.ok(blogHeading.indexOf('role="search"') < blogHeading.indexOf('aria-label="Blog language"'), 'Search must precede language selection in the shared toolbar');
+assert.match(blogHeading, /aria-expanded="false" aria-controls="blog-search-form"/);
+assert.match(blogHeading, /<form\b[^>]*id="blog-search-form"[^>]*hidden=""/);
+assert.ok(blogHeading.indexOf('class="blog-search-toggle"') < blogHeading.indexOf('aria-label="Blog language"'), 'Search toggle must precede language selection');
 assert.doesNotMatch(blog, /新しい順|Newest first/);
 for (const preview of blog.matchAll(/<article class="post-preview">[\s\S]*?<\/article>/g)) {
   assert.doesNotMatch(preview[0], /<img\b/);
@@ -46,6 +48,8 @@ assert.match(search, /href="\/blog\/posts\/slink"/);
 assert.equal(count(english), 1);
 assert.match(english, /href="\/blog\/posts\/slink.en"/);
 assert.match(english, /aria-label="Clear search text"/);
+assert.match(english, /aria-expanded="true" aria-controls="blog-search-form"/);
+assert.doesNotMatch(english.match(/<form\b[^>]*id="blog-search-form"[^>]*>/)?.[0] || '', /hidden=/, 'Existing searches must remain visible');
 assert.equal(count(taggedSearch), 1);
 assert.match(taggedSearch.match(/<a\b[^>]*aria-current="page"[^>]*>CLI<\/a>/)?.[0] || '', /href="\/blog\?lang=en&amp;q=slink"/, 'Tag reset must preserve language and search');
 assert.equal(count(empty), 0);
@@ -57,6 +61,12 @@ assert.equal((article.match(/class="article-title"/g) || []).length, 1);
 assert.match(article, /aria-label="Copy code"/);
 assert.match(article, /aria-label="Read Markdown on GitHub"/);
 assert.match(article, /Read in Japanese/);
+for (const [html, slug] of [[article, 'slink.en'], [japaneseArticle, 'slink']]) {
+  const markdownLink = html.match(/<a\b[^>]*title="Markdown in GitHub"[^>]*>[\s\S]*?<\/a>/)?.[0] || '';
+  assert.ok(markdownLink.includes(`href="https://github.com/kkensuke/pages/blob/main/posts/${slug}.md?plain=1"`), 'Markdown link must match the displayed article language');
+  assert.match(markdownLink, /lucide-github/, 'Markdown link must keep its GitHub icon');
+  assert.match(html, /<nav class="tag-list"/, 'Listing and article headers must share tag styling');
+}
 assert.match(article, /<aside class="article-toc">/);
 assert.match(article, /aria-label="Table of contents"/);
 const contents = article.match(/<aside class="article-toc">[\s\S]*?<\/aside>/)?.[0] || '';
@@ -76,6 +86,13 @@ for (const path of articles) {
   assert.equal((html.match(/<h1\b/g) || []).length, 1, `${path}: one article title`);
   assert.ok(html.includes('reading-column post prose article-content'), `${path}: Markdown rendered`);
   assert.ok(html.includes('aria-label="Table of contents"'), `${path}: original contents rendered`);
+  for (const sourceLink of html.matchAll(/<a\b[^>]*title="Source on GitHub"[^>]*>Source on GitHub<\/a>/g)) {
+    assert.match(sourceLink[0], /href="https:\/\/github\.com\//, `${path}: code source must link to GitHub`);
+    assert.match(sourceLink[0], /target="_blank"/, `${path}: code source must open in a new tab`);
+    assert.match(sourceLink[0], /rel="noopener noreferrer"/, `${path}: code source must use safe external-link attributes`);
+    assert.ok(html.includes(`<p>${sourceLink[0]}</p>`), `${path}: code source must have its own caption paragraph`);
+  }
+  if (path === '/blog/posts/code.en') assert.match(html, /title="Source on GitHub"/, 'GitHub code example must retain its source caption');
   for (const [, attributes, content] of html.matchAll(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/g)) {
     const preFont = attributes.match(/font-family:([^;\"]+)/)?.[1];
     const codeFont = content.match(/<code\b[^>]*font-family:([^;\"]+)/)?.[1];

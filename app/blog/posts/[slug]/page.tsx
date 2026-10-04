@@ -93,9 +93,9 @@ const PostContent = async (props: any) => {
   const slug = props.params.slug;
   const post = getPostContent(slug);
   const content = await embedGitHubCode(post.content);
-  const markdownUrl = `${SITE_CONFIG.links.github}/blob/main/posts/${slug}.md?plain=1`;
   const language = getPostLanguage(slug);
   const alternateSlug = getAlternatePostSlug(slug);
+  const markdownUrl = `${SITE_CONFIG.links.github}/blob/main/posts/${slug}.md?plain=1`;
 
   // Define your components with proper typing
   const CustomParagraph = ({ children }: { children?: React.ReactNode }) => {
@@ -127,7 +127,7 @@ const PostContent = async (props: any) => {
         <div className="flex flex-wrap items-center justify-between gap-x-4">
           <div className="flex items-center gap-2">
             <time dateTime={date} className="text-sm tabular-nums text-muted-foreground">{date.replace(/-/g, '.')}</time>
-            <a className="icon-button" href={markdownUrl} rel="noopener noreferrer" target="_blank" aria-label={language === 'en' ? 'Read Markdown on GitHub' : 'GitHubでMarkdownを読む'} title={language === 'en' ? 'Read Markdown on GitHub' : 'GitHubでMarkdownを読む'}><Github size={18} aria-hidden="true" /></a>
+            <a className="icon-button" href={markdownUrl} rel="noopener noreferrer" target="_blank" aria-label={language === 'en' ? 'Read Markdown on GitHub' : 'GitHubでMarkdownを読む'} title="Markdown in GitHub"><Github size={18} aria-hidden="true" /></a>
           </div>
           {alternateSlug && <Link className="text-link ml-auto" href={`/blog/posts/${alternateSlug}`}>{language === 'en' ? 'Read in Japanese' : 'Read in English'}</Link>}
         </div>

@@ -5,7 +5,6 @@ import { getBlogLanguage } from '@/lib/blog/localization';
 import { getPaginatedPosts } from '@/lib/blog/getPaginatedPosts';
 import PostPreview from './PostPreview';
 import TagSection from './TagSection';
-import LanguageToggle from './LanguageToggle';
 import Pagination from './Pagination';
 import SearchForm from './SearchForm';
 
@@ -21,12 +20,9 @@ export default function BlogIndex({ tag, searchParams }: BlogIndexProps) {
 
   return (
     <div className="site-container blog-index page-section" lang={language}>
-      <header className="page-heading blog-heading flex flex-wrap items-center justify-between gap-5">
+      <header className="page-heading blog-heading">
         <h1 className="page-title"><Link href={blogHref}>Blog</Link></h1>
-        <div className="blog-controls">
-          <SearchForm key={`${basePath}:${language}:${query}`} basePath={basePath} language={language} query={query} />
-          <LanguageToggle language={language} basePath={basePath} query={query} />
-        </div>
+        <SearchForm key={`${basePath}:${language}:${query}`} basePath={basePath} language={language} query={query} />
       </header>
       <TagSection tags={getAllTags(language)} activeTag={tag} language={language} query={query} />
       <p className="mt-4 border-b border-border pb-2 text-xs text-muted-foreground">{isJapanese ? `${totalPosts} 件の記事` : `${totalPosts} ${totalPosts === 1 ? 'article' : 'articles'}`}</p>
