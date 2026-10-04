@@ -162,17 +162,18 @@ li::marker {
   .photo-gallery figcaption { position: absolute; inset: auto 1rem .75rem; color: #fff; font-size: .875rem; text-shadow: 0 1px 3px #000; pointer-events: none; }
   .photo-link { display: block; border-radius: .4rem; overflow: hidden; }
   .photo-image { width: 100%; height: auto; }
-  .tag-link { display: inline-flex; align-items: center; min-height: 44px; padding: .45rem .75rem; border-radius: .3rem; font-size: .8rem; color: hsl(var(--muted-foreground)); }
-  .tag-link:hover { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
-  .tag-link[aria-current='page'] { background: hsl(var(--accent)); color: hsl(var(--primary)); }
-  .language-link { display: inline-flex; align-items: center; min-height: 44px; padding: .45rem .7rem; border-radius: .3rem; font-size: .8rem; color: hsl(var(--muted-foreground)); }
-  .language-link[aria-current='page'] { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
-  .language-link:hover { color: hsl(var(--primary)); }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 0 .875rem; }
+  .tag-link { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: .3rem .125rem; font-size: .8125rem; color: hsl(var(--muted-foreground)); }
+  .tag-link:hover { color: hsl(var(--foreground)); }
+  .tag-link[aria-current='page'] { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: .45rem; }
+  .language-link { display: inline-flex; align-items: center; min-height: 44px; padding: .5rem; font-size: .8125rem; color: hsl(var(--muted-foreground)); }
+  .language-link:hover, .language-link[aria-current='page'] { color: hsl(var(--foreground)); }
+  .language-link[aria-current='page'] { text-decoration: underline; text-underline-offset: .45rem; }
+  .tag-link:focus-visible, .language-link:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
   .reading-column { width: 100%; max-width: 45rem; margin-inline: auto; }
   .article-layout { width: min(100% - 3rem, 45rem); margin-inline: auto; }
   .article-header { margin-bottom: 1.25rem; text-align: center; }
-  .article-header nav { justify-content: center; gap: .5rem; }
-  .article-header .tag-link { border: 1px solid hsl(var(--border)); }
+  .article-header .tag-list { justify-content: center; }
   .article-title { margin-block: .5rem; font-size: clamp(1.5rem, 3vw, 1.95rem); font-weight: 500; line-height: 1.55; letter-spacing: -.03em; overflow-wrap: anywhere; }
   .article-toc { margin-bottom: 1.5rem; }
   .article-content { font-size: 1.05rem; line-height: 1.95; }

@@ -11,7 +11,7 @@ export default function TagSection({ tags, activeTag, language = 'ja', query = '
   const suffix = params.toString() ? '?' + params.toString() : '';
 
   return (
-    <nav className="flex flex-wrap gap-1" aria-label={language === 'ja' ? '記事のタグ' : 'Post tags'}>
+    <nav className="tag-list" aria-label={language === 'ja' ? '記事のタグ' : 'Post tags'}>
       {tags.map(tag => {
         const isActive = tag.toLowerCase() === activeTag?.toLowerCase();
         return <Link key={tag} href={`${isActive ? '/blog' : `/blog/tags/${encodeURIComponent(tag)}`}${suffix}`} className="tag-link" aria-current={isActive ? 'page' : undefined}>{tag}</Link>;
