@@ -3,6 +3,7 @@ title: "このブログの Markdown で LaTeX を使う"
 date: "2024-7-5"
 subtitle: "このブログの Markdown で LaTeX を使う方法"
 tags: [Markdown, Latex]
+icon: square-function
 ---
 
 ## LaTeXの基本的な使い方
