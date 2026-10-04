@@ -2,7 +2,7 @@
 title: "このブログの Markdown における画像"
 date: "2024-7-27"
 subtitle: "このブログの Markdown で画像を使う方法"
-previewImage: "/images/classic_nes_controller.jpg"
+icon: image
 tags: [Markdown]
 ---
 

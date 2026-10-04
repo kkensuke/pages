@@ -2,7 +2,7 @@
 title: "便利な Web アプリ"
 date: "2022-10-18"
 subtitle: "便利な Web アプリ"
-previewImage: "/images/webapps/10-minute-mail.jpeg"
+icon: globe
 tags: [App]
 ---
 

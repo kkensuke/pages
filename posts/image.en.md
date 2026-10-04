@@ -2,7 +2,7 @@
 title: "Images in This Blog’s Markdown"
 date: "2024-7-27"
 subtitle: "A guide to using images in this blog’s markdown"
-previewImage: "/images/classic_nes_controller.jpg"
+icon: image
 tags: [Markdown]
 ---
 
