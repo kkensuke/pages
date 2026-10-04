@@ -3,6 +3,7 @@ title: "このブログの Markdown におけるコードブロック"
 date: "2024-5-5"
 subtitle: "このブログの Markdown におけるコードブロック"
 tags: [Markdown, Code]
+icon: code-xml
 ---
 
 

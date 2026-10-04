@@ -3,6 +3,7 @@ title: "Homebrew CLI ツール"
 date: "2026-06-20"
 subtitle: "MacOS ターミナルを快適にする Homebrew CLI アプリ解説"
 tags: [MacOS, CLI, Productivity]
+icon: square-terminal
 ---
 
 

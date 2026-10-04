@@ -3,6 +3,7 @@ title: "yttext"
 date: "2026-09-16"
 subtitle: "YouTube 字幕を取得し、Gemini で要約する CLI & Web アプリ"
 tags: [Python, YouTube, Gemini, Productivity]
+icon: captions
 ---
 
 ## 1. はじめに

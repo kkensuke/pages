@@ -3,6 +3,7 @@ title: "Latex in This Blog’s Markdown"
 date: "2024-7-5"
 subtitle: "A guide to using Latex in this blog’s markdown"
 tags: [Markdown, Latex]
+icon: square-function
 ---
 
 ## Basic Latex Usage

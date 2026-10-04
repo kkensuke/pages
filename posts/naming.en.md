@@ -3,6 +3,7 @@ title: "Naming Conventions in Programming"
 date: "2024-7-5"
 subtitle: "A Comprehensive Guide to Writing Clean and Maintainable Code"
 tags: [Code]
+icon: case-sensitive
 ---
 
 

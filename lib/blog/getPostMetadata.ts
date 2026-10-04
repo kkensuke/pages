@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { PostMetadata } from "./types";
+import { parsePostIcon } from "./icons";
 
 type PublishedPost = {
   content: string;
@@ -31,7 +32,7 @@ const parsePublishedPost = (fileName: string, fileContents: string): PublishedPo
       // YAML parses unquoted dates as Date objects; consumers expect a string.
       date: data.date instanceof Date ? date.toISOString() : data.date.trim(),
       subtitle: typeof data.subtitle === "string" ? data.subtitle : "",
-      previewImage: typeof data.previewImage === "string" ? data.previewImage : undefined,
+      icon: parsePostIcon(data.icon, fileName),
       tags: Array.isArray(data.tags)
         ? data.tags.filter((tag: unknown): tag is string => typeof tag === "string")
         : [],

@@ -3,6 +3,7 @@ title: "Firefox"
 date: "2024-10-31"
 subtitle: "A Comprehensive Guide to Firefox"
 tags: [Productivity]
+icon: globe
 ---
 
 ## 0. Firefox is Quite User-Friendly

@@ -3,6 +3,7 @@ title: "macOS の初期設定"
 date: "2024-05-05"
 subtitle: "シェルスクリプトを使って macOS を設定するためのガイド"
 tags: [MacOS]
+icon: settings-2
 -------------
 
 ## はじめに

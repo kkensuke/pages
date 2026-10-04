@@ -46,7 +46,7 @@ It is designed for content where rich Markdown rendering is important, such as p
 * [x] Import code directly from a GitHub repository
 * [x] Select GitHub code by line range
 * [x] Automatic table of contents
-* [x] Preview images
+* [x] Lightweight SVG post icons
 * [x] Tags
 * [x] Pagination
 * [x] Previous / next / related post navigation
@@ -96,7 +96,6 @@ The blog listing, tags, pagination, and post navigation are language-aware.
 * Open Graph metadata
 * Canonical URLs
 * Alternate-language metadata
-* Post preview images
 * Generated sitemap
 * Robots configuration
 * Google indexing support
@@ -193,13 +192,15 @@ title: "Understanding Quantum Kernels"
 date: "2026-08-25"
 subtitle: "A practical introduction to quantum kernel methods"
 tags: [Quantum Computing, Machine Learning]
-previewImage: "/images/quantum-kernel.png"
+icon: sigma
 ---
 
 Your article starts here.
 ```
 
 Posts are automatically discovered from the `posts/` directory and ordered by date.
+
+The optional `icon` selects a Lucide icon registered in [`lib/blog/icons.ts`](./lib/blog/icons.ts), such as `link`, `sigma`, or `square-terminal`. Missing icons use `file-text`; invalid names produce a warning and use the same fallback. To introduce another icon, add its named import and registry entry. Color, size, and left placement are shared by all article previews, not configured per post. Open Graph images use the site-wide default.
 
 A post needs a non-empty string `title` and a valid `date` before it is published.
 Empty files and posts with missing or invalid required metadata are excluded from

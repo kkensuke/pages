@@ -3,6 +3,7 @@ title: "MacOS セットアップスクリプト"
 date: "2025-10-9"
 subtitle: "MacOS の開発環境セットアップを自動化しよう"
 tags: [MacOS]
+icon: laptop
 ---
 
 

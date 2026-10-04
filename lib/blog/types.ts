@@ -1,8 +1,10 @@
+import type { PostIconName } from './icons';
+
 export interface PostMetadata {
   title: string;
   date: string;
   subtitle: string;
-  previewImage?: string;
+  icon?: PostIconName;
   tags?: string[];
   slug: string;
 }

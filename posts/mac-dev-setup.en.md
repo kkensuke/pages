@@ -3,6 +3,7 @@ title: "MacOS Setup Script"
 date: "2025-10-9"
 subtitle: "The Ultimate Guide to Automating Your macOS Developer Setup"
 tags: [MacOS]
+icon: laptop
 ---
 
 

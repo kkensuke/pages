@@ -3,6 +3,7 @@ title: "yttext"
 date: "2026-09-16"
 subtitle: "A CLI and Web App for Extracting YouTube Captions and Summarizing Them with Gemini"
 tags: [Python, YouTube, Gemini, Productivity]
+icon: captions
 ---
 
 ## 1. Introduction

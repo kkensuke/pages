@@ -3,6 +3,7 @@ title: "xbar: Customize Your Mac Menu Bar with Scripts"
 date: "2025-10-18"
 subtitle: "Install xbar, Understand Its Plugin Format, and Build Reliable Menu Bar Tools"
 tags: [MacOS, Productivity]
+icon: panel-top
 ---
 
 [xbar](https://xbarapp.com/) is a free and open-source macOS application that displays the output of executable scripts and programs in the menu bar. A plugin can be as small as a few lines of shell script, but it can also provide dropdown menus, links, and actions.

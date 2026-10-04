@@ -3,6 +3,7 @@ title: "GitHub Flavored Markdown with remark-gfm"
 date: "2024-05-03"
 subtitle: "Autolinks, footnotes, strikethrough, tables, and task lists"
 tags: [Markdown]
+icon: file-text
 ---
 
 

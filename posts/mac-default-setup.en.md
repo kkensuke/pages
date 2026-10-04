@@ -3,6 +3,7 @@ title: "macOS Default Setup"
 date: "2024-05-05"
 subtitle: "A guide to configuring macOS with a shell script"
 tags: [MacOS]
+icon: settings-2
 -------------
 
 ## Introduction

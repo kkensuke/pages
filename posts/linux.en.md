@@ -3,6 +3,7 @@ title: "Command Line Guide"
 date: "2022-10-18"
 subtitle: "A Practical Guide to Files, Pipes, Permissions, Processes, and Shell Scripts"
 tags: [CLI]
+icon: terminal
 ---
 
 
