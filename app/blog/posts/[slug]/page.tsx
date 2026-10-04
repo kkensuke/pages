@@ -95,7 +95,7 @@ const PostContent = async (props: any) => {
   const content = await embedGitHubCode(post.content);
   const language = getPostLanguage(slug);
   const alternateSlug = getAlternatePostSlug(slug);
-  const markdownUrl = `${SITE_CONFIG.links.github}/blob/main/posts/${language === 'en' && alternateSlug ? alternateSlug : slug}.md?plain=1`;
+  const markdownUrl = `${SITE_CONFIG.links.github}/blob/main/posts/${slug}.md?plain=1`;
 
   // Define your components with proper typing
   const CustomParagraph = ({ children }: { children?: React.ReactNode }) => {

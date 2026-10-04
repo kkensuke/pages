@@ -61,9 +61,9 @@ assert.equal((article.match(/class="article-title"/g) || []).length, 1);
 assert.match(article, /aria-label="Copy code"/);
 assert.match(article, /aria-label="Read Markdown on GitHub"/);
 assert.match(article, /Read in Japanese/);
-for (const html of [article, japaneseArticle]) {
+for (const [html, slug] of [[article, 'slink.en'], [japaneseArticle, 'slink']]) {
   const markdownLink = html.match(/<a\b[^>]*title="Markdown in GitHub"[^>]*>[\s\S]*?<\/a>/)?.[0] || '';
-  assert.match(markdownLink, /href="https:\/\/github.com\/kkensuke\/pages\/blob\/main\/posts\/slink.md\?plain=1"/);
+  assert.ok(markdownLink.includes(`href="https://github.com/kkensuke/pages/blob/main/posts/${slug}.md?plain=1"`), 'Markdown link must match the displayed article language');
   assert.match(markdownLink, /lucide-github/, 'Markdown link must keep its GitHub icon');
   assert.match(html, /<nav class="tag-list"/, 'Listing and article headers must share tag styling');
 }
