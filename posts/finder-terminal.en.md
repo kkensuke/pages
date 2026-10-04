@@ -3,6 +3,7 @@ title: "Moving Between Finder, Terminal, and VScode"
 date: "2024-10-31"
 subtitle: "Moving Between Finder, Terminal, and VScode"
 tags: [MacOS, Productivity]
+icon: square-terminal
 ---
 
 
