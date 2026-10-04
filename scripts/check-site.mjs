@@ -86,6 +86,11 @@ for (const path of articles) {
   assert.equal((html.match(/<h1\b/g) || []).length, 1, `${path}: one article title`);
   assert.ok(html.includes('reading-column post prose article-content'), `${path}: Markdown rendered`);
   assert.ok(html.includes('aria-label="Table of contents"'), `${path}: original contents rendered`);
+  for (const sourceLink of html.matchAll(/<a\b[^>]*title="Source on GitHub"[^>]*>Source on GitHub<\/a>/g)) {
+    assert.match(sourceLink[0], /href="https:\/\/github\.com\//, `${path}: code source must link to GitHub`);
+    assert.ok(html.includes(`<p>${sourceLink[0]}</p>`), `${path}: code source must have its own caption paragraph`);
+  }
+  if (path === '/blog/posts/code.en') assert.match(html, /title="Source on GitHub"/, 'GitHub code example must retain its source caption');
   for (const [, attributes, content] of html.matchAll(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/g)) {
     const preFont = attributes.match(/font-family:([^;\"]+)/)?.[1];
     const codeFont = content.match(/<code\b[^>]*font-family:([^;\"]+)/)?.[1];

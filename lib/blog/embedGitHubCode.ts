@@ -115,7 +115,7 @@ async function renderDirective(attributes: DirectiveAttributes) {
     code,
     fence,
     '',
-    `[Source on GitHub](${attributes.url})`,
+    `[Source on GitHub](${attributes.url} "Source on GitHub")`,
   ].join('\n');
 }
 

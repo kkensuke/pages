@@ -166,7 +166,7 @@ li::marker {
   .photo-link { display: block; border-radius: .4rem; overflow: hidden; }
   .photo-image { width: 100%; height: auto; }
   .tag-list { display: flex; flex-wrap: wrap; gap: 0 .875rem; }
-  .tag-link { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: .3rem .125rem; font-size: .8125rem; color: hsl(var(--muted-foreground)); }
+  .tag-link { display: inline-flex; align-items: center; min-height: 44px; padding: .3rem .125rem; font-size: .8125rem; color: hsl(var(--muted-foreground)); }
   .tag-link:hover { color: hsl(var(--foreground)); }
   .tag-link[aria-current='page'] { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: .45rem; }
   .language-link { display: inline-flex; align-items: center; min-height: 44px; padding: .5rem; font-size: .8125rem; color: hsl(var(--muted-foreground)); }
@@ -180,6 +180,9 @@ li::marker {
   .article-title { margin-block: .5rem; font-size: clamp(1.5rem, 3vw, 1.95rem); font-weight: 500; line-height: 1.55; letter-spacing: -.03em; overflow-wrap: anywhere; }
   .article-toc { margin-bottom: 1.5rem; }
   .article-content { font-size: 1.05rem; line-height: 1.95; }
+  .article-content p:has(> a[title='Source on GitHub']) { margin-top: -.5rem; padding-inline: .25rem; text-align: right; font-size: .75rem; line-height: 1.5; }
+  .article-content a[title='Source on GitHub'] { color: hsl(var(--muted-foreground)); }
+  .article-content a[title='Source on GitHub']:hover { color: hsl(var(--foreground)); text-decoration: underline; text-underline-offset: .2rem; }
   .article-content :where(h2, h3, h4) { line-height: 1.55; scroll-margin-top: 2rem; }
   .article-content :where(h2) { margin-top: 3rem; }
   .article-content .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding-block: .25rem; }
