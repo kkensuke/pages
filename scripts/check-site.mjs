@@ -88,6 +88,8 @@ for (const path of articles) {
   assert.ok(html.includes('aria-label="Table of contents"'), `${path}: original contents rendered`);
   for (const sourceLink of html.matchAll(/<a\b[^>]*title="Source on GitHub"[^>]*>Source on GitHub<\/a>/g)) {
     assert.match(sourceLink[0], /href="https:\/\/github\.com\//, `${path}: code source must link to GitHub`);
+    assert.match(sourceLink[0], /target="_blank"/, `${path}: code source must open in a new tab`);
+    assert.match(sourceLink[0], /rel="noopener noreferrer"/, `${path}: code source must use safe external-link attributes`);
     assert.ok(html.includes(`<p>${sourceLink[0]}</p>`), `${path}: code source must have its own caption paragraph`);
   }
   if (path === '/blog/posts/code.en') assert.match(html, /title="Source on GitHub"/, 'GitHub code example must retain its source caption');

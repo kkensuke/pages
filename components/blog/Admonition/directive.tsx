@@ -56,6 +56,10 @@ const directiveHandlers = {
 export function remarkTextDirectives() {
   return (tree: any) => {
     visit(tree, (node) => {
+      if (node.type === 'link' && node.title === 'Source on GitHub') {
+        node.data = node.data || {};
+        node.data.hProperties = { ...node.data.hProperties, target: '_blank', rel: 'noopener noreferrer' };
+      }
       // Handle different directive types
       if (node.type === 'textDirective' || node.type === 'leafDirective') {
         const handlers = directiveHandlers[node.type as 'textDirective' | 'leafDirective'];
