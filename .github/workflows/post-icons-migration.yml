@@ -1,0 +1,129 @@
+name: Verify post icon migration
+on:
+  push:
+    branches: [feat/blog-post-icons]
+    paths: [.github/workflows/post-icons-migration.yml]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feat/blog-post-icons
+          fetch-depth: 0
+      - name: Complete migration and verify every article against the base
+        shell: python
+        run: |
+          import pathlib
+          import re
+          import subprocess
+
+          base = 'cd7a92c16e4e311f6e25385e2161e84be8f2c7b6'
+          icons = dict(pair.split('=') for pair in '''
+          RMT_DE=grid-3x3 admonitions=message-square-warning alias=terminal
+          art-block=shapes art_world=palette brew_CLI=square-terminal code=code-xml
+          concentration=sigma decorator=layers espanso=text-cursor-input
+          finder-terminal=square-terminal firefox=globe fractal=orbit
+          gin-no-saji=book-open image=image latex=square-function linux=terminal
+          mac-default-setup=settings-2 mac-dev-setup=laptop macapps=app-window
+          naming=case-sensitive remark-gfm=file-text slink=link webapps=globe
+          xbar=panel-top yttext=captions zsh=terminal
+          '''.split())
+
+          def frontmatter(source):
+              match = re.match(rb'\A---\r?\n(.*?)(^-{3,}[ \t]*\r?$)', source, re.M | re.S)
+              assert match, 'Missing frontmatter'
+              return match
+
+          def unchanged_content(source):
+              match = frontmatter(source)
+              header = re.sub(rb'^(?:icon|previewImage):[^\r\n]*(?:\r?\n|$)', b'', match[1], flags=re.M)
+              return source[:match.start(1)] + header + source[match.end(1):]
+
+          changed = 0
+          files = sorted(pathlib.Path('posts').glob('*.md'))
+          assert len(files) == 51, f'Unexpected article count: {len(files)}'
+          for file in files:
+              icon = icons[file.name.removesuffix('.md').removesuffix('.en')]
+              original = subprocess.check_output(['git', 'show', f'{base}:{file.as_posix()}'])
+              current = file.read_bytes()
+              match = frontmatter(current)
+              existing = re.findall(rb'^icon:[ \t]*([^\r\n]*)', match[1], re.M)
+              assert not existing or existing == [icon.encode()], f'{file}: unexpected existing icon'
+              header = re.sub(rb'^previewImage:[^\r\n]*(?:\r?\n|$)', b'', match[1], flags=re.M)
+              if not existing:
+                  header += b'icon: ' + icon.encode() + (b'\r\n' if b'\r\n' in match[0] else b'\n')
+              updated = current[:match.start(1)] + header + current[match.end(1):]
+              assert unchanged_content(original) == unchanged_content(updated), f'{file}: unrelated content changed'
+              assert b'previewImage:' not in frontmatter(updated)[1]
+              if current != updated:
+                  file.write_bytes(updated)
+                  changed += 1
+              print(f'{file}: {icon}; article body and other metadata unchanged')
+          print(f'Updated {changed} articles; verified all {len(files)} against {base}.')
+      - name: Save completed article changes to the existing PR branch
+        run: |
+          git diff --check
+          if ! git diff --quiet -- posts; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add posts
+            git commit -m 'Complete icon metadata for all articles without changing their bodies'
+            git push origin HEAD:feat/blog-post-icons
+          fi
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Install locked dependencies
+        run: |
+          npm install --global pnpm@10
+          pnpm install --frozen-lockfile
+      - name: Validate icons and build
+        run: |
+          node scripts/check-post-icons.mjs
+          pnpm build
+      - name: Check the production site
+        run: |
+          pnpm start > "$RUNNER_TEMP/site.log" 2>&1 &
+          for i in $(seq 1 30); do
+            if curl --silent --fail http://localhost:3000/blog > /dev/null; then break; fi
+            sleep 2
+          done
+          node scripts/check-site.mjs
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          for (const query of ['', '?page=2', '?page=3', '?lang=en', '?lang=en&page=2', '?lang=en&page=3', '/tags/Math', '?q=slink']) {
+            const response = await fetch(`http://localhost:3000/blog${query}`);
+            assert.equal(response.status, 200);
+            const html = (await response.text()).replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
+            const articles = [...html.matchAll(/<article class="post-preview">[\s\S]*?<\/article>/g)];
+            assert.ok(articles.length);
+            for (const [article] of articles) {
+              assert.equal((article.match(/class="post-icon\b/g) || []).length, 1);
+              assert.match(article, /<span aria-hidden="true" class="post-icon[^>]*text-primary/);
+              assert.match(article, /<svg[^>]*focusable="false"/);
+              assert.ok(article.indexOf('class="post-icon') < article.indexOf('<h2'));
+            }
+          }
+          console.log('PASS: left SVG icons on all Japanese/English pages, tags, and search.');
+          JS
+      - name: Capture desktop and mobile layouts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
+          mkdir -p "$RUNNER_TEMP/icon-preview"
+          google-chrome --headless --no-sandbox --disable-gpu --hide-scrollbars --virtual-time-budget=10000 --window-size=1280,1150 --screenshot="$RUNNER_TEMP/icon-preview/desktop.png" http://localhost:3000/blog
+          google-chrome --headless --no-sandbox --disable-gpu --hide-scrollbars --virtual-time-budget=10000 --window-size=390,1150 --screenshot="$RUNNER_TEMP/icon-preview/mobile.png" http://localhost:3000/blog
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: post-icon-preview
+          path: |
+            ${{ runner.temp }}/icon-preview
+            ${{ runner.temp }}/site.log
+          retention-days: 7
