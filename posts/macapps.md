@@ -126,7 +126,7 @@ https://rectangleapp.com/
 
 ## Stay
 
-:::linkcard
+:::linkcard{image="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/61/b6/7e/61b67ea5-e622-f0de-6ea6-6a4decfebd9f/AppIcon-0-0-85-220-0-0-5-0-2x.png/400x400ib-75.webp"}
 https://cordlessdog.com/stay/
 :::
 
@@ -162,18 +162,9 @@ https://github.com/sbarex/QLMarkdown
 同じく Quick Look 用のアプリとして `QLMarkdown` があります。Markdown をレンダリングして読みやすく表示します。
 
 
-## Unsplash Wallpapers
-
-:::linkcard
-https://apps.apple.com/us/app/unsplash-wallpapers/
-:::
-
-`Unsplash Wallpapers` は、美しい壁紙を設定できる無料アプリです。メニューバーのアイコンから新しい壁紙を選べます。
-
-
 ## Zotero
 
-:::linkcard
+:::linkcard{image="https://www.zotero.org/static/images/icons/zotero-app-icon-512.png"}
 https://www.zotero.org/
 :::
 

@@ -10,7 +10,7 @@ tags: [MacOS, App]
 
 
 ## AppCleaner
-:::linkcard
+:::linkcard{image="https://freemacsoft.net/img/appcleaner.png"}
 https://freemacsoft.net/appcleaner/
 :::
 When removing an app from your computer, `AppCleaner` helps you to find all files related to the app so that you can remove all of them at once.
@@ -97,9 +97,10 @@ https://rectangleapp.com/
 
 
 ## Stay
-:::linkcard
+:::linkcard{image="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/61/b6/7e/61b67ea5-e622-f0de-6ea6-6a4decfebd9f/AppIcon-0-0-85-220-0-0-5-0-2x.png/400x400ib-75.webp"}
 https://cordlessdog.com/stay/
 :::
+
 Along with Rectangle, I would like to introduce an app called `Stay`. This app allows you to save the layout of multiple app windows on your desktop. What's more, it also lets you save these layouts for multiple monitors. This means you no longer have to readjust your window sizes every time you plug or unplug your laptop from a monitor!
 
 
@@ -127,15 +128,8 @@ https://github.com/sbarex/QLMarkdown
 Similarly, I would like to introduce a QuickLook app called `QLMarkdown`. It renders and displays Markdown, making it very easy to read.
 
 
-## Unsplash Wallpapers
-:::linkcard
-https://apps.apple.com/us/app/unsplash-wallpapers/
-:::
-`Unsplash Wallpapers` is a free app for setting beautiful wallpapers. You can set a new wallpaper from a menu bar icon.
-
-
 ## Zotero
-:::linkcard
+:::linkcard{image="https://www.zotero.org/static/images/icons/zotero-app-icon-512.png"}
 https://www.zotero.org/
 :::
 Zotero is a free and open source app for managing research papers. You can manage your papers with tags and folders. You can import papers from browser with a single click using a browser extension: [Zotero Connector](https://www.zotero.org/download/connectors).

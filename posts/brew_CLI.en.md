@@ -32,7 +32,7 @@ These tools replace traditional UNIX commands (`cat`, `find`, `df`, etc.) with f
     ```bash
     brew install fzf
     ```
-    :::linkcard
+    :::linkcard{image="https://junegunn.github.io/fzf/images/fzf-color.png"}
     https://junegunn.github.io/fzf/
     :::
 - `duf`: A modern replacement for `df`. It displays disk usage and free space in a clean, colorful, and easy-to-read tabular format.
@@ -66,7 +66,7 @@ Tools designed to streamline Git operations and reduce the need to switch back a
     ```bash
     brew install git-delta
     ```
-    :::linkcard
+    :::linkcard{image="https://user-images.githubusercontent.com/52205/86275526-76792100-bba1-11ea-9e78-6be9baa80b29.png"}
     https://dandavison.github.io/delta/
     :::
 - `git-filter-repo`: The officially recommended tool for rewriting Git history. It is essential for tasks like permanently removing large files or sensitive information accidentally committed to a repository.
@@ -103,7 +103,7 @@ Core tools and runtimes required for various programming environments.
     ```bash
     brew install uv
     ```
-    :::linkcard
+    :::linkcard{image="https://github.com/astral-sh/uv/assets/1309177/03aa9163-1c79-4a87-a31d-7a9311ed9310#only-dark"}
     https://docs.astral.sh/uv/
     :::
 - `gcc` & `libomp`: The GNU Compiler Collection and the OpenMP runtime. Since Apple Clang does not support OpenMP (multi-threading) by default, these are necessary for compiling C/C++ code that requires parallel processing.
@@ -111,7 +111,7 @@ Core tools and runtimes required for various programming environments.
     brew install gcc
     brew install libomp
     ```
-    :::linkcard
+    :::linkcard{image="https://gcc.gnu.org/img/gccegg-65.png"}
     https://gcc.gnu.org/
     :::
 - `sqlite`: A lightweight relational database engine. Perfect for local data analysis or as a backend for small-scale applications.
@@ -229,7 +229,7 @@ Tools that add flavor to your terminal or serve specific niche purposes.
     ```bash
     brew install ghostscript
     ```
-    :::linkcard
+    :::linkcard{image="https://ghostscript.readthedocs.io/en/latest/_images/ghostscript-logo.png"}
     https://ghostscript.readthedocs.io/en/latest/index.html
     :::
 - `cmatrix`: A joke app that displays the scrolling green text from *The Matrix*. Use it as a terminal screensaver to look like a Hollywood hacker when you step away from your desk.

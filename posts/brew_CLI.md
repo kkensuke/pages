@@ -35,7 +35,7 @@ icon: square-terminal
     ```bash
     brew install fzf
     ```
-    :::linkcard
+    :::linkcard{image="https://junegunn.github.io/fzf/images/fzf-color.png"}
     https://junegunn.github.io/fzf/
     :::
 - `duf`: `df` コマンドのモダン版です。ディスクの空き容量や使用状況を、見やすいカラフルな表形式で表示してくれます。
@@ -69,7 +69,7 @@ Git 周辺の操作を快適にし、ターミナルからブラウザを開く�
     ```bash
     brew install git-delta
     ```
-    :::linkcard
+    :::linkcard{image="https://user-images.githubusercontent.com/52205/86275526-76792100-bba1-11ea-9e78-6be9baa80b29.png"}
     https://dandavison.github.io/delta/
     :::
 - `git-filter-repo`: Git のコミット履歴を高速かつ安全に書き換えるための公式推奨ツールです。過去に誤ってコミットしてしまった巨大なファイルや機密情報をリポジトリから完全に消し去る際などに使用します。
@@ -107,7 +107,7 @@ Git 周辺の操作を快適にし、ターミナルからブラウザを開く�
     ```bash
     brew install uv
     ```
-    :::linkcard
+    :::linkcard{image="https://github.com/astral-sh/uv/assets/1309177/03aa9163-1c79-4a87-a31d-7a9311ed9310#only-dark"}
     https://docs.astral.sh/uv/
     :::
 - `gcc` & `libomp`: C/C++ のコンパイラ（GNU Compiler Collection）と、OpenMP のランタイムです。MacOS 標準の Apple Clang はデフォルトで OpenMP（マルチスレッド処理）をサポートしていないため、並列計算を伴う C/C++ コードをコンパイルする際に必要になります。
@@ -115,7 +115,7 @@ Git 周辺の操作を快適にし、ターミナルからブラウザを開く�
     brew install gcc
     brew install libomp
     ```
-    :::linkcard
+    :::linkcard{image="https://gcc.gnu.org/img/gccegg-65.png"}
     https://gcc.gnu.org/
     :::
 - `sqlite`: 軽量なリレーショナルデータベースエンジンです。ローカルでのデータ分析や、小規模なアプリケーションのバックエンドとして手軽に使えます。
@@ -238,7 +238,7 @@ source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
     ```bash
     brew install ghostscript
     ```
-    :::linkcard
+    :::linkcard{image="https://ghostscript.readthedocs.io/en/latest/_images/ghostscript-logo.png"}
     https://ghostscript.readthedocs.io/en/latest/index.html
     :::
 - `cmatrix`: 映画『マトリックス』のような緑色の文字が上から下へ流れるアニメーションをターミナルに表示するジョークアプリです。離席時のスクリーンセーバー代わりに使うとハッカー気分を味わえます。
