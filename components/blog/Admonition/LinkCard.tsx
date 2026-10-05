@@ -175,7 +175,7 @@ const LinkCard = async ({ children }: LinkCardProps) => {
             <img
               src={`https://www.google.com/s2/favicons?domain=${metaData.domain}&sz=${DEFAULT_FAVICON_SIZE}`}
               alt="favicon"
-              className="my-1 h-32 rounded-sm border border-slate-700"
+              className="mx-auto my-1 h-32 rounded-sm border border-slate-700"
             />
           )}
         </div>
