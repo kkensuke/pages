@@ -28,7 +28,7 @@ export default function PostPreview({ language = 'ja', headingLevel = 2, ...post
           <Link href={`/blog/posts/${post.slug}`} className="post-link">
             <div className="min-w-0">
               <Heading>{post.title}</Heading>
-              {post.subtitle && post.subtitle !== post.title && <p className="mt-2 text-sm leading-7 text-muted-foreground">{excerpt}</p>}
+              {post.subtitle && <p className="mt-2 text-sm leading-7 text-muted-foreground">{excerpt}</p>}
             </div>
           </Link>
         </div>
