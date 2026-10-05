@@ -27,23 +27,43 @@ const LinkCard = async ({ children }: LinkCardProps) => {
   }
 
   const githubPath = parsedUrl.pathname.split('/').filter(Boolean);
-  const previewUrl = parsedUrl.hostname === 'github.com' && githubPath.length > 2
-    ? `${parsedUrl.origin}/${githubPath[0]}/${githubPath[1]}`
-    : url;
+  const githubRepo = parsedUrl.hostname === 'github.com' && githubPath.length >= 2
+    ? { owner: githubPath[0], repo: githubPath[1] }
+    : null;
 
   const metaData = { title: '', description: '', imageUrl: '', domain: parsedUrl.hostname };
+
   try {
-    const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(previewUrl)}`, {
-      next: { revalidate: 86400 },
-      signal: AbortSignal.timeout(5000),
-    });
-    if (response.ok) {
-      const result = await response.json();
-      if (result.status === 'success' && result.data) {
-        const data = result.data;
-        metaData.title = typeof data.title === 'string' ? data.title : '';
+    if (githubRepo) {
+      const { owner, repo } = githubRepo;
+      metaData.title = `${owner}/${repo}`;
+      metaData.imageUrl = `https://opengraph.githubassets.com/1/${owner}/${repo}`;
+
+      const response = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`, {
+        headers: { Accept: 'application/vnd.github+json' },
+        next: { revalidate: 86400 },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        metaData.title = typeof data.full_name === 'string' ? data.full_name : metaData.title;
         metaData.description = typeof data.description === 'string' ? data.description : '';
-        metaData.imageUrl = typeof data.image?.url === 'string' ? data.image.url : '';
+      }
+    } else {
+      const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`, {
+        next: { revalidate: 86400 },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.status === 'success' && result.data) {
+          const data = result.data;
+          metaData.title = typeof data.title === 'string' ? data.title : '';
+          metaData.description = typeof data.description === 'string' ? data.description : '';
+          metaData.imageUrl = typeof data.image?.url === 'string' ? data.image.url : '';
+        }
       }
     }
   } catch (error) {
