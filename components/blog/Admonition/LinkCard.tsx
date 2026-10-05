@@ -7,6 +7,7 @@ interface LinkCardProps {
 }
 
 type ImageKind = 'preview' | 'logo';
+type CardImage = { url: string; kind: ImageKind; score: number };
 
 const getAttribute = (tag: string, name: string) =>
   tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])(.*?)\\1`, 'i'))?.[2] || '';
@@ -29,41 +30,75 @@ const resolveUrl = (value: string, baseUrl: string) => {
   try { return new URL(decodeHtml(value), baseUrl).toString(); } catch { return ''; }
 };
 
-const getFallbackImage = (html: string) => {
-  const links = html.match(/<link\b[^>]*>/gi) || [];
-  const appleIcon = links.find(tag => getAttribute(tag, 'rel').toLowerCase().includes('apple-touch-icon'));
-  if (appleIcon) return { url: getAttribute(appleIcon, 'href'), kind: 'logo' as const };
+const isLogoLike = (value: string) => /logo|brand|favicon|app[-_]?icon|(?:^|[-_/])icon(?:[.\-_/]|$)/i.test(value);
 
-  const largeIcon = links
-    .map(tag => {
-      const rel = getAttribute(tag, 'rel').toLowerCase();
-      const href = getAttribute(tag, 'href');
-      if (!rel.split(/\s+/).includes('icon') || !href) return null;
-      const size = Math.max(0, ...(getAttribute(tag, 'sizes').match(/\d+x\d+/gi) || []).map(value => Number(value.split('x')[0])));
-      const score = href.split(/[?#]/)[0].toLowerCase().endsWith('.svg') ? 1000 : size;
-      return score >= 128 ? { href, score } : null;
-    })
-    .filter((icon): icon is { href: string; score: number } => Boolean(icon))
-    .sort((a, b) => b.score - a.score)[0];
-  if (largeIcon) return { url: largeIcon.href, kind: 'logo' as const };
+const getBestSrcset = (tag: string) => {
+  const srcset = getAttribute(tag, 'srcset') || getAttribute(tag, 'data-srcset');
+  if (!srcset) return { url: '', size: 0 };
 
-  const images = (html.match(/<img\b[^>]*>/gi) || []).filter(tag => {
-    const src = getAttribute(tag, 'src') || getAttribute(tag, 'data-src') || getAttribute(tag, 'data-lazy-src');
-    const text = `${src} ${getAttribute(tag, 'alt')} ${getAttribute(tag, 'class')}`.toLowerCase();
+  return srcset.split(',').reduce((best, candidate) => {
+    const [url, descriptor = ''] = candidate.trim().split(/\s+/);
+    const match = descriptor.match(/^(\d+(?:\.\d+)?)(w|x)$/);
+    const size = match ? Number(match[1]) * (match[2] === 'x' ? 512 : 1) : 0;
+    return url && size > best.size ? { url, size } : best;
+  }, { url: '', size: 0 });
+};
+
+const getPageImage = (html: string): CardImage | null => {
+  let best: CardImage | null = null;
+
+  for (const tag of html.match(/<img\b[^>]*>/gi) || []) {
+    const srcset = getBestSrcset(tag);
+    const src = srcset.url
+      || getAttribute(tag, 'src')
+      || getAttribute(tag, 'data-src')
+      || getAttribute(tag, 'data-lazy-src');
+    if (!src || /^(?:data:|blob:)/i.test(src)) continue;
+
+    const text = `${src} ${getAttribute(tag, 'alt')} ${getAttribute(tag, 'class')} ${getAttribute(tag, 'id')}`.toLowerCase();
+    if (/badge|shields\.io|tracking|tracker|analytics|pixel|1x1/.test(text)) continue;
+
     const width = Number.parseInt(getAttribute(tag, 'width'), 10) || 0;
     const height = Number.parseInt(getAttribute(tag, 'height'), 10) || 0;
-    return Boolean(src)
-      && !/^(?:data:|blob:)/i.test(src)
-      && !/badge|shields\.io|tracking|analytics|pixel|1x1/.test(text)
-      && !(width && height && width <= 64 && height <= 64);
-  });
-  const preferred = images.find(tag => /hero|banner|screenshot|preview|cover|logo|brand/i.test(tag)) || images[0];
-  if (!preferred) return { url: '', kind: 'preview' as const };
+    const size = Math.max(width, height, srcset.size);
+    if (width && height && width <= 64 && height <= 64) continue;
 
-  return {
-    url: getAttribute(preferred, 'src') || getAttribute(preferred, 'data-src') || getAttribute(preferred, 'data-lazy-src'),
-    kind: /logo|brand/i.test(preferred) ? 'logo' as const : 'preview' as const,
-  };
+    const kind: ImageKind = isLogoLike(text) ? 'logo' : 'preview';
+    const semanticScore = /hero|banner|cover/.test(text) ? 4000
+      : /screenshot|preview/.test(text) ? 3500
+      : kind === 'logo' ? 3000
+      : 0;
+    const isSvg = src.split(/[?#]/)[0].toLowerCase().endsWith('.svg');
+    if (!semanticScore && size < 256 && !isSvg) continue;
+
+    const candidate = { url: src, kind, score: semanticScore + Math.min(size || (isSvg ? 512 : 0), 2000) };
+    if (!best || candidate.score > best.score) best = candidate;
+  }
+
+  return best;
+};
+
+const getSiteIcon = (html: string): CardImage | null => {
+  const links = html.match(/<link\b[^>]*>/gi) || [];
+
+  const appleIcon = links.find(tag => getAttribute(tag, 'rel').toLowerCase().includes('apple-touch-icon'));
+  if (appleIcon) return { url: getAttribute(appleIcon, 'href'), kind: 'logo', score: 0 };
+
+  const icon = links
+    .map(tag => {
+      const rel = getAttribute(tag, 'rel').toLowerCase();
+      const url = getAttribute(tag, 'href');
+      if (!rel.split(/\s+/).includes('icon') || !url) return null;
+
+      const size = Math.max(0, ...(getAttribute(tag, 'sizes').match(/\d+x\d+/gi) || [])
+        .map(value => Number(value.split('x')[0])));
+      const score = url.split(/[?#]/)[0].toLowerCase().endsWith('.svg') ? 1000 : size;
+      return score >= 128 ? { url, kind: 'logo' as const, score } : null;
+    })
+    .filter((item): item is CardImage => Boolean(item))
+    .sort((a, b) => b.score - a.score)[0];
+
+  return icon || null;
 };
 
 const LinkCard = async ({ children }: LinkCardProps) => {
@@ -141,18 +176,25 @@ const LinkCard = async ({ children }: LinkCardProps) => {
           || getMeta(html, 'name', 'twitter:description');
         const socialImage = getMeta(html, 'property', 'og:image')
           || getMeta(html, 'name', 'twitter:image');
-        const fallbackImage = socialImage ? null : getFallbackImage(html);
-        const image = socialImage || fallbackImage?.url || '';
+        const selectedImage = socialImage
+          ? { url: socialImage, kind: isLogoLike(socialImage) ? 'logo' as const : 'preview' as const }
+          : getPageImage(html) || getSiteIcon(html);
 
         metaData.title = decodeHtml(title).trim();
         metaData.description = decodeHtml(description).trim();
-        metaData.imageKind = socialImage ? 'preview' : fallbackImage?.kind || 'preview';
-        if (image) metaData.imageUrl = resolveUrl(image, baseUrl);
+        if (selectedImage?.url) {
+          metaData.imageUrl = resolveUrl(selectedImage.url, baseUrl);
+          metaData.imageKind = selectedImage.kind;
+        }
       }
     }
   } catch (error) {
     console.warn(`Link preview unavailable: ${url}`, error instanceof Error ? error.message : error);
   }
+
+  const imageUrl = metaData.imageUrl
+    || `https://www.google.com/s2/favicons?domain=${metaData.domain}&sz=${DEFAULT_FAVICON_SIZE}`;
+  const imageKind: ImageKind = metaData.imageUrl ? metaData.imageKind : 'logo';
 
   return (
     <a
@@ -172,26 +214,16 @@ const LinkCard = async ({ children }: LinkCardProps) => {
         </div>
 
         <div className="w-2/5 flex-shrink-0">
-          {metaData.imageUrl ? (
-            metaData.imageKind === 'logo' ? (
-              <div className="mx-auto my-1 flex h-32 items-center justify-center rounded-sm border border-slate-700 bg-slate-100 p-4">
-                <img src={metaData.imageUrl} alt="Preview" className="max-h-full max-w-full object-contain" />
-              </div>
-            ) : (
-              <img
-                src={metaData.imageUrl}
-                alt="Preview"
-                className="mx-auto my-1 h-32 rounded-sm border-slate-700 object-cover"
-              />
-            )
-          ) : (
-            <div className="mx-auto my-1 flex h-32 items-center justify-center rounded-sm border border-slate-700 bg-slate-100 p-4">
-              <img
-                src={`https://www.google.com/s2/favicons?domain=${metaData.domain}&sz=${DEFAULT_FAVICON_SIZE}`}
-                alt="favicon"
-                className="max-h-full max-w-full object-contain"
-              />
+          {imageKind === 'logo' ? (
+            <div className="mx-auto my-1 flex h-32 items-center justify-center rounded-sm border border-slate-600 bg-white p-2">
+              <img src={imageUrl} alt="Preview" className="h-full w-full object-contain" />
             </div>
+          ) : (
+            <img
+              src={imageUrl}
+              alt="Preview"
+              className="mx-auto my-1 h-32 rounded-sm border-slate-700 object-cover"
+            />
           )}
         </div>
       </div>
