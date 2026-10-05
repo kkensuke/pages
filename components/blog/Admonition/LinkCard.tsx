@@ -7,12 +7,13 @@ interface LinkCardProps {
 }
 
 const getAttribute = (tag: string, name: string) =>
-  tag.match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']*)["']`, 'i'))?.[1] || '';
+  tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])(.*?)\\1`, 'i'))?.[2] || '';
 
-const getMeta = (html: string, attribute: 'name' | 'property', value: string) =>
-  (html.match(/<meta\b[^>]*>/gi) || [])
-    .find(tag => getAttribute(tag, attribute).toLowerCase() === value.toLowerCase())
-    ?.match(/\bcontent\s*=\s*["']([^"']*)["']/i)?.[1] || '';
+const getMeta = (html: string, attribute: 'name' | 'property', value: string) => {
+  const tag = (html.match(/<meta\b[^>]*>/gi) || [])
+    .find(tag => getAttribute(tag, attribute).toLowerCase() === value.toLowerCase());
+  return tag ? getAttribute(tag, 'content') : '';
+};
 
 const decodeHtml = (value: string) =>
   value
@@ -75,9 +76,8 @@ const LinkCard = async ({ children }: LinkCardProps) => {
 
       if (pageResponse.ok) {
         const html = await pageResponse.text();
-        const ogImageTag = html.match(/<meta(?=[^>]*property=["']og:image["'])[^>]*>/i)?.[0];
-        const ogImage = ogImageTag?.match(/content=["']([^"']+)["']/i)?.[1];
-        if (ogImage) metaData.imageUrl = ogImage.replace(/&amp;/g, '&');
+        const ogImage = getMeta(html, 'property', 'og:image');
+        if (ogImage) metaData.imageUrl = decodeHtml(ogImage);
       }
     } else {
       const response = await fetch(url, {
