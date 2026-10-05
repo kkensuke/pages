@@ -105,7 +105,7 @@ https://mathpix.com/
 ## MonitorControl
 
 :::linkcard
-https://github.com/MonitorControl/MonitorControl#readme
+https://github.com/MonitorControl/MonitorControl
 :::
 
 `MonitorControl` は、**外部モニター**の明るさを調整するための無料でオープンソースのアプリです。モニター本体のボタンを使わず、ショートカットキーで明るさを調整できます。
