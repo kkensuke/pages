@@ -95,7 +95,7 @@ const getSiteIcon = (html: string): CardImage | null => {
       const score = url.split(/[?#]/)[0].toLowerCase().endsWith('.svg') ? 1000 : size;
       return score >= 128 ? { url, kind: 'logo' as const, score } : null;
     })
-    .filter((item): item is CardImage => Boolean(item))
+    .filter((item): item is { url: string; kind: 'logo'; score: number } => item !== null)
     .sort((a, b) => b.score - a.score)[0];
 
   return icon || null;
