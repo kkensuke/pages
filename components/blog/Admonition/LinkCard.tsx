@@ -6,6 +6,22 @@ interface LinkCardProps {
   children: React.ReactNode;
 }
 
+const getAttribute = (tag: string, name: string) =>
+  tag.match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']*)["']`, 'i'))?.[1] || '';
+
+const getMeta = (html: string, attribute: 'name' | 'property', value: string) =>
+  (html.match(/<meta\b[^>]*>/gi) || [])
+    .find(tag => getAttribute(tag, attribute).toLowerCase() === value.toLowerCase())
+    ?.match(/\bcontent\s*=\s*["']([^"']*)["']/i)?.[1] || '';
+
+const decodeHtml = (value: string) =>
+  value
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&#x27;/gi, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+
 const LinkCard = async ({ children }: LinkCardProps) => {
   const extractUrl = (children: React.ReactNode): string => {
     if (React.isValidElement(children)) {
@@ -64,19 +80,28 @@ const LinkCard = async ({ children }: LinkCardProps) => {
         if (ogImage) metaData.imageUrl = ogImage.replace(/&amp;/g, '&');
       }
     } else {
-      const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`, {
+      const response = await fetch(url, {
+        headers: { Accept: 'text/html,application/xhtml+xml' },
         next: { revalidate: 86400 },
         signal: AbortSignal.timeout(5000),
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        if (result.status === 'success' && result.data) {
-          const data = result.data;
-          metaData.title = typeof data.title === 'string' ? data.title : '';
-          metaData.description = typeof data.description === 'string' ? data.description : '';
-          metaData.imageUrl = typeof data.image?.url === 'string' ? data.image.url : '';
-        }
+      if (response.ok && response.headers.get('content-type')?.includes('text/html')) {
+        const html = await response.text();
+        const baseUrl = response.url || url;
+        const title = getMeta(html, 'property', 'og:title')
+          || getMeta(html, 'name', 'twitter:title')
+          || html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]
+          || '';
+        const description = getMeta(html, 'property', 'og:description')
+          || getMeta(html, 'name', 'description')
+          || getMeta(html, 'name', 'twitter:description');
+        const image = getMeta(html, 'property', 'og:image')
+          || getMeta(html, 'name', 'twitter:image');
+
+        metaData.title = decodeHtml(title).trim();
+        metaData.description = decodeHtml(description).trim();
+        if (image) metaData.imageUrl = new URL(decodeHtml(image), baseUrl).toString();
       }
     }
   } catch (error) {
