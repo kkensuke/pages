@@ -23,97 +23,42 @@ const decodeHtml = (value: string) =>
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>');
 
-const toAbsoluteUrl = (value: string, baseUrl: string) => {
-  try {
-    const resolved = new URL(decodeHtml(value), baseUrl);
-    return ['http:', 'https:'].includes(resolved.protocol) ? resolved.toString() : '';
-  } catch {
-    return '';
-  }
+const resolveUrl = (value: string, baseUrl: string) => {
+  try { return new URL(decodeHtml(value), baseUrl).toString(); } catch { return ''; }
 };
 
-const getHighResolutionIcon = (html: string) => {
-  let best = { href: '', score: 0 };
+const getFallbackImage = (html: string) => {
+  const links = html.match(/<link\b[^>]*>/gi) || [];
+  const appleIcon = links.find(tag => getAttribute(tag, 'rel').toLowerCase().includes('apple-touch-icon'));
+  if (appleIcon) return getAttribute(appleIcon, 'href');
 
-  for (const tag of html.match(/<link\b[^>]*>/gi) || []) {
-    const rel = getAttribute(tag, 'rel').toLowerCase();
-    const href = getAttribute(tag, 'href');
-    if (!href) continue;
+  const largeIcon = links
+    .map(tag => {
+      const rel = getAttribute(tag, 'rel').toLowerCase();
+      const href = getAttribute(tag, 'href');
+      if (!rel.split(/\s+/).includes('icon') || !href) return null;
+      const size = Math.max(0, ...(getAttribute(tag, 'sizes').match(/\d+x\d+/gi) || []).map(value => Number(value.split('x')[0])));
+      const score = href.split(/[?#]/)[0].toLowerCase().endsWith('.svg') ? 1000 : size;
+      return score >= 128 ? { href, score } : null;
+    })
+    .filter((icon): icon is { href: string; score: number } => Boolean(icon))
+    .sort((a, b) => b.score - a.score)[0];
+  if (largeIcon) return largeIcon.href;
 
-    if (rel.includes('apple-touch-icon')) {
-      if (best.score < 10000) best = { href, score: 10000 };
-      continue;
-    }
-
-    if (!rel.split(/\s+/).includes('icon')) continue;
-
-    const isSvg = href.split(/[?#]/)[0].toLowerCase().endsWith('.svg');
-    const size = Math.max(
-      0,
-      ...(getAttribute(tag, 'sizes').match(/\d+x\d+/gi) || [])
-        .map(value => Number(value.split('x')[0]))
-        .filter(Number.isFinite),
-    );
-
-    const score = isSvg ? 1000 : size >= 128 ? size : 0;
-    if (score > best.score) best = { href, score };
-  }
-
-  return best.href;
-};
-
-const getPageImage = (html: string) => {
-  let best = { src: '', score: -1 };
-
-  for (const tag of html.match(/<img\b[^>]*>/gi) || []) {
-    const src = getAttribute(tag, 'src')
-      || getAttribute(tag, 'data-src')
-      || getAttribute(tag, 'data-lazy-src');
-    if (!src || /^(?:data:|blob:)/i.test(src)) continue;
-
-    const text = [
-      src,
-      getAttribute(tag, 'alt'),
-      getAttribute(tag, 'class'),
-      getAttribute(tag, 'id'),
-    ].join(' ').toLowerCase();
-
-    if (/badge|shields\.io|tracking|tracker|analytics|pixel|1x1/.test(text)) continue;
-
+  const images = (html.match(/<img\b[^>]*>/gi) || []).filter(tag => {
+    const src = getAttribute(tag, 'src') || getAttribute(tag, 'data-src') || getAttribute(tag, 'data-lazy-src');
+    const text = `${src} ${getAttribute(tag, 'alt')} ${getAttribute(tag, 'class')}`.toLowerCase();
     const width = Number.parseInt(getAttribute(tag, 'width'), 10) || 0;
     const height = Number.parseInt(getAttribute(tag, 'height'), 10) || 0;
-    if (width && height && width <= 64 && height <= 64) continue;
-
-    let score = 1;
-    if (/hero|banner|screenshot|preview|cover/.test(text)) score += 100;
-    if (/logo|brand/.test(text)) score += 60;
-    if (width >= 128 || height >= 128) score += 20;
-    if (getAttribute(tag, 'alt')) score += 5;
-
-    if (score > best.score) best = { src, score };
-  }
-
-  return best.src;
-};
-
-const getPageMetadata = (html: string, baseUrl: string) => {
-  const title = getMeta(html, 'property', 'og:title')
-    || getMeta(html, 'name', 'twitter:title')
-    || html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]
-    || '';
-  const description = getMeta(html, 'property', 'og:description')
-    || getMeta(html, 'name', 'description')
-    || getMeta(html, 'name', 'twitter:description');
-  const image = getMeta(html, 'property', 'og:image')
-    || getMeta(html, 'name', 'twitter:image')
-    || getHighResolutionIcon(html)
-    || getPageImage(html);
-
-  return {
-    title: decodeHtml(title).trim(),
-    description: decodeHtml(description).trim(),
-    imageUrl: image ? toAbsoluteUrl(image, baseUrl) : '',
-  };
+    return Boolean(src)
+      && !/^(?:data:|blob:)/i.test(src)
+      && !/badge|shields\.io|tracking|analytics|pixel|1x1/.test(text)
+      && !(width && height && width <= 64 && height <= 64);
+  });
+  const preferred = images.find(tag => /hero|banner|screenshot|preview|cover|logo|brand/i.test(tag)) || images[0];
+  return preferred
+    ? getAttribute(preferred, 'src') || getAttribute(preferred, 'data-src') || getAttribute(preferred, 'data-lazy-src')
+    : '';
 };
 
 const LinkCard = async ({ children }: LinkCardProps) => {
@@ -168,9 +113,8 @@ const LinkCard = async ({ children }: LinkCardProps) => {
       });
 
       if (pageResponse.ok) {
-        const html = await pageResponse.text();
-        const ogImage = getMeta(html, 'property', 'og:image');
-        if (ogImage) metaData.imageUrl = toAbsoluteUrl(ogImage, repoUrl) || metaData.imageUrl;
+        const ogImage = getMeta(await pageResponse.text(), 'property', 'og:image');
+        if (ogImage) metaData.imageUrl = resolveUrl(ogImage, repoUrl) || metaData.imageUrl;
       }
     } else {
       const response = await fetch(url, {
@@ -181,7 +125,22 @@ const LinkCard = async ({ children }: LinkCardProps) => {
 
       const contentType = response.headers.get('content-type') || '';
       if (response.ok && (contentType.includes('text/html') || contentType.includes('application/xhtml+xml'))) {
-        Object.assign(metaData, getPageMetadata(await response.text(), response.url || url));
+        const html = await response.text();
+        const baseUrl = response.url || url;
+        const title = getMeta(html, 'property', 'og:title')
+          || getMeta(html, 'name', 'twitter:title')
+          || html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]
+          || '';
+        const description = getMeta(html, 'property', 'og:description')
+          || getMeta(html, 'name', 'description')
+          || getMeta(html, 'name', 'twitter:description');
+        const image = getMeta(html, 'property', 'og:image')
+          || getMeta(html, 'name', 'twitter:image')
+          || getFallbackImage(html);
+
+        metaData.title = decodeHtml(title).trim();
+        metaData.description = decodeHtml(description).trim();
+        if (image) metaData.imageUrl = resolveUrl(image, baseUrl);
       }
     }
   } catch (error) {
