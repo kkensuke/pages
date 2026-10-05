@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import type { BlogLanguage } from '@/lib/blog/localization';
 
-type TagSectionProps = { tags: string[]; activeTag?: string; language?: BlogLanguage; query?: string };
+type TagSectionProps = { tags: string[]; activeTag?: string; language?: BlogLanguage; query?: string; page?: number };
 
-export default function TagSection({ tags, activeTag, language = 'ja', query = '' }: TagSectionProps) {
+export default function TagSection({ tags, activeTag, language = 'ja', query = '', page = 1 }: TagSectionProps) {
   if (!tags?.length) return null;
   const params = new URLSearchParams();
   if (language === 'en') params.set('lang', 'en');
   if (query) params.set('q', query);
+  if (page > 1) params.set('page', String(page));
   const suffix = params.toString() ? '?' + params.toString() : '';
 
   return (
