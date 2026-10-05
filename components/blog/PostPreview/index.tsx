@@ -22,7 +22,7 @@ export default function PostPreview({ language = 'ja', headingLevel = 2, ...post
           <div className="mb-2 flex flex-wrap items-center gap-x-3 text-xs text-muted-foreground">
             <time dateTime={date} className="tabular-nums">{date.replace(/-/g, '.')}</time>
             {(post.tags || []).map(tag => (
-              <Link key={tag} href={`/blog/tags/${encodeURIComponent(tag)}${language === 'en' ? '?lang=en' : ''}`} className="post-tag tag-link">{tag}</Link>
+              <Link key={tag} href={`/blog/tags/${encodeURIComponent(tag)}${language === 'en' ? '?lang=en' : ''}`} className="post-tag tag-link !min-h-7 !py-0">{tag}</Link>
             ))}
           </div>
           <Link href={`/blog/posts/${post.slug}`} className="post-link">
