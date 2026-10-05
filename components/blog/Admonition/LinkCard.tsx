@@ -86,7 +86,8 @@ const LinkCard = async ({ children }: LinkCardProps) => {
         signal: AbortSignal.timeout(5000),
       });
 
-      if (response.ok && response.headers.get('content-type')?.includes('text/html')) {
+      const contentType = response.headers.get('content-type') || '';
+      if (response.ok && (contentType.includes('text/html') || contentType.includes('application/xhtml+xml'))) {
         const html = await response.text();
         const baseUrl = response.url || url;
         const title = getMeta(html, 'property', 'og:title')
