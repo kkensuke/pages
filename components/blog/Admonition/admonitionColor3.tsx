@@ -166,7 +166,7 @@ const SimpleAdmonition = ({ title, children }: AdmonitionProps) => {
   );
 }
 
-const LinkAdmonition = ({ children }: { children: React.ReactNode }) => {
+const LinkAdmonition = ({ children, image }: { children: React.ReactNode; image?: string }) => {
   // Ensure we're passing the innermost text content
   const getTextContent = (node: React.ReactNode): string => {
     if (typeof node === 'string') return node;
@@ -176,7 +176,7 @@ const LinkAdmonition = ({ children }: { children: React.ReactNode }) => {
   };
 
   // @ts-expect-error Async Server Components require TypeScript 5.1; this project uses 4.9.
-  return <LinkCard>{getTextContent(children)}</LinkCard>;
+  return <LinkCard image={image}>{getTextContent(children)}</LinkCard>;
 };
 
 const AdmonitionComponents = {
