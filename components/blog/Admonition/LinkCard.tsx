@@ -4,6 +4,7 @@ const DEFAULT_FAVICON_SIZE = 256;
 
 interface LinkCardProps {
   children: React.ReactNode;
+  image?: string;
 }
 
 type ImageKind = 'preview' | 'logo';
@@ -101,7 +102,7 @@ const getSiteIcon = (html: string): CardImage | null => {
   return icon || null;
 };
 
-const LinkCard = async ({ children }: LinkCardProps) => {
+const LinkCard = async ({ children, image }: LinkCardProps) => {
   const extractUrl = (children: React.ReactNode): string => {
     if (React.isValidElement(children)) {
       return children.props.children?.toString() || '';
@@ -121,19 +122,28 @@ const LinkCard = async ({ children }: LinkCardProps) => {
     );
   }
 
+  const manualImageUrl = image ? resolveUrl(image, url) : '';
+  const manualImageKind: ImageKind = isLogoLike(image || '') ? 'logo' : 'preview';
+
   const githubPath = parsedUrl.pathname.split('/').filter(Boolean);
   const githubRepo = parsedUrl.hostname === 'github.com' && githubPath.length >= 2
     ? { owner: githubPath[0], repo: githubPath[1] }
     : null;
 
-  const metaData = { title: '', description: '', imageUrl: '', imageKind: 'preview' as ImageKind, domain: parsedUrl.hostname };
+  const metaData = {
+    title: '',
+    description: '',
+    imageUrl: manualImageUrl,
+    imageKind: manualImageUrl ? manualImageKind : 'preview' as ImageKind,
+    domain: parsedUrl.hostname,
+  };
 
   try {
     if (githubRepo) {
       const { owner, repo } = githubRepo;
       const repoUrl = `https://github.com/${owner}/${repo}`;
       metaData.title = `${owner}/${repo}`;
-      metaData.imageUrl = `https://opengraph.githubassets.com/1/${owner}/${repo}`;
+      if (!manualImageUrl) metaData.imageUrl = `https://opengraph.githubassets.com/1/${owner}/${repo}`;
 
       const response = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`, {
         headers: { Accept: 'application/vnd.github+json' },
@@ -147,14 +157,16 @@ const LinkCard = async ({ children }: LinkCardProps) => {
         metaData.description = typeof data.description === 'string' ? data.description : '';
       }
 
-      const pageResponse = await fetch(repoUrl, {
-        next: { revalidate: 86400 },
-        signal: AbortSignal.timeout(5000),
-      });
+      if (!manualImageUrl) {
+        const pageResponse = await fetch(repoUrl, {
+          next: { revalidate: 86400 },
+          signal: AbortSignal.timeout(5000),
+        });
 
-      if (pageResponse.ok) {
-        const ogImage = getMeta(await pageResponse.text(), 'property', 'og:image');
-        if (ogImage) metaData.imageUrl = resolveUrl(ogImage, repoUrl) || metaData.imageUrl;
+        if (pageResponse.ok) {
+          const ogImage = getMeta(await pageResponse.text(), 'property', 'og:image');
+          if (ogImage) metaData.imageUrl = resolveUrl(ogImage, repoUrl) || metaData.imageUrl;
+        }
       }
     } else {
       const response = await fetch(url, {
@@ -176,9 +188,11 @@ const LinkCard = async ({ children }: LinkCardProps) => {
           || getMeta(html, 'name', 'twitter:description');
         const socialImage = getMeta(html, 'property', 'og:image')
           || getMeta(html, 'name', 'twitter:image');
-        const selectedImage = socialImage
-          ? { url: socialImage, kind: isLogoLike(socialImage) ? 'logo' as const : 'preview' as const }
-          : getPageImage(html) || getSiteIcon(html);
+        const selectedImage = manualImageUrl
+          ? null
+          : socialImage
+            ? { url: socialImage, kind: isLogoLike(socialImage) ? 'logo' as const : 'preview' as const }
+            : getPageImage(html) || getSiteIcon(html);
 
         metaData.title = decodeHtml(title).trim();
         metaData.description = decodeHtml(description).trim();
