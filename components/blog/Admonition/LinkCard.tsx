@@ -36,6 +36,7 @@ const LinkCard = async ({ children }: LinkCardProps) => {
   try {
     if (githubRepo) {
       const { owner, repo } = githubRepo;
+      const repoUrl = `https://github.com/${owner}/${repo}`;
       metaData.title = `${owner}/${repo}`;
       metaData.imageUrl = `https://opengraph.githubassets.com/1/${owner}/${repo}`;
 
@@ -49,6 +50,18 @@ const LinkCard = async ({ children }: LinkCardProps) => {
         const data = await response.json();
         metaData.title = typeof data.full_name === 'string' ? data.full_name : metaData.title;
         metaData.description = typeof data.description === 'string' ? data.description : '';
+      }
+
+      const pageResponse = await fetch(repoUrl, {
+        next: { revalidate: 86400 },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (pageResponse.ok) {
+        const html = await pageResponse.text();
+        const ogImageTag = html.match(/<meta(?=[^>]*property=["']og:image["'])[^>]*>/i)?.[0];
+        const ogImage = ogImageTag?.match(/content=["']([^"']+)["']/i)?.[1];
+        if (ogImage) metaData.imageUrl = ogImage.replace(/&amp;/g, '&');
       }
     } else {
       const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`, {
