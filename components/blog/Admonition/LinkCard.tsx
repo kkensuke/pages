@@ -6,6 +6,8 @@ interface LinkCardProps {
   children: React.ReactNode;
 }
 
+type ImageKind = 'preview' | 'logo';
+
 const getAttribute = (tag: string, name: string) =>
   tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])(.*?)\\1`, 'i'))?.[2] || '';
 
@@ -30,7 +32,7 @@ const resolveUrl = (value: string, baseUrl: string) => {
 const getFallbackImage = (html: string) => {
   const links = html.match(/<link\b[^>]*>/gi) || [];
   const appleIcon = links.find(tag => getAttribute(tag, 'rel').toLowerCase().includes('apple-touch-icon'));
-  if (appleIcon) return getAttribute(appleIcon, 'href');
+  if (appleIcon) return { url: getAttribute(appleIcon, 'href'), kind: 'logo' as const };
 
   const largeIcon = links
     .map(tag => {
@@ -43,7 +45,7 @@ const getFallbackImage = (html: string) => {
     })
     .filter((icon): icon is { href: string; score: number } => Boolean(icon))
     .sort((a, b) => b.score - a.score)[0];
-  if (largeIcon) return largeIcon.href;
+  if (largeIcon) return { url: largeIcon.href, kind: 'logo' as const };
 
   const images = (html.match(/<img\b[^>]*>/gi) || []).filter(tag => {
     const src = getAttribute(tag, 'src') || getAttribute(tag, 'data-src') || getAttribute(tag, 'data-lazy-src');
@@ -56,9 +58,12 @@ const getFallbackImage = (html: string) => {
       && !(width && height && width <= 64 && height <= 64);
   });
   const preferred = images.find(tag => /hero|banner|screenshot|preview|cover|logo|brand/i.test(tag)) || images[0];
-  return preferred
-    ? getAttribute(preferred, 'src') || getAttribute(preferred, 'data-src') || getAttribute(preferred, 'data-lazy-src')
-    : '';
+  if (!preferred) return { url: '', kind: 'preview' as const };
+
+  return {
+    url: getAttribute(preferred, 'src') || getAttribute(preferred, 'data-src') || getAttribute(preferred, 'data-lazy-src'),
+    kind: /logo|brand/i.test(preferred) ? 'logo' as const : 'preview' as const,
+  };
 };
 
 const LinkCard = async ({ children }: LinkCardProps) => {
@@ -86,7 +91,7 @@ const LinkCard = async ({ children }: LinkCardProps) => {
     ? { owner: githubPath[0], repo: githubPath[1] }
     : null;
 
-  const metaData = { title: '', description: '', imageUrl: '', domain: parsedUrl.hostname };
+  const metaData = { title: '', description: '', imageUrl: '', imageKind: 'preview' as ImageKind, domain: parsedUrl.hostname };
 
   try {
     if (githubRepo) {
@@ -134,12 +139,14 @@ const LinkCard = async ({ children }: LinkCardProps) => {
         const description = getMeta(html, 'property', 'og:description')
           || getMeta(html, 'name', 'description')
           || getMeta(html, 'name', 'twitter:description');
-        const image = getMeta(html, 'property', 'og:image')
-          || getMeta(html, 'name', 'twitter:image')
-          || getFallbackImage(html);
+        const socialImage = getMeta(html, 'property', 'og:image')
+          || getMeta(html, 'name', 'twitter:image');
+        const fallbackImage = socialImage ? null : getFallbackImage(html);
+        const image = socialImage || fallbackImage?.url || '';
 
         metaData.title = decodeHtml(title).trim();
         metaData.description = decodeHtml(description).trim();
+        metaData.imageKind = socialImage ? 'preview' : fallbackImage?.kind || 'preview';
         if (image) metaData.imageUrl = resolveUrl(image, baseUrl);
       }
     }
@@ -166,17 +173,25 @@ const LinkCard = async ({ children }: LinkCardProps) => {
 
         <div className="w-2/5 flex-shrink-0">
           {metaData.imageUrl ? (
-            <img
-              src={metaData.imageUrl}
-              alt="Preview"
-              className="mx-auto my-1 h-32 rounded-sm border-slate-700 object-cover"
-            />
+            metaData.imageKind === 'logo' ? (
+              <div className="mx-auto my-1 flex h-32 items-center justify-center rounded-sm border border-slate-700 bg-slate-100 p-4">
+                <img src={metaData.imageUrl} alt="Preview" className="max-h-full max-w-full object-contain" />
+              </div>
+            ) : (
+              <img
+                src={metaData.imageUrl}
+                alt="Preview"
+                className="mx-auto my-1 h-32 rounded-sm border-slate-700 object-cover"
+              />
+            )
           ) : (
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${metaData.domain}&sz=${DEFAULT_FAVICON_SIZE}`}
-              alt="favicon"
-              className="mx-auto my-1 h-32 rounded-sm border border-slate-700"
-            />
+            <div className="mx-auto my-1 flex h-32 items-center justify-center rounded-sm border border-slate-700 bg-slate-100 p-4">
+              <img
+                src={`https://www.google.com/s2/favicons?domain=${metaData.domain}&sz=${DEFAULT_FAVICON_SIZE}`}
+                alt="favicon"
+                className="max-h-full max-w-full object-contain"
+              />
+            </div>
           )}
         </div>
       </div>
