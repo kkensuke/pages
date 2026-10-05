@@ -14,22 +14,24 @@ export default function PostPreview({ language = 'ja', headingLevel = 2, ...post
 
   return (
     <article className="post-preview">
-      <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-[22px] max-sm:gap-x-[18px]">
-        <div className="col-start-2 mb-2 flex flex-wrap items-center gap-x-3 text-xs text-muted-foreground">
-          <time dateTime={date} className="tabular-nums">{date.replace(/-/g, '.')}</time>
-          {(post.tags || []).map(tag => (
-            <Link key={tag} href={`/blog/tags/${encodeURIComponent(tag)}${language === 'en' ? '?lang=en' : ''}`} className="post-tag tag-link">{tag}</Link>
-          ))}
-        </div>
-        <span aria-hidden="true" className="post-icon pointer-events-none row-start-2 flex h-14 w-14 shrink-0 self-center items-center justify-center rounded-[14px] border border-primary/[0.13] bg-primary/[0.065] text-primary max-sm:h-11 max-sm:w-11 max-sm:rounded-[11px]">
+      <div className="flex items-center gap-[22px] max-sm:gap-[18px]">
+        <span aria-hidden="true" className="post-icon pointer-events-none flex h-14 w-14 shrink-0 items-center justify-center rounded-[14px] border border-primary/[0.13] bg-primary/[0.065] text-primary max-sm:h-11 max-sm:w-11 max-sm:rounded-[11px]">
           <Icon className="h-7 w-7 max-sm:h-6 max-sm:w-6" strokeWidth={1.7} focusable="false" />
         </span>
-        <Link href={`/blog/posts/${post.slug}`} className="post-link col-start-2 row-start-2">
-          <div className="min-w-0">
-            <Heading>{post.title}</Heading>
-            {post.subtitle && post.subtitle !== post.title && <p className="mt-2 text-sm leading-7 text-muted-foreground">{excerpt}</p>}
+        <div className="min-w-0 flex-1">
+          <div className="mb-2 flex flex-wrap items-center gap-x-3 text-xs text-muted-foreground">
+            <time dateTime={date} className="tabular-nums">{date.replace(/-/g, '.')}</time>
+            {(post.tags || []).map(tag => (
+              <Link key={tag} href={`/blog/tags/${encodeURIComponent(tag)}${language === 'en' ? '?lang=en' : ''}`} className="post-tag tag-link !min-h-7 !py-0">{tag}</Link>
+            ))}
           </div>
-        </Link>
+          <Link href={`/blog/posts/${post.slug}`} className="post-link">
+            <div className="min-w-0">
+              <Heading>{post.title}</Heading>
+              {post.subtitle && post.subtitle !== post.title && <p className="mt-2 text-sm leading-7 text-muted-foreground">{excerpt}</p>}
+            </div>
+          </Link>
+        </div>
       </div>
     </article>
   );
