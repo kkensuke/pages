@@ -239,7 +239,7 @@ const LinkCard = async ({ children, image }: LinkCardProps) => {
 
         <div className="w-2/5 flex-shrink-0">
           {imageKind === 'logo' ? (
-            <div className="mx-auto my-1 flex h-32 items-center justify-center rounded-sm border border-slate-600 p-2">
+            <div className="mx-auto my-1 flex h-32 items-center justify-center rounded-sm p-2">
               <img src={imageUrl} alt="Preview" className="h-full w-full object-contain" />
             </div>
           ) : (
