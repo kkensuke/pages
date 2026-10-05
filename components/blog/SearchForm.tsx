@@ -5,7 +5,7 @@ import { Search, X } from 'lucide-react';
 import type { BlogLanguage } from '@/lib/blog/localization';
 import LanguageToggle from './LanguageToggle';
 
-export default function SearchForm({ basePath, language, query }: { basePath: string; language: BlogLanguage; query: string }) {
+export default function SearchForm({ basePath, language, query, page }: { basePath: string; language: BlogLanguage; query: string; page: number }) {
   const [value, setValue] = useState(query);
   const [open, setOpen] = useState(Boolean(query));
   const input = useRef<HTMLInputElement>(null);
@@ -17,7 +17,7 @@ export default function SearchForm({ basePath, language, query }: { basePath: st
     <>
       <div className="blog-controls">
         <button ref={toggle} type="button" className="blog-search-toggle" aria-expanded={open} aria-controls="blog-search-form" onClick={() => { setOpen(!open); if (open) toggle.current?.focus(); }}><Search size={16} aria-hidden="true" /><span>Search</span></button>
-        <LanguageToggle language={language} basePath={basePath} query={query} />
+        <LanguageToggle language={language} basePath={basePath} query={query} page={page} />
       </div>
       <form id="blog-search-form" action={basePath} method="get" role="search" className="blog-search" hidden={!open} onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); setOpen(false); toggle.current?.focus(); } }}>
         {language === 'en' && <input type="hidden" name="lang" value="en" />}
