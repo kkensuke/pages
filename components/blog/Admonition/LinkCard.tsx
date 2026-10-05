@@ -28,7 +28,12 @@ const decodeHtml = (value: string) =>
     .replace(/&gt;/g, '>');
 
 const resolveUrl = (value: string, baseUrl: string) => {
-  try { return new URL(decodeHtml(value), baseUrl).toString(); } catch { return ''; }
+  try {
+    const resolved = new URL(decodeHtml(value), baseUrl);
+    return ['http:', 'https:'].includes(resolved.protocol) ? resolved.toString() : '';
+  } catch {
+    return '';
+  }
 };
 
 const isLogoLike = (value: string) => /logo|brand|favicon|app[-_]?icon|(?:^|[-_/])icon(?:[.\-_/]|$)/i.test(value);
