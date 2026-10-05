@@ -224,7 +224,7 @@ Wappalyzer はウェブサイトで用いられている技術を表示します
 ::::
 
 ::::simple
-:::linkcard
+:::linkcard{image="https://www.zotero.org/static/images/icons/zotero-app-icon-512.png"}
 https://www.zotero.org/download/connectors
 :::
 
