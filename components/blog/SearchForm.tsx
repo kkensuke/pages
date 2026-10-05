@@ -16,7 +16,7 @@ export default function SearchForm({ basePath, language, query }: { basePath: st
   return (
     <>
       <div className="blog-controls">
-        <button ref={toggle} type="button" className="blog-search-toggle" aria-expanded={open} aria-controls="blog-search-form" onClick={() => { setOpen(!open); if (open) toggle.current?.focus(); }}><Search size={16} aria-hidden="true" /><span>{isJapanese ? '検索' : 'Search'}</span></button>
+        <button ref={toggle} type="button" className="blog-search-toggle" aria-expanded={open} aria-controls="blog-search-form" onClick={() => { setOpen(!open); if (open) toggle.current?.focus(); }}><Search size={16} aria-hidden="true" /><span>Search</span></button>
         <LanguageToggle language={language} basePath={basePath} query={query} />
       </div>
       <form id="blog-search-form" action={basePath} method="get" role="search" className="blog-search" hidden={!open} onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); setOpen(false); toggle.current?.focus(); } }}>
