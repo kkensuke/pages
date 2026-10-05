@@ -11,7 +11,7 @@ tags: [MacOS, App]
 
 ## AppCleaner
 
-:::linkcard
+:::linkcard{image="https://freemacsoft.net/img/appcleaner.png"}
 https://freemacsoft.net/appcleaner/
 :::
 
