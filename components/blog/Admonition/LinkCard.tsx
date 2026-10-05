@@ -50,8 +50,9 @@ const getBestSrcset = (tag: string) => {
   }, { url: '', size: 0 });
 };
 
-const getPageImage = (html: string): CardImage | null => {
+const getPageImage = (html: string, pageTitle: string): CardImage | null => {
   let best: CardImage | null = null;
+  const title = decodeHtml(pageTitle).split(/\s*[|—–]\s*/)[0].trim().toLowerCase();
 
   for (const tag of html.match(/<img\b[^>]*>/gi) || []) {
     const srcset = getBestSrcset(tag);
@@ -69,12 +70,16 @@ const getPageImage = (html: string): CardImage | null => {
     const size = Math.max(width, height, srcset.size);
     if (width && height && width <= 64 && height <= 64) continue;
 
-    const kind: ImageKind = isLogoLike(text) ? 'logo' : 'preview';
-    const semanticScore = /hero|banner|cover/.test(text) ? 4000
+    const isExplicitPreview = /hero|banner|cover|screenshot|preview/.test(text);
+    const isSvg = src.split(/[?#]/)[0].toLowerCase().endsWith('.svg');
+    const isWideLogo = width > 0 && height > 0 && width / height >= 3 && !isExplicitPreview;
+    const kind: ImageKind = isLogoLike(text) || isWideLogo || (isSvg && !isExplicitPreview) ? 'logo' : 'preview';
+    const titleMatch = title.length >= 4 && text.includes(title);
+    const semanticScore = titleMatch ? 5000
+      : /hero|banner|cover/.test(text) ? 4000
       : /screenshot|preview/.test(text) ? 3500
       : kind === 'logo' ? 3000
       : 0;
-    const isSvg = src.split(/[?#]/)[0].toLowerCase().endsWith('.svg');
     if (!semanticScore && size < 256 && !isSvg) continue;
 
     const candidate = { url: src, kind, score: semanticScore + Math.min(size || (isSvg ? 512 : 0), 2000) };
@@ -197,7 +202,7 @@ const LinkCard = async ({ children, image }: LinkCardProps) => {
           ? null
           : socialImage
             ? { url: socialImage, kind: isLogoLike(socialImage) ? 'logo' as const : 'preview' as const }
-            : getPageImage(html) || getSiteIcon(html);
+            : getPageImage(html, title) || getSiteIcon(html);
 
         metaData.title = decodeHtml(title).trim();
         metaData.description = decodeHtml(description).trim();
