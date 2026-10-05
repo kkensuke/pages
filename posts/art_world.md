@@ -1,7 +1,7 @@
 ---
 title: "世界の名画"
 date: "2026-05-8"
-subtitle: ""
+subtitle: "ルネサンスから近代までの歴史的な名作26点"
 tags: [Art]
 icon: palette
 ---

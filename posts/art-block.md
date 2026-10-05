@@ -1,7 +1,7 @@
 ---
-title: "Art Blocks — マークダウンで描く装飾パターン"
+title: "マークダウンで描く装飾パターン"
 date: "2026-05-10"
-subtitle: "art ディレクティブを使って記事に視覚的なアクセントを加える方法"
+subtitle: "art ディレクティブを使って記事に視覚的なアクセントを加える"
 tags: [Markdown, Art]
 icon: shapes
 ---

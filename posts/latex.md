@@ -1,5 +1,5 @@
 ---
-title: "このブログの Markdown で LaTeX を使う"
+title: "このブログの Markdown で LaTeX を使う方法"
 date: "2024-7-5"
 subtitle: "このブログの Markdown で LaTeX を使う方法"
 tags: [Markdown, Latex]

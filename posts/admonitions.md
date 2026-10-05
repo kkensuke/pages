@@ -1,7 +1,7 @@
 ---
 title: "このブログの Markdown で使える Admonition"
 date: "2024-10-31"
-subtitle: "このブログの Markdown で Admonition とディレクティブを使う方法"
+subtitle: "このブログの Markdown での Admonition とディレクティブの使い方"
 tags: [Markdown]
 icon: message-square-warning
 ---

@@ -1,5 +1,5 @@
 ---
-title: "Nature's Beauty Drawn by Computers: Patterns Created by Formulas and Algorithms"
+title: "Nature's Patterns Created by Algorithms"
 date: "2026-05-23"
 subtitle: "From Turing patterns to fractals: visually decoding nature's designs through math and code"
 icon: orbit
@@ -79,9 +79,9 @@ V[size//2-r:size//2+r, size//2-r:size//2+r] = 0.25
 for i in range(iterations):
     Lu = laplacian(U)
     Lv = laplacian(V)
-    
+
     uvv = U * V * V
-    
+
     U += Du * Lu - uvv + F * (1 - U)
     V += Dv * Lv + uvv - (F + k) * V
 
@@ -132,14 +132,14 @@ def generate_mandelbrot(width, height, x_min, x_max, y_min, y_max, max_iter):
     X, Y = np.meshgrid(x, y)
     C = X + 1j * Y
     Z = np.zeros_like(C)
-    
+
     # Array to record the number of iterations until divergence
     escape_time = np.zeros(C.shape, dtype=int)
     mask = np.ones(C.shape, dtype=bool)
 
     for i in range(max_iter):
         Z[mask] = Z[mask]**2 + C[mask]
-        
+
         # Consider it diverged if it exceeds the threshold (radius 2)
         diverged = np.abs(Z) > 2
         escape_time[diverged & mask] = i

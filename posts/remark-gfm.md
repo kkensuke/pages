@@ -1,5 +1,5 @@
 ---
-title: "remark-gfm で GitHub Flavored Markdown を使う"
+title: "remark-gfm"
 date: "2024-05-03"
 subtitle: "自動リンク、脚注、取り消し線、表、タスクリスト"
 tags: [Markdown]

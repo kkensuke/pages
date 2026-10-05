@@ -1,7 +1,7 @@
 ---
-title: "このブログの Markdown における画像"
+title: "このブログの Markdown における画像の使い方"
 date: "2024-7-27"
-subtitle: "このブログの Markdown で画像を使う方法"
+subtitle: "このブログの Markdown における画像の使い方"
 icon: image
 tags: [Markdown]
 ---
