@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DEFAULT_FAVICON_SIZE = 64;
+const DEFAULT_FAVICON_SIZE = 256;
 
 interface LinkCardProps {
   children: React.ReactNode;
@@ -22,6 +22,99 @@ const decodeHtml = (value: string) =>
     .replace(/&#39;|&#x27;/gi, "'")
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>');
+
+const toAbsoluteUrl = (value: string, baseUrl: string) => {
+  try {
+    const resolved = new URL(decodeHtml(value), baseUrl);
+    return ['http:', 'https:'].includes(resolved.protocol) ? resolved.toString() : '';
+  } catch {
+    return '';
+  }
+};
+
+const getHighResolutionIcon = (html: string) => {
+  let best = { href: '', score: 0 };
+
+  for (const tag of html.match(/<link\b[^>]*>/gi) || []) {
+    const rel = getAttribute(tag, 'rel').toLowerCase();
+    const href = getAttribute(tag, 'href');
+    if (!href) continue;
+
+    if (rel.includes('apple-touch-icon')) {
+      if (best.score < 10000) best = { href, score: 10000 };
+      continue;
+    }
+
+    if (!rel.split(/\s+/).includes('icon')) continue;
+
+    const isSvg = href.split(/[?#]/)[0].toLowerCase().endsWith('.svg');
+    const size = Math.max(
+      0,
+      ...(getAttribute(tag, 'sizes').match(/\d+x\d+/gi) || [])
+        .map(value => Number(value.split('x')[0]))
+        .filter(Number.isFinite),
+    );
+
+    const score = isSvg ? 1000 : size >= 128 ? size : 0;
+    if (score > best.score) best = { href, score };
+  }
+
+  return best.href;
+};
+
+const getPageImage = (html: string) => {
+  let best = { src: '', score: -1 };
+
+  for (const tag of html.match(/<img\b[^>]*>/gi) || []) {
+    const src = getAttribute(tag, 'src')
+      || getAttribute(tag, 'data-src')
+      || getAttribute(tag, 'data-lazy-src');
+    if (!src || /^(?:data:|blob:)/i.test(src)) continue;
+
+    const text = [
+      src,
+      getAttribute(tag, 'alt'),
+      getAttribute(tag, 'class'),
+      getAttribute(tag, 'id'),
+    ].join(' ').toLowerCase();
+
+    if (/badge|shields\.io|tracking|tracker|analytics|pixel|1x1/.test(text)) continue;
+
+    const width = Number.parseInt(getAttribute(tag, 'width'), 10) || 0;
+    const height = Number.parseInt(getAttribute(tag, 'height'), 10) || 0;
+    if (width && height && width <= 64 && height <= 64) continue;
+
+    let score = 1;
+    if (/hero|banner|screenshot|preview|cover/.test(text)) score += 100;
+    if (/logo|brand/.test(text)) score += 60;
+    if (width >= 128 || height >= 128) score += 20;
+    if (getAttribute(tag, 'alt')) score += 5;
+
+    if (score > best.score) best = { src, score };
+  }
+
+  return best.src;
+};
+
+const getPageMetadata = (html: string, baseUrl: string) => {
+  const title = getMeta(html, 'property', 'og:title')
+    || getMeta(html, 'name', 'twitter:title')
+    || html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]
+    || '';
+  const description = getMeta(html, 'property', 'og:description')
+    || getMeta(html, 'name', 'description')
+    || getMeta(html, 'name', 'twitter:description');
+  const image = getMeta(html, 'property', 'og:image')
+    || getMeta(html, 'name', 'twitter:image')
+    || getHighResolutionIcon(html)
+    || getPageImage(html);
+
+  return {
+    title: decodeHtml(title).trim(),
+    description: decodeHtml(description).trim(),
+    imageUrl: image ? toAbsoluteUrl(image, baseUrl) : '',
+  };
+};
 
 const LinkCard = async ({ children }: LinkCardProps) => {
   const extractUrl = (children: React.ReactNode): string => {
@@ -77,7 +170,7 @@ const LinkCard = async ({ children }: LinkCardProps) => {
       if (pageResponse.ok) {
         const html = await pageResponse.text();
         const ogImage = getMeta(html, 'property', 'og:image');
-        if (ogImage) metaData.imageUrl = decodeHtml(ogImage);
+        if (ogImage) metaData.imageUrl = toAbsoluteUrl(ogImage, repoUrl) || metaData.imageUrl;
       }
     } else {
       const response = await fetch(url, {
@@ -88,21 +181,7 @@ const LinkCard = async ({ children }: LinkCardProps) => {
 
       const contentType = response.headers.get('content-type') || '';
       if (response.ok && (contentType.includes('text/html') || contentType.includes('application/xhtml+xml'))) {
-        const html = await response.text();
-        const baseUrl = response.url || url;
-        const title = getMeta(html, 'property', 'og:title')
-          || getMeta(html, 'name', 'twitter:title')
-          || html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]
-          || '';
-        const description = getMeta(html, 'property', 'og:description')
-          || getMeta(html, 'name', 'description')
-          || getMeta(html, 'name', 'twitter:description');
-        const image = getMeta(html, 'property', 'og:image')
-          || getMeta(html, 'name', 'twitter:image');
-
-        metaData.title = decodeHtml(title).trim();
-        metaData.description = decodeHtml(description).trim();
-        if (image) metaData.imageUrl = new URL(decodeHtml(image), baseUrl).toString();
+        Object.assign(metaData, getPageMetadata(await response.text(), response.url || url));
       }
     }
   } catch (error) {
