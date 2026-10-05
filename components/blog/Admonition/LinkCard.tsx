@@ -26,9 +26,14 @@ const LinkCard = async ({ children }: LinkCardProps) => {
     );
   }
 
+  const githubPath = parsedUrl.pathname.split('/').filter(Boolean);
+  const previewUrl = parsedUrl.hostname === 'github.com' && githubPath.length > 2
+    ? `${parsedUrl.origin}/${githubPath[0]}/${githubPath[1]}`
+    : url;
+
   const metaData = { title: '', description: '', imageUrl: '', domain: parsedUrl.hostname };
   try {
-    const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`, {
+    const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(previewUrl)}`, {
       next: { revalidate: 86400 },
       signal: AbortSignal.timeout(5000),
     });
