@@ -3,7 +3,7 @@ title: "Must-Have Homebrew CLI Tools"
 date: "2026-06-20"
 subtitle: "Enhancing your macOS Terminal experience with Homebrew CLI apps"
 tags: [MacOS, CLI, Productivity]
-icon: square-terminal
+icon: terminal
 ---
 
 ## Introduction

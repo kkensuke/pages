@@ -47,6 +47,7 @@ It is designed for content where rich Markdown rendering is important, such as p
 * [x] Select GitHub code by line range
 * [x] Automatic table of contents
 * [x] Lightweight SVG post icons
+    * [Find from Lucide](https://lucide.dev/icons/)
 * [x] Tags
 * [x] Pagination
 * [x] Previous / next / related post navigation
