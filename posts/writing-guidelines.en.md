@@ -58,7 +58,7 @@ Select relevant items when drafting and revising, taking into account the purpos
 ## IV. Clarity of Explanation & Precise Referencing
 - **Clarifying Phrases & Logical Connectives**:
     - Are phrases used for summary or rephrasing ("In other words...", "That is...") employed effectively to aid understanding without being redundant?
-    - Do connectives accurately express the relationship between ideas? Use "However" for contrast or a departure from expectations, even when both statements can be true; use "In addition" or a similar connective for a simple addition.
+    - Do connectives accurately express the relationship between ideas? Use "However" for contrast or a departure from expectations; use "In addition" or a similar connective for a simple addition. Be careful not to use "However" when merely adding information without expressing a meaningful contrast or departure from expectations.
 - **Avoiding Circular Definitions & Uninformative Restatements**:
     - Does the explanation provide independently understandable characteristics, conditions, or examples? For example, “Quantum mechanics is the study of quantum systems” is insufficient for beginners if “quantum systems” has not been explained.
 - **Effective Use of Visuals & Captions**: Do figures and tables effectively supplement the text and enhance reader understanding?
