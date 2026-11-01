@@ -20,6 +20,8 @@ try {
   await copyFile(new URL('../public/photos/tokyo.jpeg', import.meta.url), path.join(directory, 'b_tokyo2026.jpeg'));
   await copyFile(new URL('../public/photos/berkeley.jpeg', import.meta.url), path.join(directory, 'a garden-2.JPG'));
   await copyFile(new URL('../public/photos/berkeley.jpeg', import.meta.url), path.join(directory, 'a garden-3.JPG'));
+  await mkdir(path.join(directory, 'thumbs'));
+  await copyFile(new URL('../public/photos/berkeley.jpeg', import.meta.url), path.join(directory, 'thumbs', 'a garden-2.JPG'));
   await writeFile(path.join(directory, 'readme.txt'), 'Not a photo');
   await mkdir(path.join(directory, 'skip.jpg'));
   const context = { exports: {}, require, process: { cwd: () => root } };
@@ -37,9 +39,13 @@ try {
   assert.match(figures[2], /width="3024" height="4032"/, 'Account for EXIF rotation');
   for (const figure of figures) {
     assert.match(figure, /target="_blank" rel="noopener noreferrer"/);
-    assert.equal(figure.match(/<img\b[^>]*src="([^"]+)"/)?.[1], figure.match(/<a\b[^>]*href="([^"]+)"/)?.[1], 'Display the same original file as the full-size link');
+    const src = figure.match(/<img\b[^>]*src="([^"]+)"/)?.[1];
+    const href = figure.match(/<a\b[^>]*href="([^"]+)"/)?.[1];
+    assert.ok(src === href || src === href.replace('/photos/', '/photos/thumbs/'), 'Display the original or its thumbnail; the link always opens the original');
     assert.doesNotMatch(figure, /\/_next\/image|\bsrcset=/i, 'Do not use re-encoded image variants');
   }
+  assert.match(figures[0], /<img\b[^>]*src="\/photos\/thumbs\/a%20garden-2\.JPG"/, 'Show the thumbnail when one exists');
+  assert.match(figures[1], /<img\b[^>]*src="\/photos\/a%20garden-3\.JPG"/, 'Fall back to the original without a thumbnail');
   assert.doesNotMatch(html, />Full size\b/);
   await writeFile(path.join(directory, 'c_added.png'), Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl8N2sAAAAASUVORK5CYII=', 'base64'));
   const withAddedPhoto = await render();
@@ -54,4 +60,4 @@ try {
 } finally {
   await rm(root, { recursive: true, force: true });
 }
-console.log('PASS: file discovery, ordering, captions, encoded links, EXIF dimensions, additions, removals, and an empty gallery.');
+console.log('PASS: file discovery, ordering, captions, encoded links, EXIF dimensions, thumbnails with original fallback, additions, removals, and an empty gallery.');

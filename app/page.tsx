@@ -31,10 +31,10 @@ export default function HomePage() {
               aria-label="View full-size photo: Arizona"
           >
               <Image
-              src="/photos/Arizona.jpeg"
+              src="/photos/thumbs/Arizona.jpeg"
               alt="Red sandstone cliffs in Arizona"
-              width={3024}
-              height={4032}
+              width={1200}
+              height={1600}
               unoptimized
               priority
               className="photo-image h-64 object-cover md:h-auto"
