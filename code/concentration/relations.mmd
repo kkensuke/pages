@@ -1,0 +1,15 @@
+%%{init: {"theme": "neutral", "themeVariables": {"fontSize": "20px"}, "flowchart": {"nodeSpacing": 40, "rankSpacing": 60}}}%%
+flowchart TD
+    M["<b>Markov</b><br/>nonnegativity, mean"]
+    C["<b>Chebyshev</b><br/>variance"]
+    CH["<b>Chernoff method</b><br/>MGF"]
+    R["<b>Relative-error<br/>Chernoff bound</b><br/>Bernoulli sums"]
+    H["<b>Hoeffding</b><br/>independence, range"]
+    B["<b>Bernstein</b><br/>independence, range, variance"]
+    D["<b>McDiarmid</b><br/>independence,<br/>bounded differences"]
+    M -->|"apply to (X - E[X])²"| C
+    M -->|"apply to exp(λX)"| CH
+    CH -->|"Bernoulli MGF"| R
+    CH -->|"Hoeffding's lemma"| H
+    CH -->|"MGF bound with variance"| B
+    H -->|"martingale"| D
