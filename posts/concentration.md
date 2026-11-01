@@ -138,7 +138,7 @@ $$
 が成り立ちます。
 $\varphi$ の選び方によって、異なる不等式が得られます（図 2）。
 
-![Image](/images/concentration/indicator_bounds.png "width=560px caption='図 2：指示関数 1{y ≥ t}（黒）を上から抑える非負の関数。Markov の不等式は y/t（y ≥ 0 の場合）、Chebyshev の不等式は y²/t²、Chernoff 法は e^{λ(y−t)} を使う。'")
+![Image](/images/concentration/indicator_bounds.png "width=560px caption='図 2：指示関数 1{y ≥ t}（黒）を上から抑える非負の関数。Markov の不等式は y/t（y ≥ 0 の場合）、Chebyshev の不等式は y²/t²、Chernoff 法は exp(λ(y − t)) を使う。'")
 
 - **Markov の不等式**（第 2 節）：非負の $Y = X$ に $\varphi(y) = y/t$ を使います。
 - **Chebyshev の不等式**（第 3 節）：$Y = X - \mathbb{E}[X]$ に $\varphi(y) = y^2/t^2$ を使います。この $\varphi$ は $y \leq -t$ でも $1$ 以上なので、両側の裾確率を一度に抑えます。
@@ -164,10 +164,12 @@ $$
 
 **証明**　非負の確率変数 $(X - \mathbb{E}[X])^2$ に Markov の不等式を適用すると、
 $$
+    \begin{aligned}
     \Pr(|X - \mathbb{E}[X]| \geq t)
-    = \Pr\left((X - \mathbb{E}[X])^2 \geq t^2\right)
-    \leq \frac{\mathbb{E}\left[(X - \mathbb{E}[X])^2\right]}{t^2}
+    &= \Pr\left((X - \mathbb{E}[X])^2 \geq t^2\right) \\
+    &\leq \frac{\mathbb{E}\left[(X - \mathbb{E}[X])^2\right]}{t^2}
     = \frac{\operatorname{Var}(X)}{t^2}
+    \end{aligned}
 $$
 を得ます。$\square$
 
@@ -203,10 +205,12 @@ $$
 を使います。
 $\lambda > 0$ で $\psi_X(\lambda)$ が有限なら、$x \mapsto e^{\lambda x}$ は単調増加なので、Markov の不等式より
 $$
+    \begin{aligned}
     \Pr(X - \mathbb{E}[X] \geq t)
-    = \Pr\left(e^{\lambda (X - \mathbb{E}[X])} \geq e^{\lambda t}\right)
-    \leq e^{-\lambda t}\, \mathbb{E}\left[e^{\lambda (X - \mathbb{E}[X])}\right]
+    &= \Pr\left(e^{\lambda (X - \mathbb{E}[X])} \geq e^{\lambda t}\right) \\
+    &\leq e^{-\lambda t}\, \mathbb{E}\left[e^{\lambda (X - \mathbb{E}[X])}\right]
     = \exp\left(-\lambda t + \psi_X(\lambda)\right)
+    \end{aligned}
 $$
 が成り立ちます。
 この式は $\psi_X(\lambda)$ が有限なすべての $\lambda > 0$ で成り立つので、右辺を $\lambda$ について最小化して
@@ -257,7 +261,11 @@ Chernoff 法を Bernoulli 確率変数の和に適用すると、期待値に対
 $X_1, \dots, X_n$ を独立な確率変数とし、$X_i \in \{0, 1\}$、$\Pr(X_i = 1) = p_i$ とします。
 $m := \mathbb{E}[S_n] = \sum_{i=1}^n p_i$ とおくと、任意の $\eta > 0$ に対して
 $$
-    \Pr\left(S_n \geq (1 + \eta) m\right) \leq \left(\frac{e^{\eta}}{(1 + \eta)^{1 + \eta}}\right)^m \leq \exp\left(-\frac{\eta^2 m}{2 + \eta}\right)
+    \begin{aligned}
+    \Pr\left(S_n \geq (1 + \eta) m\right)
+    &\leq \left(\frac{e^{\eta}}{(1 + \eta)^{1 + \eta}}\right)^m \\
+    &\leq \exp\left(-\frac{\eta^2 m}{2 + \eta}\right)
+    \end{aligned}
 $$
 が成り立ちます。
 また、$0 < \eta < 1$ に対して
@@ -309,7 +317,11 @@ $$
 **証明**　Hoeffding の補題より、各 $X_i$ は分散パラメータ $(b_i - a_i)^2/4$ の sub-Gaussian です。
 第 4 節で見たように、独立な和 $S_n$ は分散パラメータ $\nu := \sum_{i=1}^n (b_i - a_i)^2/4$ の sub-Gaussian なので、
 $$
-    \Pr(S_n - \mathbb{E}[S_n] \geq t) \leq \exp\left(-\frac{t^2}{2\nu}\right) = \exp\left(-\frac{2t^2}{\sum_{i=1}^n (b_i - a_i)^2}\right)
+    \begin{aligned}
+    \Pr(S_n - \mathbb{E}[S_n] \geq t)
+    &\leq \exp\left(-\frac{t^2}{2\nu}\right) \\
+    &= \exp\left(-\frac{2t^2}{\sum_{i=1}^n (b_i - a_i)^2}\right)
+    \end{aligned}
 $$
 を得ます。$\square$
 
@@ -441,14 +453,16 @@ reps = 10_000
 s = np.linspace(0, 1.5, 151)  # 横軸は sqrt(n) * t
 
 for n in [100, 1000]:
-    u = np.sort(rng.random((reps, n)), axis=1)  # Uniform(0, 1) の標本を昇順に並べる
+    # Uniform(0, 1) の標本を reps 組生成し、各組を昇順に並べる
+    u = np.sort(rng.random((reps, n)), axis=1)
     i = np.arange(1, n + 1)
     # Z = sup_x |F_n(x) - x|（経験分布関数と真の分布関数 F(x) = x の差の最大値）
     z = np.maximum(i / n - u, u - (i - 1) / n).max(axis=1)
     tail = [np.mean(z - z.mean() >= x / np.sqrt(n)) for x in s]
     plt.semilogy(s, tail, lw=2, label=f"Simulation ($n = {n}$)")
 
-plt.semilogy(s, np.exp(-2 * s**2), "k--", lw=2, label=r"McDiarmid bound $e^{-2nt^2}$")
+plt.semilogy(s, np.exp(-2 * s**2), "k--", lw=2,
+             label=r"McDiarmid bound $e^{-2nt^2}$")
 plt.ylim(1e-4, 1.5)
 plt.xlabel(r"$\sqrt{n}\,t$")
 plt.ylabel(r"$\Pr(Z - \mathbb{E}[Z] \geq t)$")
@@ -510,7 +524,7 @@ Chebyshev と Bernstein の不等式には真の分散 $p(1-p)$ を使ってい�
 | 二項分布から計算した値 | 分布そのもの | 約 400 | 約 2,400 | 約 1,600 | 約 10,400 |
 
 最終行は、その値以上のすべての $n$ で $\Pr(|\hat{p} - p| \geq \varepsilon) \leq \delta$ となる最小の $n$ です。
-$n\varepsilon$ が整数になる $n$ では境界上の値が事象に含まれるため、二項分布の確率は $n$ について単調ではありません。
+$n(p \pm \varepsilon)$ が整数になる $n$ では、$|\hat{p} - p| = \varepsilon$ となる境界上の値が事象に含まれるため、二項分布から計算した確率は $n$ について単調には減少しません。
 そのため、概数で示しています。
 
 次のコードは、二項分布から計算した $\Pr(|\hat{p} - p| \geq \varepsilon)$ と、各不等式による上界を $n$ の関数として描きます。
@@ -522,7 +536,8 @@ from scipy.stats import binom
 
 def exact_tail(n, p, eps):
     """S ~ Bin(n, p) について Pr(|S/n - p| >= eps) を計算する"""
-    upper = np.ceil(n * (p + eps) - 1e-9)  # 1e-9 は浮動小数点の丸め誤差対策
+    # 1e-9 は浮動小数点の丸め誤差対策
+    upper = np.ceil(n * (p + eps) - 1e-9)
     lower = np.floor(n * (p - eps) + 1e-9)
     return binom.sf(upper - 1, n, p) + binom.cdf(lower, n, p)
 
@@ -536,15 +551,16 @@ def bounds(n, p, eps):
         "Bernstein": 2 * np.exp(-n * eps**2 / (2 * (var + M * eps / 3))),
     }
 
+settings = [("A", 0.5, 0.05, 4000), ("B", 0.01, 0.005, 20000)]
 fig, axes = plt.subplots(1, 2, figsize=(14, 5.6), sharey=True)
-for ax, (label, p, eps, n_max) in zip(axes, [("A", 0.5, 0.05, 4000), ("B", 0.01, 0.005, 20000)]):
+for ax, (label, p, eps, n_max) in zip(axes, settings):
     n = np.arange(10, n_max + 1, 10)
     ax.semilogy(n, exact_tail(n, p, eps), "k", lw=1.2, label="Exact (binomial)")
     for name, value in bounds(n, p, eps).items():
         ax.semilogy(n, np.minimum(value, 1), lw=2.2, label=name)
     ax.axhline(0.05, color="gray", ls="--")
-    ax.set(title=rf"({label}) $p = {p}$, $\varepsilon = {eps}$", xlabel="$n$",
-           xlim=(0, n_max), ylim=(1e-10, 2))
+    ax.set(title=rf"({label}) $p = {p}$, $\varepsilon = {eps}$",
+           xlabel="$n$", xlim=(0, n_max), ylim=(1e-10, 2))
 axes[0].set_ylabel(r"$\Pr(|\hat p - p| \geq \varepsilon)$")
 axes[1].legend(loc="lower left")
 plt.show()
@@ -604,7 +620,7 @@ MGF が有限でない分布でも、高次のモーメントが有限なら、�
 ![Image](/images/concentration/relations.png "width=520px caption='図 5：本記事で扱った不等式の関係。各箱の下段は、その不等式が使う主な仮定や情報。'")
 
 - **Markov → Chebyshev**：二乗偏差に Markov の不等式を適用し、分散で裾確率を評価します。
-- **Markov → Chernoff 法 → Hoeffding、Bernstein、McDiarmid**：指数関数に Markov の不等式を適用し、MGF を評価して指数的に減少する上界を得ます。McDiarmid の不等式は、martingale による分解を加えて対象を和以外の関数に広げます。
+- **Markov → Chernoff 法 → Hoeffding、Bernstein、McDiarmid**：指数関数に Markov の不等式を適用し、MGF を評価して指数的に減少する上界を得ます。McDiarmid の不等式は、martingale による分解によって、和以外の関数にも適用できるようにした結果です。
 
 どの不等式も、有限個のデータから作った量が期待値からどれだけ外れうるか、という問いに答えます。
 第 8 節の例が示すように、どの不等式が最も小さい上界を与えるかは、使える仮定（分散、値域、独立性、関数の安定性）と問題の条件によって変わります。
