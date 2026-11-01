@@ -6,7 +6,9 @@
     "node": "24.x"
   },
   "scripts": {
+    "predev": "node scripts/make-photo-thumbs.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/make-photo-thumbs.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -55,6 +57,7 @@
     "@types/react-syntax-highlighter": "^15.5.11",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.19",
+    "sharp": "^0.35.5",
     "tailwindcss": "^3.2.4"
   }
 }
