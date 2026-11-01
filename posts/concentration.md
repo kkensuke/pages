@@ -138,7 +138,7 @@ $$
 が成り立ちます。
 $\varphi$ の選び方によって、異なる不等式が得られます（図 2）。
 
-![Image](/images/concentration/indicator_bounds.png "width=560px caption='図 2：指示関数 1{y ≥ t}（黒）を上から抑える非負の関数。Markov の不等式は y/t（y ≥ 0 の場合）、Chebyshev の不等式は y²/t²、Chernoff 法は exp(λ(y − t)) を使う。'")
+![Image](/images/concentration/indicator_bounds.png "width=100% caption='図 2：指示関数 1{y ≥ t}（黒、t = 1）を上から抑える非負の関数。(a) は t の近く、(b) は広い範囲で、(b) の破線の枠が (a) の範囲。Markov の不等式は y/t（y ≥ 0 の場合）、Chebyshev の不等式は y²/t²、Chernoff 法は exp(λ(y − t)) を使う。'")
 
 - **Markov の不等式**（第 2 節）：非負の $Y = X$ に $\varphi(y) = y/t$ を使います。
 - **Chebyshev の不等式**（第 3 節）：$Y = X - \mathbb{E}[X]$ に $\varphi(y) = y^2/t^2$ を使います。この $\varphi$ は $y \leq -t$ でも $1$ 以上なので、両側の裾確率を一度に抑えます。
@@ -146,8 +146,13 @@ $\varphi$ の選び方によって、異なる不等式が得られます（図 
 
 $Y$ が値をとりやすい範囲で $\varphi$ が指示関数に近いほど、上界は小さくなります。
 Chernoff 法では $\lambda$ によって $\varphi$ の形を調整できます。
-図 2 の $\lambda = 4$ の曲線は、$\lambda = 1.5$ の曲線と比べて $y < t$ で指示関数に近い代わりに、$y > t$ で速く増加します。
+図 2 (a) の $t$ の近くでは、$\lambda = 4$ の曲線は $\lambda = 1.5$ の曲線と比べて、$y < t$ で指示関数に近い代わりに、$y > t$ で速く増加します。
 第 4 節では、この $\lambda$ を最適化します。
+
+図 2 (b) の広い範囲では、遠くでの増え方の違いが分かります。
+Markov の不等式の $y/t$ は $y$ の 1 次関数で、Chebyshev の不等式の $y^2/t^2$ は $0$ から左右どちらに離れても増加します。
+Chernoff 法の $e^{\lambda(y - t)}$ は、$y$ が小さくなるほど $0$ に近づく一方、$y > t$ では指数関数的に増加します。
+そのため、Chernoff 法で $\mathbb{E}[\varphi(Y)]$ が有限になるには、$Y$ の積率母関数（第 4 節）が有限であること、つまり $Y$ の上側の裾が指数関数以上の速さで減衰することが必要です。
 
 
 ## 3. Chebyshev の不等式
