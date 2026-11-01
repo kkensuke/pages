@@ -1,8 +1,9 @@
-"""Regenerate the figures of posts/concentration.md.
+"""Regenerate the figures of posts/concentration.md and its English version.
 
-Figures 1, 3 and 4 run the Python code blocks of the post unchanged, so the
-images always match the code shown to readers. Figure 2 is drawn below, and
-figure 5 is rendered from relations.mmd with the Mermaid CLI (mmdc).
+Figures 1, 3 and 4 run the Python code blocks of the Japanese post unchanged,
+so the images always match the code shown to readers. The English post has the
+same code with English comments. Figure 2 is drawn below, and figure 5 is
+rendered from relations.mmd with the Mermaid CLI (mmdc).
 
 Usage (from the repository root, needs numpy, scipy and matplotlib):
     python code/concentration/make_figures.py
