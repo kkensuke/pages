@@ -8,7 +8,6 @@ interface LinkCardProps {
 }
 
 type ImageKind = 'preview' | 'logo';
-type CardImage = { url: string; kind: ImageKind; score: number };
 
 const getAttribute = (tag: string, name: string) =>
   tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])(.*?)\\1`, 'i'))?.[2] || '';
@@ -36,81 +35,11 @@ const resolveUrl = (value: string, baseUrl: string) => {
   }
 };
 
+// AMO returns { [lang]: text }, plus `_default` naming the fallback locale when `lang` has no translation.
+const localized = (field?: Record<string, string | null> | null) =>
+  (field && (field[field._default || ''] || Object.values(field)[0])) || '';
+
 const isLogoLike = (value: string) => /logo|brand|favicon|app[-_]?icon|(?:^|[-_/])icon(?:[.\-_/]|$)/i.test(value);
-
-const getBestSrcset = (tag: string) => {
-  const srcset = getAttribute(tag, 'srcset') || getAttribute(tag, 'data-srcset');
-  if (!srcset) return { url: '', size: 0 };
-
-  return srcset.split(',').reduce((best, candidate) => {
-    const [url, descriptor = ''] = candidate.trim().split(/\s+/);
-    const match = descriptor.match(/^(\d+(?:\.\d+)?)(w|x)$/);
-    const size = match ? Number(match[1]) * (match[2] === 'x' ? 512 : 1) : 0;
-    return url && size > best.size ? { url, size } : best;
-  }, { url: '', size: 0 });
-};
-
-const getPageImage = (html: string, pageTitle: string): CardImage | null => {
-  let best: CardImage | null = null;
-  const title = decodeHtml(pageTitle).split(/\s*[|—–]\s*/)[0].trim().toLowerCase();
-
-  for (const tag of html.match(/<img\b[^>]*>/gi) || []) {
-    const srcset = getBestSrcset(tag);
-    const src = srcset.url
-      || getAttribute(tag, 'src')
-      || getAttribute(tag, 'data-src')
-      || getAttribute(tag, 'data-lazy-src');
-    if (!src || /^(?:data:|blob:)/i.test(src)) continue;
-
-    const text = `${src} ${getAttribute(tag, 'alt')} ${getAttribute(tag, 'class')} ${getAttribute(tag, 'id')}`.toLowerCase();
-    if (/badge|shields\.io|tracking|tracker|analytics|pixel|1x1/.test(text)) continue;
-
-    const width = Number.parseInt(getAttribute(tag, 'width'), 10) || 0;
-    const height = Number.parseInt(getAttribute(tag, 'height'), 10) || 0;
-    const size = Math.max(width, height, srcset.size);
-    if (width && height && width <= 64 && height <= 64) continue;
-
-    const isExplicitPreview = /hero|banner|cover|screenshot|preview/.test(text);
-    const isSvg = src.split(/[?#]/)[0].toLowerCase().endsWith('.svg');
-    const isWideLogo = width > 0 && height > 0 && width / height >= 3 && !isExplicitPreview;
-    const kind: ImageKind = isLogoLike(text) || isWideLogo || (isSvg && !isExplicitPreview) ? 'logo' : 'preview';
-    const titleMatch = title.length >= 4 && text.includes(title);
-    const semanticScore = titleMatch ? 5000
-      : /hero|banner|cover/.test(text) ? 4000
-      : /screenshot|preview/.test(text) ? 3500
-      : kind === 'logo' ? 3000
-      : 0;
-    if (!semanticScore && size < 256 && !isSvg) continue;
-
-    const candidate = { url: src, kind, score: semanticScore + Math.min(size || (isSvg ? 512 : 0), 2000) };
-    if (!best || candidate.score > best.score) best = candidate;
-  }
-
-  return best;
-};
-
-const getSiteIcon = (html: string): CardImage | null => {
-  const links = html.match(/<link\b[^>]*>/gi) || [];
-
-  const appleIcon = links.find(tag => getAttribute(tag, 'rel').toLowerCase().includes('apple-touch-icon'));
-  if (appleIcon) return { url: getAttribute(appleIcon, 'href'), kind: 'logo', score: 0 };
-
-  const icon = links
-    .map(tag => {
-      const rel = getAttribute(tag, 'rel').toLowerCase();
-      const url = getAttribute(tag, 'href');
-      if (!rel.split(/\s+/).includes('icon') || !url) return null;
-
-      const size = Math.max(0, ...(getAttribute(tag, 'sizes').match(/\d+x\d+/gi) || [])
-        .map(value => Number(value.split('x')[0])));
-      const score = url.split(/[?#]/)[0].toLowerCase().endsWith('.svg') ? 1000 : size;
-      return score >= 128 ? { url, kind: 'logo' as const, score } : null;
-    })
-    .filter((item): item is { url: string; kind: 'logo'; score: number } => item !== null)
-    .sort((a, b) => b.score - a.score)[0];
-
-  return icon || null;
-};
 
 const LinkCard = async ({ children, image }: LinkCardProps) => {
   const extractUrl = (children: React.ReactNode): string => {
@@ -133,18 +62,19 @@ const LinkCard = async ({ children, image }: LinkCardProps) => {
   }
 
   const manualImageUrl = image ? resolveUrl(image, url) : '';
-  const manualImageKind: ImageKind = isLogoLike(image || '') ? 'logo' : 'preview';
 
-  const githubPath = parsedUrl.pathname.split('/').filter(Boolean);
-  const githubRepo = parsedUrl.hostname === 'github.com' && githubPath.length >= 2
-    ? { owner: githubPath[0], repo: githubPath[1] }
+  const path = parsedUrl.pathname.split('/').filter(Boolean);
+  const githubRepo = parsedUrl.hostname === 'github.com' && path.length >= 2
+    ? { owner: path[0], repo: path[1] }
     : null;
+  // addons.mozilla.org serves a bot challenge page instead of HTML, so use its API: /<lang>/firefox/addon/<slug>/
+  const amoSlug = parsedUrl.hostname === 'addons.mozilla.org' && path[2] === 'addon' ? path[3] : '';
 
   const metaData = {
     title: '',
     description: '',
     imageUrl: manualImageUrl,
-    imageKind: manualImageUrl ? manualImageKind : 'preview' as ImageKind,
+    imageKind: (isLogoLike(manualImageUrl) ? 'logo' : 'preview') as ImageKind,
     domain: parsedUrl.hostname,
   };
 
@@ -178,6 +108,23 @@ const LinkCard = async ({ children, image }: LinkCardProps) => {
           if (ogImage) metaData.imageUrl = resolveUrl(ogImage, repoUrl) || metaData.imageUrl;
         }
       }
+    } else if (amoSlug) {
+      const response = await fetch(`https://addons.mozilla.org/api/v5/addons/addon/${encodeURIComponent(amoSlug)}/?lang=${encodeURIComponent(path[0])}`, {
+        next: { revalidate: 86400 },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        metaData.title = localized(data.name);
+        metaData.description = localized(data.summary);
+        if (!manualImageUrl) {
+          // Same choice as the og:image of the add-on page: first screenshot, else the icon.
+          const preview = data.previews?.[0]?.image_url;
+          metaData.imageUrl = preview || data.icons?.['128'] || data.icon_url || '';
+          metaData.imageKind = preview ? 'preview' : 'logo';
+        }
+      }
     } else {
       const response = await fetch(url, {
         headers: { Accept: 'text/html,application/xhtml+xml' },
@@ -188,7 +135,6 @@ const LinkCard = async ({ children, image }: LinkCardProps) => {
       const contentType = response.headers.get('content-type') || '';
       if (response.ok && (contentType.includes('text/html') || contentType.includes('application/xhtml+xml'))) {
         const html = await response.text();
-        const baseUrl = response.url || url;
         const title = getMeta(html, 'property', 'og:title')
           || getMeta(html, 'name', 'twitter:title')
           || html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1]
@@ -198,17 +144,12 @@ const LinkCard = async ({ children, image }: LinkCardProps) => {
           || getMeta(html, 'name', 'twitter:description');
         const socialImage = getMeta(html, 'property', 'og:image')
           || getMeta(html, 'name', 'twitter:image');
-        const selectedImage = manualImageUrl
-          ? null
-          : socialImage
-            ? { url: socialImage, kind: isLogoLike(socialImage) ? 'logo' as const : 'preview' as const }
-            : getPageImage(html, title) || getSiteIcon(html);
 
         metaData.title = decodeHtml(title).trim();
         metaData.description = decodeHtml(description).trim();
-        if (selectedImage?.url) {
-          metaData.imageUrl = resolveUrl(selectedImage.url, baseUrl);
-          metaData.imageKind = selectedImage.kind;
+        if (!manualImageUrl && socialImage) {
+          metaData.imageUrl = resolveUrl(socialImage, response.url || url);
+          metaData.imageKind = isLogoLike(socialImage) ? 'logo' : 'preview';
         }
       }
     }
