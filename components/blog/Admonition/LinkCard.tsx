@@ -36,6 +36,10 @@ const resolveUrl = (value: string, baseUrl: string) => {
   }
 };
 
+// AMO returns { [lang]: text }, plus `_default` naming the fallback locale when `lang` has no translation.
+const localized = (field?: Record<string, string | null> | null) =>
+  (field && (field[field._default || ''] || Object.values(field)[0])) || '';
+
 const isLogoLike = (value: string) => /logo|brand|favicon|app[-_]?icon|(?:^|[-_/])icon(?:[.\-_/]|$)/i.test(value);
 
 const getBestSrcset = (tag: string) => {
@@ -135,10 +139,12 @@ const LinkCard = async ({ children, image }: LinkCardProps) => {
   const manualImageUrl = image ? resolveUrl(image, url) : '';
   const manualImageKind: ImageKind = isLogoLike(image || '') ? 'logo' : 'preview';
 
-  const githubPath = parsedUrl.pathname.split('/').filter(Boolean);
-  const githubRepo = parsedUrl.hostname === 'github.com' && githubPath.length >= 2
-    ? { owner: githubPath[0], repo: githubPath[1] }
+  const path = parsedUrl.pathname.split('/').filter(Boolean);
+  const githubRepo = parsedUrl.hostname === 'github.com' && path.length >= 2
+    ? { owner: path[0], repo: path[1] }
     : null;
+  // addons.mozilla.org serves a bot challenge page instead of HTML, so use its API: /<lang>/firefox/addon/<slug>/
+  const amoSlug = parsedUrl.hostname === 'addons.mozilla.org' && path[2] === 'addon' ? path[3] : '';
 
   const metaData = {
     title: '',
@@ -176,6 +182,23 @@ const LinkCard = async ({ children, image }: LinkCardProps) => {
         if (pageResponse.ok) {
           const ogImage = getMeta(await pageResponse.text(), 'property', 'og:image');
           if (ogImage) metaData.imageUrl = resolveUrl(ogImage, repoUrl) || metaData.imageUrl;
+        }
+      }
+    } else if (amoSlug) {
+      const response = await fetch(`https://addons.mozilla.org/api/v5/addons/addon/${encodeURIComponent(amoSlug)}/?lang=${encodeURIComponent(path[0])}`, {
+        next: { revalidate: 86400 },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        metaData.title = localized(data.name);
+        metaData.description = localized(data.summary);
+        if (!manualImageUrl) {
+          // Same choice as the og:image of the add-on page: first screenshot, else the icon.
+          const preview = data.previews?.[0]?.image_url;
+          metaData.imageUrl = preview || data.icons?.['128'] || data.icon_url || '';
+          metaData.imageKind = preview ? 'preview' : 'logo';
         }
       }
     } else {
