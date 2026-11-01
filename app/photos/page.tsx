@@ -11,6 +11,8 @@ const imageSize: (data: Buffer) => { width: number; height: number; orientation?
 export default async function PhotosPage() {
   const directory = path.join(process.cwd(), 'public', 'photos');
   const entries = await readdir(directory, { withFileTypes: true });
+  // Display copies made by scripts/make-photo-thumbs.sh; photos without one show the original.
+  const thumbs = new Set(await readdir(path.join(directory, 'thumbs')).catch(() => []));
   const photos = await Promise.all(entries
     .filter(entry => entry.isFile() && /\.(jpe?g|png|webp|gif)$/i.test(entry.name))
     .sort((a, b) => a.name.localeCompare(b.name, 'en'))
@@ -20,6 +22,7 @@ export default async function PhotosPage() {
       return {
         title: path.parse(name).name.replace(/-\d+$/, '').replace(/^./u, letter => letter.toUpperCase()),
         imagePath: `/photos/${encodeURIComponent(name)}`,
+        displayPath: `/photos/${thumbs.has(name) ? 'thumbs/' : ''}${encodeURIComponent(name)}`,
         width: rotated ? height : width,
         height: rotated ? width : height,
       };
@@ -31,7 +34,7 @@ export default async function PhotosPage() {
         {photos.map((photo, index) => (
           <figure key={photo.imagePath}>
             <a href={photo.imagePath} target="_blank" rel="noopener noreferrer" className="photo-link" aria-label={`View full-size photo: ${photo.title}`}>
-              <Image src={photo.imagePath} alt={`View photographed in ${photo.title}`} width={photo.width} height={photo.height} unoptimized priority={index === 0} className="photo-image" />
+              <Image src={photo.displayPath} alt={`View photographed in ${photo.title}`} width={photo.width} height={photo.height} unoptimized priority={index === 0} className="photo-image" />
             </a>
             <figcaption>{photo.title}</figcaption>
           </figure>
