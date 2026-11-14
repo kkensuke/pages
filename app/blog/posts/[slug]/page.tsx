@@ -96,8 +96,10 @@ const PostContent = async (props: any) => {
     const hasBlockElement = React.Children.toArray(children).some(
       (child) =>
         React.isValidElement(child) &&
+        // Keyboard buttons (:btn) are inline, so they keep the paragraph.
+        child.type !== TextDirectiveComponents['keyboard-button'] &&
         (
-          // All React components are treated as blocks.
+          // All other React components are treated as blocks.
           typeof child.type !== 'string' ||
           ['div', 'figure', 'img'].includes(child.type)
         )

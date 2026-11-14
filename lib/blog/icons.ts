@@ -1,7 +1,7 @@
 import {
   AppWindow, BookOpen, Captions, CaseSensitive, CodeXml, FileText,
   Globe, Grid3X3, Image, Laptop, Layers, Link, MessageSquareWarning,
-  Orbit, Palette, PanelTop, Settings2, Shapes, Sigma, SquareFunction,
+  NotebookPen, Orbit, Palette, PanelTop, Settings2, Shapes, Sigma, SquareFunction,
   SquareTerminal, Terminal, TextCursorInput,
 } from 'lucide-react';
 
@@ -19,6 +19,7 @@ export const POST_ICONS = {
   layers: Layers,
   link: Link,
   'message-square-warning': MessageSquareWarning,
+  'notebook-pen': NotebookPen,
   orbit: Orbit,
   palette: Palette,
   'panel-top': PanelTop,
