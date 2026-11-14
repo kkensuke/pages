@@ -4,8 +4,8 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 
 const research = [
   { title: 'Double Descent in Quantum Kernel Ridge Regression', kind: 'Paper · arXiv', href: 'https://arxiv.org/abs/2604.17202' },
-  { title: 'Study Notes on Statistical Learning Theory for Quantum Machine Learning', kind: 'Study notes · PDF', href: 'https://kkensuke.github.io/QML_generalization/main.pdf' },
-  { title: 'Analysis of Data-encoding Induced Barren Plateau in Quantum Machine Learning', kind: 'Master’s thesis · PDF', href: 'https://kkensuke.github.io/master_thesis/main.pdf' },
+//   { title: 'Study Notes on Statistical Learning Theory for Quantum Machine Learning', kind: 'Study notes · PDF', href: 'https://kkensuke.github.io/QML_generalization/main.pdf' },
+//   { title: 'Analysis of Data-encoding Induced Barren Plateau in Quantum Machine Learning', kind: 'Master’s thesis · PDF', href: 'https://kkensuke.github.io/master_thesis/main.pdf' },
 ];
 
 export default function HomePage() {
