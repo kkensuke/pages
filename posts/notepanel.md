@@ -220,6 +220,8 @@ notepanel がノートの名前を変えると、履歴のフォルダもつい�
 
 ### 7.1. General
 
+![notepanel の設定画面（General）](/images/notepanel/settings.png "width=360px")
+
 | 項目                  | 内容                                                                |
 | ------------------- | ----------------------------------------------------------------- |
 | Data folder         | ノートとその履歴を入れるフォルダ。**Choose…** で選び、**Use Default** で既定に戻す          |
