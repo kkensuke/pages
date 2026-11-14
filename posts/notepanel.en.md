@@ -220,6 +220,8 @@ Press :btn[cmd] + :btn[,] in the panel, or right-click the menu bar icon and cho
 
 ### 7.1. General
 
+![notepanel Settings (General)](/images/notepanel/settings.png "width=360px")
+
 | Setting | Description |
 | --- | --- |
 | Data folder | The folder for notes and their history. Choose one with **Choose…**, and go back to the default with **Use Default** |
